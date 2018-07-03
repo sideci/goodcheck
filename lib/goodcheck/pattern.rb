@@ -24,36 +24,31 @@ module Goodcheck
       new(source: tokens, regexp: compile_tokens(tokens, case_sensitive: case_sensitive))
     end
 
-    def self.compile_tokens(source, case_sensitive:)
+    def self.extract_tokens(source)
       tokens = []
       s = StringScanner.new(source)
-
+      regexps = [/\(|\)|\{|\}|\[|\]|\<|\>/,
+                 /\s+/,
+                 /\w+|[\p{Letter}&&\p{^ASCII}]+/,
+                 %r{[!"#$%&'=\-^~¥\\|`@*:+;/?.,]+},
+                 /./]
       until s.eos?
-        case
-        when s.scan(/\(|\)|\{|\}|\[|\]|\<|\>/)
-          tokens << Regexp.escape(s.matched)
-        when s.scan(/\s+/)
-          tokens << '\s+'
-        when s.scan(/\w+|[\p{Letter}&&\p{^ASCII}]+/)
-          tokens << Regexp.escape(s.matched)
-        when s.scan(%r{[!"#$%&'=\-^~¥\\|`@*:+;/?.,]+})
-          tokens << Regexp.escape(s.matched.rstrip)
-        when s.scan(/./)
-          tokens << Regexp.escape(s.matched)
+        regexps.each_with_index do |regexp, idx|
+          next unless s.scan(regexp)
+          tokens << Regexp.escape(s.matched.rstrip) if idx == 3
+          tokens << Regexp.escape(s.matched) unless idx == 3
+          break
         end
       end
+      tokens
+    end
 
-      if tokens.first =~ /\A\p{Letter}/
-        tokens.first.prepend('\b')
-      end
-
-      if tokens.last =~ /\p{Letter}\Z/
-        tokens.last << '\b'
-      end
-
+    def self.compile_tokens(source, case_sensitive:)
+      tokens = extract_tokens(source)
+      tokens.first.prepend('\b') if tokens.first =~ /\A\p{Letter}/
+      tokens.last << '\b' if tokens.last =~ /\p{Letter}\Z/
       options = Regexp::MULTILINE
       options |= Regexp::IGNORECASE unless case_sensitive
-
       Regexp.new(tokens.join('\s*').gsub(/\\s\*(\\s\+\\s\*)+/, '\s+'), options)
     end
   end
