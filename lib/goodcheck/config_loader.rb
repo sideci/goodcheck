@@ -55,7 +55,7 @@ module Goodcheck
 
     def load_rule(hash)
       id = hash[:id]
-      patterns = array(hash[:pattern]).map {|pat| load_pattern(pat) }
+      patterns = retrieve_patterns(hash)
       justifications = array(hash[:justification])
       globs = load_globs(array(hash[:glob]))
       message = hash[:message].chomp
@@ -63,6 +63,24 @@ module Goodcheck
       fails = array(hash[:fail])
 
       Rule.new(id: id, patterns: patterns, justifications: justifications, globs: globs, message: message, passes: passes, fails: fails)
+    end
+
+    def all_patterns_literal?(patterns)
+      patterns.all? { |pattern| pattern.class == String || pattern[:literal] }
+    end
+
+    def combine_literal_patterns(patterns)
+      literals = patterns.map { |pat| pat.class == String ? pat : pat[:literal].to_s }
+      Pattern.regexp('(' + literals.join('|') + ')', case_sensitive: true, multiline: nil)
+    end
+
+    def retrieve_patterns(hash)
+      pat_array = array(hash[:pattern])
+      if all_patterns_literal?(pat_array)
+        [combine_literal_patterns(pat_array)]
+      else
+        pat_array.map { |pat| load_pattern(pat) }
+      end
     end
 
     def load_globs(globs)

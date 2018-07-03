@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative "test_helper"
 
 class ConfigLoaderTest < Minitest::Test
@@ -74,7 +75,7 @@ class ConfigLoaderTest < Minitest::Test
     assert_instance_of Rule, rule
     assert_equal "com.id.1", rule.id
     assert_equal "Some message", rule.message
-    assert_equal ["foo.bar"], rule.patterns.map(&:source)
+    assert_equal ["(foo.bar)"], rule.patterns.map(&:source)
     assert_equal [], rule.justifications
     assert_equal [], rule.globs
     assert_equal [], rule.passes
@@ -92,6 +93,9 @@ class ConfigLoaderTest < Minitest::Test
                                 },
                                 {
                                   literal: "foo.bar.baz",
+                                  # When we combine the literal patterns we use case sensitive
+                                  # for the result pattern.  That means these values here are
+                                  # ignored.
                                   case_insensitive: true,
                                 },
                                 {
@@ -104,7 +108,7 @@ class ConfigLoaderTest < Minitest::Test
     assert_instance_of Rule, rule
     assert_equal "com.id.1", rule.id
     assert_equal "Some message", rule.message
-    assert_equal [/foo\.bar/, /foo\.bar\.baz/i, /foo/i], rule.patterns.map(&:regexp)
+    assert_equal [/(foo.bar|foo.bar.baz|foo)/], rule.patterns.map(&:regexp)
     assert_equal [], rule.justifications
     assert_equal [], rule.globs
     assert_equal [], rule.passes
@@ -128,7 +132,8 @@ class ConfigLoaderTest < Minitest::Test
                        ]
                      })
 
-    assert_match /`case_insensitive` option is deprecated/, stderr.string
+    # When we combine the literal patterns we explicitely set case_sensitive
+    # assert_match /`case_insensitive` option is deprecated/, stderr.string
     assert_equal 1, stderr.string.scan(/`case_insensitive` option is deprecated/).count
   end
 
