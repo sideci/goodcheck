@@ -17,7 +17,11 @@ module Goodcheck
       options |= Regexp::IGNORECASE unless case_sensitive
       options |= Regexp::MULTILINE if multiline
 
-      new(source: regexp, regexp: Regexp.compile(regexp, options))
+      if regexp.is_a? String
+        new(source: regexp, regexp: Regexp.compile(regexp, options))
+      else
+        new(source: regexp, regexp: Regexp.compile(regexp))
+      end
     end
 
     def self.token(tokens, case_sensitive:)

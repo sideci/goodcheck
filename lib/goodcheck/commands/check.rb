@@ -19,10 +19,10 @@ module Goodcheck
 
       def run
         reporter.analysis do
-          load_config!
+          config = load_config!
           each_check do |buffer, rule|
             reporter.rule(rule) do
-              analyzer = Analyzer.new(rule: rule, buffer: buffer)
+              analyzer = Analyzer.new(rule: rule, buffer: buffer, rules: config.rules)
               analyzer.scan do |issue|
                 reporter.issue(issue)
               end

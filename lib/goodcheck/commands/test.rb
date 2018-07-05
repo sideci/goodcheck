@@ -87,7 +87,7 @@ module Goodcheck
 
       def rule_matches_example?(rule, example)
         buffer = Buffer.new(path: Pathname("-"), content: example)
-        analyzer = Analyzer.new(rule: rule, buffer: buffer)
+        analyzer = Analyzer.new(rule: rule, buffer: buffer, rules: config.rules)
         analyzer.scan.count > 0
       end
     end
