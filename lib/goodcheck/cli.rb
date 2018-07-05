@@ -54,7 +54,9 @@ module Goodcheck
       end.parse!(args)
 
       if args.empty?
-        targets << Pathname(".")
+        Dir.glob("**/*").select do |fname|
+          Pathname(fname).file? && !Pathname(fname).symlink?
+          end.map { |arg| targets.push Pathname(arg) }
       else
         targets.push *args.map {|arg| Pathname(arg) }
       end
