@@ -25,7 +25,8 @@ NSArray *a = [ NSMutableArray
   end
 
   def test_analyzer
-    analyzer = Analyzer.new(buffer: buffer, rule: new_rule("rule1", Pattern.literal("ipsum", case_sensitive: true)))
+    rule = new_rule("rule1", Pattern.literal("ipsum", case_sensitive: true))
+    analyzer = Analyzer.new(buffer: buffer, rule: rule, rules: [rule])
 
     issues = analyzer.scan.to_a
 
@@ -35,7 +36,8 @@ NSArray *a = [ NSMutableArray
   end
 
   def test_analyzer_japanese
-    analyzer = Analyzer.new(buffer: buffer, rule: new_rule("rule1", Pattern.literal("吾輩", case_sensitive: true)))
+    rule = new_rule("rule1", Pattern.literal("吾輩", case_sensitive: true))
+    analyzer = Analyzer.new(buffer: buffer, rule: rule, rules: [rule])
 
     issues = analyzer.scan.to_a
 
@@ -45,7 +47,8 @@ NSArray *a = [ NSMutableArray
   end
 
   def test_analyzer_tokens
-    analyzer = Analyzer.new(buffer: buffer, rule: new_rule("rule1", Pattern.token("[NSMutableArray new]", case_sensitive: true)))
+    rule = new_rule("rule1", Pattern.token("[NSMutableArray new]", case_sensitive: true))
+    analyzer = Analyzer.new(buffer: buffer, rule: rule, rules: [rule])
 
     issues = analyzer.scan.to_a
 
@@ -56,21 +59,21 @@ NSArray *a = [ NSMutableArray
   end
 
   def test_analyzer_no_duplicate
-    analyzer = Analyzer.new(buffer: buffer, rule:
-      new_rule("rule1",
-               Pattern.regexp("N.Array", case_sensitive: false, multiline: false),
-               Pattern.regexp("NSAr.ay", case_sensitive: false, multiline: false))
-    )
+    rule = new_rule("rule1",
+                    Pattern.regexp("N.Array", case_sensitive: false, multiline: false),
+                    Pattern.regexp("NSAr.ay", case_sensitive: false, multiline: false))
+    analyzer = Analyzer.new(buffer: buffer, rule: rule, rules: [rule])
 
     issues = analyzer.scan.to_a
 
-    assert_equal ["rule1"], issues.map(&:rule).map(&:id)
+    assert_equal ['rule1'], issues.map(&:rule).map(&:id)
     assert_equal ["NSArray"], issues.map(&:text)
     assert_equal [Location.new(start_line: 6, start_column: 0, end_line: 6, end_column: 7)], issues.map(&:location)
   end
 
   def test_analyzer_token_word_brake
-    analyzer = Analyzer.new(buffer: buffer, rule: new_rule("rule1", Pattern.token("Array", case_sensitive: true)))
+    rule = new_rule("rule1", Pattern.token("Array", case_sensitive: true))
+    analyzer = Analyzer.new(buffer: buffer, rule: rule, rules: [rule])
 
     issues = analyzer.scan.to_a
     assert_empty issues

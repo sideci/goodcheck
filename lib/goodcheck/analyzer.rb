@@ -33,8 +33,10 @@ module Goodcheck
               text = scanner.matched
               affected_rules = affected_rules(rule, text)
               range = (scanner.pos - text.bytesize) .. scanner.pos
-              affected_rules.each do |rule|
-                issues << Issue.new(buffer: buffer, range: range, rule: rule, text: text)
+              unless issues.any? {|issue| issue.range == range }
+                affected_rules.each do |rule|
+                  issues << Issue.new(buffer: buffer, range: range, rule: rule, text: text)
+                end
               end
             when scanner.scan(/.\b/m)
               after_break = true
