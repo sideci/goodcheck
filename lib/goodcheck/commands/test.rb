@@ -69,7 +69,7 @@ module Goodcheck
               test_pass = false
 
               pass_errors.each do |_, index|
-                stdout.puts "  #{(index+1).ordinalize} pass example matched.😱"
+                stdout.puts "  #{(index + 1).ordinalize} pass example matched.😱"
               end
             end
 
@@ -77,7 +77,7 @@ module Goodcheck
               test_pass = false
 
               fail_errors.each do |_, index|
-                stdout.puts "  #{(index+1).ordinalize} fail example didn't match.😱"
+                stdout.puts "  #{(index + 1).ordinalize} fail example didn't match.😱"
               end
             end
 

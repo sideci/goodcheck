@@ -59,8 +59,7 @@ NSArray *a = [ NSMutableArray
     analyzer = Analyzer.new(buffer: buffer, rule:
       new_rule("rule1",
                Pattern.regexp("N.Array", case_sensitive: false, multiline: false),
-               Pattern.regexp("NSAr.ay", case_sensitive: false, multiline: false))
-    )
+               Pattern.regexp("NSAr.ay", case_sensitive: false, multiline: false)))
 
     issues = analyzer.scan.to_a
 

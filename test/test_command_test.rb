@@ -19,7 +19,7 @@ rules:
     pattern: foo
     message: Hello
   - id: sample.2
-    pattern: 
+    pattern:
       - token: "[NSArray new]"
     message: Bar
     pass:

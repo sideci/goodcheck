@@ -9,11 +9,11 @@ module Goodcheck
     def rules_for_path(path, rules_filter:, &block)
       if block_given?
         rules.map do |rule|
-          if rules_filter.empty? || rules_filter.any? {|filter| /\A#{Regexp.escape(filter)}\.?/ =~ rule.id }
+          if rules_filter.empty? || rules_filter.any? { |filter| /\A#{Regexp.escape(filter)}\.?/ =~ rule.id }
             if rule.globs.empty?
               [rule, nil]
             else
-              glob = rule.globs.find {|glob| path.fnmatch?(glob.pattern, File::FNM_PATHNAME | File::FNM_EXTGLOB) }
+              glob = rule.globs.find { |glob| path.fnmatch?(glob.pattern, File::FNM_PATHNAME | File::FNM_EXTGLOB) }
               if glob
                 [rule, glob]
               end

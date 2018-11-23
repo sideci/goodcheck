@@ -146,17 +146,17 @@ EOF
 
       refute status.success?
       assert_equal [{
-                      rule_id: "foo",
-                      path: "app/models/user.rb",
-                      location: {
-                        start_line: 2,
-                        start_column: 14,
-                        end_line: 2,
-                        end_column: 17
-                      },
-                      message: "Foo",
-                      justifications: []
-                    }], JSON.parse(stdout, symbolize_names: true)
+        rule_id: "foo",
+        path: "app/models/user.rb",
+        location: {
+          start_line: 2,
+          start_column: 14,
+          end_line: 2,
+          end_column: 17
+        },
+        message: "Foo",
+        justifications: []
+      }], JSON.parse(stdout, symbolize_names: true)
     end
   end
 

@@ -24,8 +24,8 @@ module Goodcheck
               next if break_head && !after_break
 
               text = scanner.matched
-              range = (scanner.pos - text.bytesize) .. scanner.pos
-              unless issues.any? {|issue| issue.range == range }
+              range = (scanner.pos - text.bytesize)..scanner.pos
+              unless issues.any? { |issue| issue.range == range }
                 issues << Issue.new(buffer: buffer, range: range, rule: rule, text: text)
               end
             when scanner.scan(/.\b/m)

@@ -17,7 +17,7 @@ module Goodcheck
                          deprecated_regexp_pattern, deprecated_literal_pattern, deprecated_token_pattern,
                          string)
 
-      let :encoding, enum(*Encoding.name_list.map {|name| literal(name) })
+      let :encoding, enum(*Encoding.name_list.map { |name| literal(name) })
       let :glob, object(pattern: string, encoding: optional(encoding))
 
       let :rule, object(
@@ -104,6 +104,7 @@ module Goodcheck
 
     def combine_literal_patterns(patterns, case_sensitive:)
       return nil if patterns.empty?
+
       literals = patterns.map do |pat|
         str = pat.is_a?(String) ? pat : pat[:literal].to_s
         Regexp.escape(str)
@@ -175,6 +176,7 @@ module Goodcheck
 
     def case_sensitive?(pattern)
       return true if pattern.is_a?(String)
+
       case
       when pattern.key?(:case_sensitive)
         pattern[:case_sensitive]

@@ -33,8 +33,7 @@ class JSONReporterTest < Minitest::Test
                       end_column: 2,
                     },
                     message: "Message",
-                    justifications: ["reason1", "reason2"]
-                  }], json
+                    justifications: ["reason1", "reason2"] }], json
     assert_equal json, JSON.parse(JSON.dump(json_analysis), symbolize_names: true)
   end
 end

@@ -184,7 +184,7 @@ class ConfigLoaderTest < Minitest::Test
                                     id: "foo",
                                     pattern: "bar",
                                     message: "baz",
-                                    glob: { pattern: "*.rb", encoding: "UNKNOWN_ENCODING😍"}
+                                    glob: { pattern: "*.rb", encoding: "UNKNOWN_ENCODING😍" }
                                   }
                                 ]
                               },
@@ -275,7 +275,7 @@ EOF
 
       config = loader.load
 
-      assert config.rules.any? {|rule| rule.id == "imported_rule" }
+      assert config.rules.any? { |rule| rule.id == "imported_rule" }
     end
   end
 end

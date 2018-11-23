@@ -12,11 +12,11 @@ class ConfigTest < Minitest::Test
     loader = ConfigLoader.new(path: nil, content: nil, stderr: stderr, import_loader: nil)
 
     config = Config.new(rules: [
-      loader.load_rule({ id: "rule1", glob: ["**/*.rb"], message: "" }),
-      loader.load_rule({ id: "rule2", glob: ["*.rb", "app/views/**/*.html.erb"], message: "" }),
-      loader.load_rule({ id: "rule3", glob: ["app/**/*.rb"], message: "" }),
-      loader.load_rule({ id: "rule4", glob: ["**/*.ts{,x}"], message: "" })
-    ])
+                          loader.load_rule({ id: "rule1", glob: ["**/*.rb"], message: "" }),
+                          loader.load_rule({ id: "rule2", glob: ["*.rb", "app/views/**/*.html.erb"], message: "" }),
+                          loader.load_rule({ id: "rule3", glob: ["app/**/*.rb"], message: "" }),
+                          loader.load_rule({ id: "rule4", glob: ["**/*.ts{,x}"], message: "" })
+                        ])
 
     assert_equal ["rule1", "rule2"], config.rules_for_path(Pathname("bar.rb"), rules_filter: []).map(&:first).map(&:id)
     assert_equal ["rule1", "rule3"], config.rules_for_path(Pathname("app/models/user.rb"), rules_filter: []).map(&:first).map(&:id)
@@ -28,8 +28,8 @@ class ConfigTest < Minitest::Test
     loader = ConfigLoader.new(path: nil, content: nil, stderr: stderr, import_loader: nil)
 
     config = Config.new(rules: [
-      loader.load_rule({ id: "rule1", glob: [], message: "" }),
-    ])
+                          loader.load_rule({ id: "rule1", glob: [], message: "" }),
+                        ])
 
     assert_equal ["rule1"], config.rules_for_path(Pathname("bar.rb"), rules_filter: []).map(&:first).map(&:id)
   end
@@ -38,10 +38,10 @@ class ConfigTest < Minitest::Test
     loader = ConfigLoader.new(path: nil, content: nil, stderr: stderr, import_loader: nil)
 
     config = Config.new(rules: [
-      loader.load_rule({ id: "rule1", glob: [], message: "" }),
-      loader.load_rule({ id: "rule1.x", glob: [], message: "" }),
-      loader.load_rule({ id: "rule2", glob: [], message: "" }),
-    ])
+                          loader.load_rule({ id: "rule1", glob: [], message: "" }),
+                          loader.load_rule({ id: "rule1.x", glob: [], message: "" }),
+                          loader.load_rule({ id: "rule2", glob: [], message: "" }),
+                        ])
 
     assert_equal ["rule1", "rule1.x"], config.rules_for_path(Pathname("bar.rb"), rules_filter: ["rule1"]).map(&:first).map(&:id)
   end

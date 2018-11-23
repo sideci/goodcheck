@@ -15,7 +15,7 @@ rules:
     pattern:
       - foo
       - bar
-    glob: 
+    glob:
       - "app/models/**/*.rb"
 EOF
 
@@ -160,7 +160,7 @@ rules:
   - id: foo
     message: Foo
     pattern: 猫
-    glob: 
+    glob:
       - pattern: euc-jp
         encoding: EUC-JP
       - pattern: utf-8

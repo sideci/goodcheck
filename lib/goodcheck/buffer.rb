@@ -35,11 +35,11 @@ module Goodcheck
     end
 
     def line(line_number)
-      content.lines[line_number-1]
+      content.lines[line_number - 1]
     end
 
     def position_for_location(line, column)
-      if (range = line_starts[line-1])
+      if (range = line_starts[line - 1])
         pos = range.begin + column
         if pos < range.end
           pos

@@ -25,11 +25,11 @@ ipsum
   def test_location_for_position
     buffer = Buffer.new(path: Pathname("a.txt"), content: CONTENT)
 
-    assert_equal [1,0], buffer.location_for_position(0)
-    assert_equal [1,1], buffer.location_for_position(1)
-    assert_equal [1,5], buffer.location_for_position(5)
-    assert_equal [2,0], buffer.location_for_position(6)
-    assert_equal [3,0], buffer.location_for_position(12)
+    assert_equal [1, 0], buffer.location_for_position(0)
+    assert_equal [1, 1], buffer.location_for_position(1)
+    assert_equal [1, 5], buffer.location_for_position(5)
+    assert_equal [2, 0], buffer.location_for_position(6)
+    assert_equal [3, 0], buffer.location_for_position(12)
     assert_nil buffer.location_for_position(120)
   end
 
@@ -43,4 +43,3 @@ ipsum
     assert_nil buffer.position_for_location(100, 0)
   end
 end
-
