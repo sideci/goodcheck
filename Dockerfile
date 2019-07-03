@@ -13,9 +13,7 @@ ENV LC_ALL=en_US.UTF-8 \
 RUN mkdir /goodcheck
 WORKDIR /goodcheck
 COPY . /goodcheck/
-RUN gem build hello.gemspec
-# RUN gem build -o goodcheck.gem goodcheck.gemspec
-# RUN gem install goodcheck.gem
+RUN rake install
 
 RUN mkdir /work
 WORKDIR /work
