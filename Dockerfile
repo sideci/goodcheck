@@ -1,7 +1,5 @@
 FROM rubylang/ruby:2.6.2-bionic
 
-ENV DEBIAN_FRONTEND=noninteractive
-
 RUN mkdir /goodcheck
 WORKDIR /goodcheck
 COPY . /goodcheck/
