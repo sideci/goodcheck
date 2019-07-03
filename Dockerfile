@@ -1,4 +1,4 @@
-FROM rubylang/ruby:2.6.3-bionic
+FROM rubylang/ruby:2.6.2-bionic
 
 ENV DEBIAN_FRONTEND=noninteractive
 
