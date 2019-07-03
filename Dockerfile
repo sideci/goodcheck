@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN mkdir /goodcheck
 WORKDIR /goodcheck
 COPY . /goodcheck/
-RUN rake install
+RUN rake build
+RUN gem install pkg/goodcheck-2.3.1.gem
 
 RUN mkdir /work
 WORKDIR /work
