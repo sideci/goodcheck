@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Configuration · GoodCheck</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## `goodcheck.yml`"/><meta name="docsearch:version" content="next"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Configuration · GoodCheck"/><meta property="og:type" content="website"/><meta property="og:url" content="https://sider.github.io/goodcheck/"/><meta property="og:description" content="## `goodcheck.yml`"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/goodcheck/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/mono-blue.min.css"/><link rel="stylesheet" href="/css/code-block-buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/code-block-buttons.js"></script><script src="/goodcheck/js/scrollSpy.js"></script><link rel="stylesheet" href="/goodcheck/css/main.css"/><script src="/goodcheck/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/goodcheck/"><img class="logo" src="/goodcheck/img/favicon.ico" alt="GoodCheck"/><h2 class="headerTitleWithLogo">GoodCheck</h2></a><a href="/goodcheck/versions"><h3>next</h3></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/goodcheck/docs/next/getstarted" target="_self">Get Started</a></li><li class="siteNavGroupActive siteNavItemActive"><a href="/goodcheck/docs/next/configuration" target="_self">Configuration</a></li><li class="siteNavGroupActive"><a href="/goodcheck/docs/next/rules" target="_self">Rule</a></li><li class="siteNavGroupActive"><a href="/goodcheck/docs/next/commands" target="_self">Commands</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Docs</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Docs</h3><ul class=""><li class="navListItem"><a class="navItem" href="/goodcheck/docs/next/getstarted">Get Started</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/goodcheck/docs/next/configuration">Configuration</a></li><li class="navListItem"><a class="navItem" href="/goodcheck/docs/next/rules">Rules</a></li><li class="navListItem"><a class="navItem" href="/goodcheck/docs/next/commands">Commands</a></li><li class="navListItem"><a class="navItem" href="/goodcheck/docs/next/development">Development</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Configuration</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="goodcheckyml"></a><a href="#goodcheckyml" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><code>goodcheck.yml</code></h2>
+<p>An example of the configuration is like the following:</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">rules:</span>
+<span class="hljs-attr">  - id:</span> <span class="hljs-string">com.example.github</span>
+<span class="hljs-attr">    pattern:</span> <span class="hljs-string">Github</span>
+<span class="hljs-attr">    message:</span> <span class="hljs-string">|
+      GitHub is GitHub, not Github
+
+      You may misspelling the name of the service!
+</span><span class="hljs-attr">    justification:</span>
+<span class="hljs-bullet">      -</span> <span class="hljs-string">When</span> <span class="hljs-string">you</span> <span class="hljs-string">mean</span> <span class="hljs-string">a</span> <span class="hljs-string">service</span> <span class="hljs-string">different</span> <span class="hljs-string">from</span> <span class="hljs-string">GitHub</span>
+<span class="hljs-bullet">      -</span> <span class="hljs-string">When</span> <span class="hljs-string">GitHub</span> <span class="hljs-string">is</span> <span class="hljs-string">renamed</span>
+<span class="hljs-attr">    glob:</span>
+<span class="hljs-bullet">      -</span> <span class="hljs-string">app/views/**/*.html.slim</span>
+<span class="hljs-bullet">      -</span> <span class="hljs-string">config/locales/**/*.yaml</span>
+<span class="hljs-attr">    pass:</span>
+<span class="hljs-bullet">      -</span> <span class="hljs-string">&lt;a&gt;Signup</span> <span class="hljs-string">via</span> <span class="hljs-string">GitHub&lt;/a&gt;</span>
+<span class="hljs-attr">    fail:</span>
+<span class="hljs-bullet">      -</span> <span class="hljs-string">&lt;a&gt;Signup</span> <span class="hljs-string">via</span> <span class="hljs-string">Github&lt;/a&gt;</span>
+</code></pre>
+<p>The <em>rule</em> hash contains the following keys.</p>
+<ul>
+<li><code>id</code>: a string to identify rules (required)</li>
+<li><code>pattern</code>: a <em>pattern</em> or a sequence of <em>pattern</em>s</li>
+<li><code>message</code>: a string to tell writers why the code piece should be revised (required)</li>
+<li><code>justification</code>: a sequence of strings to tell writers when an exception can be allowed (optional)</li>
+<li><code>glob</code>: a <em>glob</em> or a sequence of <em>glob</em>s (optional)</li>
+<li><code>pass</code>: a string, or a sequence of strings, which does not match the given pattern (optional)</li>
+<li><code>fail</code>: a string, or a sequence of strings, which does match the given pattern (optional)</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="pattern"></a><a href="#pattern" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><em>pattern</em></h2>
+<p>A <em>pattern</em> can be a <em>literal pattern</em>, <em>regexp pattern</em>, <em>token pattern</em>, or a string.</p>
+<h3><a class="anchor" aria-hidden="true" id="string-literal"></a><a href="#string-literal" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>String literal</h3>
+<p>String literal represents a <em>literal pattern</em> or <em>regexp pattern</em>.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">pattern:</span>
+<span class="hljs-bullet">  -</span> <span class="hljs-string">This</span> <span class="hljs-string">is</span> <span class="hljs-string">a</span> <span class="hljs-string">literal</span> <span class="hljs-string">pattern</span>
+<span class="hljs-bullet">  -</span> <span class="hljs-string">/This</span> <span class="hljs-string">is</span> <span class="hljs-string">a</span> <span class="hljs-string">regexp</span> <span class="hljs-string">pattern/</span>
+</code></pre>
+<p>If the string value begins with <code>/</code> and ends with <code>/</code>, it is a <em>regexp pattern</em>.
+You can optionally specify regexp options like <code>/casefold/i</code> or <code>/multiline/m</code>.</p>
+<h3><a class="anchor" aria-hidden="true" id="literal-pattern"></a><a href="#literal-pattern" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><em>literal pattern</em></h3>
+<p><em>literal pattern</em> allows you to construct a regexp which matches exactly to the <code>literal</code> string.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">id:</span> <span class="hljs-string">com.sample.GitHub</span>
+<span class="hljs-attr">pattern:</span>
+<span class="hljs-attr">  literal:</span> <span class="hljs-string">Github</span>
+<span class="hljs-attr">  case_sensitive:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">message:</span> <span class="hljs-string">Write</span> <span class="hljs-string">GitHub,</span> <span class="hljs-string">not</span> <span class="hljs-string">Github</span>
+</code></pre>
+<p>All regexp meta characters included in the <code>literal</code> value will be escaped.
+<code>case_sensitive</code> is an optional key and the default is <code>true</code>.</p>
+<h3><a class="anchor" aria-hidden="true" id="regexp-pattern"></a><a href="#regexp-pattern" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><em>regexp pattern</em></h3>
+<p><em>regexp pattern</em> allows you to write a regexp with meta chars.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">id:</span> <span class="hljs-string">com.sample.digits</span>
+<span class="hljs-attr">pattern:</span>
+<span class="hljs-attr">  regexp:</span> <span class="hljs-string">\d{4,}</span>
+<span class="hljs-attr">  case_sensitive:</span> <span class="hljs-literal">false</span>
+<span class="hljs-attr">  multiline:</span> <span class="hljs-literal">false</span>
+<span class="hljs-attr">message:</span> <span class="hljs-string">Insert</span> <span class="hljs-string">delimiters</span> <span class="hljs-string">when</span> <span class="hljs-string">writing</span> <span class="hljs-string">large</span> <span class="hljs-string">numbers</span>
+<span class="hljs-attr">justification:</span>
+<span class="hljs-bullet">  -</span> <span class="hljs-string">When</span> <span class="hljs-string">you</span> <span class="hljs-string">are</span> <span class="hljs-string">not</span> <span class="hljs-string">writing</span> <span class="hljs-string">numbers,</span> <span class="hljs-string">including</span> <span class="hljs-string">phone</span> <span class="hljs-string">numbers,</span> <span class="hljs-string">zip</span> <span class="hljs-string">code,</span> <span class="hljs-string">...</span>
+</code></pre>
+<p>It accepts two optional attributes, <code>case_sensitive</code> and <code>multiline</code>.
+The default values of <code>case_sensitive</code> and <code>multiline</code> are <code>true</code> and <code>false</code> respectively.</p>
+<p>The regexp will be passed to <code>Regexp.compile</code>.
+The precise definition of regular expressions can be found in the documentation for Ruby.</p>
+<h3><a class="anchor" aria-hidden="true" id="token-pattern"></a><a href="#token-pattern" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><em>token pattern</em></h3>
+<p><em>token pattern</em> compiles to a <em>tokenized</em> regexp.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">id:</span> <span class="hljs-string">com.sample.no-blink</span>
+<span class="hljs-attr">pattern:</span>
+<span class="hljs-attr">  token:</span> <span class="hljs-string">"&lt;blink"</span>
+<span class="hljs-attr">  case_sensitive:</span> <span class="hljs-literal">false</span>
+<span class="hljs-attr">message:</span> <span class="hljs-string">Stop</span> <span class="hljs-string">using</span> <span class="hljs-string">&lt;blink&gt;</span> <span class="hljs-string">tag</span>
+<span class="hljs-attr">glob:</span> <span class="hljs-string">"**/*.html"</span>
+<span class="hljs-attr">justification:</span>
+<span class="hljs-bullet">  -</span> <span class="hljs-string">If</span> <span class="hljs-string">Lynx</span> <span class="hljs-string">is</span> <span class="hljs-string">the</span> <span class="hljs-string">major</span> <span class="hljs-string">target</span> <span class="hljs-string">of</span> <span class="hljs-string">the</span> <span class="hljs-string">web</span> <span class="hljs-string">site</span>
+</code></pre>
+<p>It tries to tokenize the input and generates a regexp which matches a sequence of tokens.
+The tokenization is heuristic and may not work well for your programming language.
+In that case, try using <em>regexp pattern</em>.</p>
+<p>The generated regexp of <code>&lt;blink</code> is <code>&lt;\s*blink\b/m</code>.
+It matches with <code>&lt;blink /&gt;</code> and <code>&lt; BLINK&gt;</code>, but does not match with <code>https://www.chromium.org/blink</code>.</p>
+<p>It accepts one optional attribute <code>case_sensitive</code>.
+The default value of <code>case_sensitive</code> is <code>true</code>.
+Note that the generated regexp is in multiline mode.</p>
+<p>Token patterns can have an optional <code>where</code> attribute and <em>variable bindings</em>.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">pattern:</span>
+<span class="hljs-attr">  - token:</span> <span class="hljs-string">bgcolor=${color:string}</span>
+<span class="hljs-attr">    where:</span>
+<span class="hljs-attr">      color:</span> <span class="hljs-literal">true</span>
+</code></pre>
+<p>The variable binding consists of <em>variable name</em> and <em>variable type</em>, where <code>color</code> and <code>string</code> in the example above respectively. You have to add a key of the <em>variable name</em> in <code>where</code> attribute.</p>
+<p>We have 8 built-in patterns:</p>
+<ul>
+<li><code>string</code></li>
+<li><code>int</code></li>
+<li><code>float</code></li>
+<li><code>number</code></li>
+<li><code>url</code></li>
+<li><code>email</code></li>
+<li><code>word</code></li>
+<li><code>identifier</code></li>
+</ul>
+<p>You can find the exact definitions of the types in the definition of <code>Goodcheck::Pattern::Token</code> (<code>@@TYPES</code>).</p>
+<p>You can omit the type of variable binding.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">pattern:</span>
+<span class="hljs-attr">  - token:</span> <span class="hljs-attr">margin-left:</span> <span class="hljs-string">${size}px;</span>
+<span class="hljs-attr">    where:</span>
+<span class="hljs-attr">      size:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">  - token:</span> <span class="hljs-string">backgroundColor={${color}}</span>
+<span class="hljs-attr">    where:</span>
+<span class="hljs-attr">      color:</span> <span class="hljs-literal">true</span>
+</code></pre>
+<p>In this case, the following character will be used to detect the range of binding. In the first example above, the <code>px</code> will be used as the marker for the end of <code>size</code> binding.</p>
+<p>If parens or brackets are surrounding the variable, Goodcheck tries to match with nested ones in the variable. It expands five levels of nesting. See the example of matches with the second <code>backgroundColor</code> pattern:</p>
+<ul>
+<li><code>backgroundColor={color}</code> Matches (<code>color==&quot;color&quot;</code>)</li>
+<li><code>backgroundColor={{ red: red(), green: green(), blue: green()-1 }}</code> Matches (<code>color==&quot;{ red: red(), green: green(), blue: green()-1 }&quot;</code>)</li>
+<li><code>backgroundColor={ {{{{{{}}}}}} }</code> Matches (<code>color==&quot; {{{{{{}}}}}&quot;</code>)</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="glob"></a><a href="#glob" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><em>glob</em></h2>
+<p>A <em>glob</em> can be a string, or a hash.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">glob:</span>
+<span class="hljs-attr">  pattern:</span> <span class="hljs-string">"legacy/**/*.rb"</span>
+<span class="hljs-attr">  encoding:</span> <span class="hljs-string">EUC-JP</span>
+</code></pre>
+<p>The hash can have an optional <code>encoding</code> attribute.
+You can specify the encoding of the file by the names defined for Ruby.
+The list of all available encoding names can be found by <code>$ ruby -e &quot;puts Encoding.name_list&quot;</code>.
+The default value is <code>UTF-8</code>.</p>
+<p>If you write a string as a <code>glob</code>, the string value can be the <code>pattern</code> of the glob, without <code>encoding</code> attribute.</p>
+<p>If you omit the <code>glob</code> attribute in a rule, the rule will be applied to all files given to <code>goodcheck</code>.</p>
+<p>If both your rule and its pattern has <code>glob</code>, Goodcheck will scan the pattern with files matching the <code>glob</code> condition in the pattern.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">rules:</span>
+<span class="hljs-attr">  - id:</span> <span class="hljs-string">glob_test</span>
+<span class="hljs-attr">    pattern:</span>
+<span class="hljs-attr">      - literal:</span> <span class="hljs-number">123</span>      <span class="hljs-comment"># This pattern applies to .css files</span>
+<span class="hljs-attr">        glob:</span> <span class="hljs-string">"*.css"</span>
+<span class="hljs-attr">      - literal:</span> <span class="hljs-string">abc</span>      <span class="hljs-comment"># This pattern applies to .txt files</span>
+<span class="hljs-attr">    glob:</span> <span class="hljs-string">"*.txt"</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="a-rule-with-_negated_-pattern"></a><a href="#a-rule-with-_negated_-pattern" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>A rule with <em>negated</em> pattern</h2>
+<p>Goodcheck rules are usually to detect <em>something is included in a file</em>.
+You can define the <em>negated</em> rules for the opposite, <em>something is missing in a file</em>.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">rules:</span>
+<span class="hljs-attr">  - id:</span> <span class="hljs-string">negated</span>
+<span class="hljs-attr">    not:</span>
+<span class="hljs-attr">      pattern:</span>
+        <span class="hljs-string">&lt;!DOCTYPE</span> <span class="hljs-string">html&gt;</span>
+<span class="hljs-attr">    message:</span> <span class="hljs-string">Write</span> <span class="hljs-string">a</span> <span class="hljs-string">doctype</span> <span class="hljs-string">on</span> <span class="hljs-string">HTML</span> <span class="hljs-string">files.</span>
+<span class="hljs-attr">    glob:</span> <span class="hljs-string">"**/*.html"</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="a-rule-without-pattern"></a><a href="#a-rule-without-pattern" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>A rule without <code>pattern</code></h2>
+<p>You can define a rule without <code>pattern</code>.
+The rule emits an issue on each file specified with <code>glob</code>.
+You cannot omit <code>glob</code> from a rule definition without <code>pattern</code>.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">rules:</span>
+<span class="hljs-attr">  - id:</span> <span class="hljs-string">without_pattern</span>
+<span class="hljs-attr">    message:</span> <span class="hljs-string">|
+      Read the operation manual for DB migration: https://example.com/guides/123
+</span><span class="hljs-attr">    glob:</span> <span class="hljs-string">db/schema.rb</span>
+</code></pre>
+<p>The output will be something like:</p>
+<pre><code class="hljs">$ goodcheck<span class="hljs-built_in"> check
+</span>db/schema.rb:-:<span class="hljs-comment"># This file is auto-generated from the current state of the database. Instead: Read the operation manual for DB migration: https://example.com/guides/123</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="triggers"></a><a href="#triggers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Triggers</h2>
+<p>Version 2.0.0 introduces a new abstraction to define patterns, trigger.
+You can continue using <code>pattern</code>s in <code>rule</code>, but using <code>trigger</code> allows more flexible pattern definition and more precise testing.</p>
+<pre><code class="hljs"><span class="hljs-symbol">rules:</span>
+  - id: trigger
+<span class="hljs-symbol">    message:</span> Using trigger
+<span class="hljs-symbol">    trigger:</span>
+      - pattern: <span class="hljs-params">&lt;blink
+        glob: "**/*.html"
+        fail:
+          - &lt;blink&gt;</span><span class="hljs-params">&lt;/blink&gt;</span>
+      - not:
+<span class="hljs-symbol">          pattern:</span>
+<span class="hljs-symbol">            token:</span> <span class="hljs-params">&lt;meta charset="UTF<span class="hljs-number">-8</span>"&gt;</span>
+<span class="hljs-symbol">            case_sensitive:</span> false
+<span class="hljs-symbol">        glob:</span> <span class="hljs-string">"**/*.html"</span>
+<span class="hljs-symbol">        pass:</span> |
+          <span class="hljs-params">&lt;html&gt;</span>
+            <span class="hljs-params">&lt;meta charset="utf<span class="hljs-number">-8</span>"&gt;</span><span class="hljs-params">&lt;/meta&gt;</span>
+          <span class="hljs-params">&lt;/html&gt;</span>
+</code></pre>
+<p>You can continue existing <code>pattern</code> definitions, but using <code>goodcheck test</code> against <code>pattern</code>s with <code>glob</code> does not work.
+If your <code>pattern</code> definition includes <code>glob</code>, switching to <code>trigger</code> would make sense.</p>
+<h2><a class="anchor" aria-hidden="true" id="importing-rules"></a><a href="#importing-rules" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Importing rules</h2>
+<p><code>goodcheck.yml</code> can have an optional <code>import</code> attribute.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">import:</span>
+<span class="hljs-bullet">  -</span> <span class="hljs-string">/usr/share/goodcheck/rules.yml</span>
+<span class="hljs-bullet">  -</span> <span class="hljs-string">lib/goodcheck/rules.yml</span>
+<span class="hljs-attr">  - https:</span><span class="hljs-string">//some.host/shared/rules.yml</span>
+</code></pre>
+<p>The value of <code>import</code> can be an array of:</p>
+<ul>
+<li>A string which represents an absolute file path,</li>
+<li>A string which represents a relative file path from the config file, or</li>
+<li>A http/https URL which represents the location of rules</li>
+</ul>
+<p>The rules file is a YAML file with an array of rules.</p>
+<h2><a class="anchor" aria-hidden="true" id="downloaded-rules"></a><a href="#downloaded-rules" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Downloaded rules</h2>
+<p>Downloaded rules are cached in <code>cache</code> directory in <em>goodcheck home directory</em>.
+The <em>goodcheck home directory</em> is <code>~/.goodcheck</code>, but you can customize the location with <code>GOODCHECK_HOME</code> environment variable.</p>
+<p>The cache expires in 3 minutes.</p>
+<h2><a class="anchor" aria-hidden="true" id="excluding-files"></a><a href="#excluding-files" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Excluding files</h2>
+<p><code>goodcheck.yml</code> can have an optional <code>exclude</code> attribute.</p>
+<pre><code class="hljs css language-yaml"><span class="hljs-attr">exclude:</span>
+<span class="hljs-bullet">  -</span> <span class="hljs-string">node_modules</span>
+<span class="hljs-bullet">  -</span> <span class="hljs-string">vendor</span>
+</code></pre>
+<p>The value of <code>exclude</code> can be a string or an array of strings representing the glob pattern for excluded files.</p>
+<h2><a class="anchor" aria-hidden="true" id="cheatsheet"></a><a href="#cheatsheet" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Cheatsheet</h2>
+<p>You can download a <a href="https://github.com/sider/goodcheck/blob/master/cheatsheet.pdf">printable cheatsheet</a> from this repository.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/goodcheck/docs/next/getstarted"><span class="arrow-prev">← </span><span>Get Started</span></a><a class="docs-next button" href="/goodcheck/docs/next/rules"><span>Rules</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#goodcheckyml"><code>goodcheck.yml</code></a></li><li><a href="#pattern"><em>pattern</em></a><ul class="toc-headings"><li><a href="#string-literal">String literal</a></li><li><a href="#literal-pattern"><em>literal pattern</em></a></li><li><a href="#regexp-pattern"><em>regexp pattern</em></a></li><li><a href="#token-pattern"><em>token pattern</em></a></li></ul></li><li><a href="#glob"><em>glob</em></a></li><li><a href="#a-rule-with-_negated_-pattern">A rule with <em>negated</em> pattern</a></li><li><a href="#a-rule-without-pattern">A rule without <code>pattern</code></a></li><li><a href="#triggers">Triggers</a></li><li><a href="#importing-rules">Importing rules</a></li><li><a href="#downloaded-rules">Downloaded rules</a></li><li><a href="#excluding-files">Excluding files</a></li><li><a href="#cheatsheet">Cheatsheet</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/goodcheck/" class="nav-home"><img src="/goodcheck/img/favicon.ico" alt="GoodCheck" width="40" height="39"/></a><div><h5>Docs</h5><a href="/docs/getstarted">Getting Started</a><a href="/docs/configuration">Configuration</a><a href="/docs/rules">Rules</a><a href="/docs/commands">Commands</a><a href="/docs/development">Development</a></div><div><h5>More</h5><a href="https://github.com/sider/goodcheck">GitHub</a><a class="github-button" href="https://github.com/sider/goodcheck" data-icon="octicon-star" data-count-href="/sider/goodcheck/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 Goodcheck</section></footer></div></body></html>
