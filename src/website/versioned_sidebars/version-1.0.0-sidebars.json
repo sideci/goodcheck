@@ -1,0 +1,11 @@
+{
+  "version-1.0.0-goodcheck": {
+    "Docs": [
+      "version-1.0.0-getstarted",
+      "version-1.0.0-configuration",
+      "version-1.0.0-rules",
+      "version-1.0.0-commands",
+      "version-1.0.0-development"
+    ]
+  }
+}

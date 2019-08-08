@@ -1,0 +1,11 @@
+{
+    "Goodcheck": {
+        "Docs": [
+            "getstarted",
+            "configuration",
+            "rules",
+            "commands",
+            "development"
+        ]
+    }
+}
