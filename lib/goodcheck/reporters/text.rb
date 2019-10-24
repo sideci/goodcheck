@@ -30,7 +30,9 @@ module Goodcheck
           colored_line = line.byteslice(0, issue.location.start_column) + Rainbow(line.byteslice(issue.location.start_column, end_column - issue.location.start_column)).red + line.byteslice(end_column, line.bytesize)
           stdout.puts "#{issue.path}:#{issue.location.start_line}:#{colored_line.chomp}:\t#{issue.rule.message.lines.first.chomp}"
         else
-          stdout.puts "#{issue.path}:-:#{issue.buffer.line(1).chomp}:\t#{issue.rule.message.lines.first.chomp}"
+          line = issue.buffer.line(1)&.chomp
+          line = line ? Rainbow(line).red : '-'
+          stdout.puts "#{issue.path}:-:#{line}:\t#{issue.rule.message.lines.first.chomp}"
         end
       end
     end

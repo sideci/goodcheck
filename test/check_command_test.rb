@@ -251,10 +251,10 @@ MSG
 rules:
   - id: foo
     message: Foo
-    pattern: 
+    pattern:
       - token: "background-color: ${color:word};"
         where:
-          color: 
+          color:
             - /ink/
             - gray
 EOF
@@ -518,6 +518,27 @@ EOF
                          justifications: []
                        }
                      ], JSON.parse(stdout.string, symbolize_names: true)
+      end
+    end
+  end
+
+  def test_not_pattern_on_empty_file
+    TestCaseBuilder.tmpdir do |builder|
+      builder.cd do
+        reporter = Reporters::Text.new(stdout: stdout)
+        builder.file name: Pathname("x.js"), content: ""
+        builder.config content: <<EOF
+rules:
+  - id: strict-mode
+    not:
+      pattern: use strict
+    message: Use *strict mode* if possible.
+EOF
+
+        Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("x.js")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
+          assert_equal 2, check.run
+          assert_equal "x.js:-:-:\tUse *strict mode* if possible.\n", stdout.string
+        end
       end
     end
   end
