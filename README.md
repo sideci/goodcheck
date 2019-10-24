@@ -418,7 +418,7 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 To release a new version, follows the steps below:
 
 1. Update the version number in [`version.rb`](lib/goodcheck/version.rb).
-2. Add new version's entry to the [changelog](CHANGELOG.md).
+2. Add the new version's entry to the [changelog](CHANGELOG.md).
 3. Run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
