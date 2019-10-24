@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.4.2 (2019-10-24)
+
 * Fix `check` error on empty files [#73](https://github.com/sider/goodcheck/pull/73)
 
 ## 2.4.1 (2019-08-29)
