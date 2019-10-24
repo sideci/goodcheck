@@ -2,6 +2,8 @@
 
 ## master
 
+* Fix `check` error on empty files [#73](https://github.com/sider/goodcheck/pull/73)
+
 ## 2.4.1 (2019-08-29)
 
 * Relax dependency requirement for ActiveSupport [#68](https://github.com/sider/goodcheck/pull/68)
