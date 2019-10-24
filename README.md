@@ -419,7 +419,8 @@ To release a new version, follows the steps below:
 
 1. Update the version number in [`version.rb`](lib/goodcheck/version.rb).
 2. Add the new version's entry to the [changelog](CHANGELOG.md).
-3. Run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+3. Commit the above changes like `git commit -m 'Version 1.2.3'`.
+4. Run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
