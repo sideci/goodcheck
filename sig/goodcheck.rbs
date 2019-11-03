@@ -1,0 +1,302 @@
+class Goodcheck::Buffer
+  attr_reader path: Pathname
+  attr_reader content: String
+
+  def initialize: (path: Pathname, content: String) -> void
+  def line_ranges: () -> Array[Range[Integer]]
+  def location_for_position: (Integer position) -> [Integer, Integer]?
+  def line: (Integer line_number) -> String?
+  def position_for_location: (Integer line, Integer column) -> Integer?
+end
+
+class Goodcheck::Location
+  attr_reader start_line: Integer
+  attr_reader start_column: Integer
+  attr_reader end_line: Integer
+  attr_reader end_column: Integer
+
+  def initialize: (start_line: Integer, start_column: Integer, end_line: Integer, end_column: Integer) -> void
+end
+
+class Goodcheck::Rule
+  attr_reader id: String
+  attr_reader triggers: Array[Trigger]
+  attr_reader message: String
+  attr_reader justifications: Array[String]
+
+  def initialize: (id: String, triggers: Array[Trigger], message: String, justifications: Array[String]) -> void
+end
+
+class Goodcheck::Trigger
+  attr_reader patterns: Array[pattern]
+  attr_reader globs: Array[Glob]
+  attr_reader passes: Array[String]
+  attr_reader fails: Array[String]
+  attr_reader negated: bool
+
+  def initialize: (patterns: Array[pattern], globs: Array[Glob], passes: Array[String], fails: Array[String], negated: bool) -> void
+  def by_pattern!: () -> self
+  def by_pattern?: () -> bool
+  def skips_fail_examples!: (bool flag) -> self
+  def skips_fail_examples?: () -> bool
+  def negated?: () -> bool
+  def fires_for?: (path: Pathname) -> bool
+end
+
+type Goodcheck::pattern = Pattern::Literal | Pattern::Regexp | Pattern::Token
+
+class Goodcheck::Pattern::Literal
+  attr_reader source: String
+  attr_reader case_sensitive: bool
+
+  def initialize: (source: String, case_sensitive: bool) -> void
+
+  def regexp: () -> ::Regexp
+end
+
+class Goodcheck::Pattern::Regexp
+  attr_reader source: String
+  attr_reader case_sensitive: bool
+  attr_reader multiline: bool
+
+  def initialize: (source: String, case_sensitive: bool, multiline: bool, ?regexp: ::Regexp?) -> void
+  def regexp: -> ::Regexp
+end
+
+class Goodcheck::Pattern::Token::VarPattern
+  attr_reader negated: bool
+  attr_reader patterns: Array[untyped]
+  attr_accessor type: Symbol
+
+  def initialize: (patterns: Array[untyped], negated: bool) -> void
+  def cast: (String) -> (Integer | Float | String)
+  def test: (String) -> bool
+  def test2: (untyped pattern, String str) -> bool
+  def self.empty: () -> VarPattern
+end
+
+class Goodcheck::Pattern::Token
+  attr_reader source: String
+  attr_reader case_sensitive: bool
+  attr_reader variables: Hash[Symbol, VarPattern]
+
+  def initialize: (source: String, variables: Hash[Symbol, VarPattern], case_sensitive: bool) -> void
+  def regexp: -> ::Regexp
+  def self.expand: (String, String, ?depth: Integer) -> Array[::Regexp]
+  def self.regexp_for_type: (name: Symbol, type: Symbol, scanner: StringScanner) -> ::Regexp
+  def self.compile_tokens: (String source, Hash[Symbol, VarPattern] variables, case_sensitive: bool) -> void
+
+  @@TYPES: Hash[Symbol, ^(String) -> ::Regexp]
+end
+
+Goodcheck::Pattern::Token::WORD_RE: ::Regexp
+Goodcheck::Pattern::Token::AUTO_LINK_RE: ::Regexp
+Goodcheck::Pattern::Token::AUTO_EMAIL_LOCAL_RE: ::Regexp
+Goodcheck::Pattern::Token::AUTO_EMAIL_RE: ::Regexp
+
+class Goodcheck::Glob
+  attr_reader pattern: String
+  attr_reader encoding: String?
+
+  def initialize: (pattern: String, encoding: String?) -> void
+
+  def test: (Pathname path) -> bool
+end
+
+class Goodcheck::Config
+  attr_reader rules: Array[Rule]
+  attr_reader exclude_paths: Array[String]
+
+  def initialize: (rules: Array[Rule], exclude_paths: Array[String]) -> void
+  def each_rule: (filter: Array[String]) { (Rule) -> void } -> Array[Rule]
+               | (filter: Array[String]) -> Enumerator[Rule, Array[Rule]]
+
+  def rules_for_path: (Pathname, rules_filter: Array[String]) { ([Rule, Glob?, Trigger]) -> void } -> void
+                    | (Pathname, rules_filter: Array[String]) -> Enumerator[[Rule, Glob, Trigger], void]
+end
+
+class Goodcheck::Issue
+  attr_reader buffer: Buffer
+  attr_reader range: Range[Integer]?
+  attr_reader rule: Rule
+  attr_reader text: String?
+
+  def initialize: (buffer: Buffer, range: Range[Integer]?, rule: Rule, text: String?) -> void
+  def path: -> Pathname
+  def location: -> Location?
+end
+
+module Goodcheck
+  def self.logger: -> Logger
+end
+
+module Goodcheck::HomePath
+  def cache_dir_path: -> Pathname
+end
+
+class Goodcheck::ConfigLoader::InvalidPattern < StandardError
+end
+
+interface Goodcheck::_IO
+  def puts: (String) -> void
+end
+
+class Goodcheck::ConfigLoader
+  attr_reader path: Pathname?
+  attr_reader content: untyped
+  attr_reader stdout: _IO
+  attr_reader printed_warnings: Set[String]
+  attr_reader import_loader: ImportLoader?
+
+  def initialize: (path: Pathname?, content: untyped, stderr: _IO, import_loader: ImportLoader?) -> void
+  def load: () -> Config
+  def load_rules: (Array[Rule], Array[untyped]) -> void
+  def load_import: (Array[Rule], untyped) -> void
+  def load_rule: (untyped) -> Rule
+  def retrieve_triggers: (untyped) -> Array[Trigger]
+  def retrieve_trigger: (untyped) -> Trigger
+  def retrieve_patterns: (untyped) -> [Array[Goodcheck::pattern], bool]
+  def load_globs: (untyped) -> Array[Glob]
+  def load_pattern: (untyped) -> Goodcheck::pattern
+  def load_string_pattern: (String) -> (::Regexp | String)
+  def load_token_vars: (untyped) -> Hash[Symbol, Pattern::Token::VarPattern]
+  def load_var_pattern: (untyped) -> Pattern::Token::VarPattern
+  def case_sensitive: (untyped) -> bool
+  def print_warning_once: (String) -> void
+end
+
+class Goodcheck::ImportLoader::UnexpectedSchemaError < StandardError
+  attr_reader uri: URI
+
+  def initialize: (URI uri) -> void
+end
+
+class Goodcheck::ImportLoader
+  attr_reader cache_path: Pathname
+  attr_reader expires_in: Integer
+  attr_reader force_download: bool
+  attr_reader config_path: Pathname
+
+  def initialize: (cache_path: Pathname, ?expires_in: Integer, force_download: bool, config_path: Pathname) -> void
+  def load: (String) { (String) -> void } -> void
+  def load_file: (URI uri) { (String) -> void } -> void
+  def load_http: (URI uri) { (String) -> void } -> void 
+  def cache_name: (URI) -> String
+  def write_cache: (URI, String) -> void
+end
+
+module Goodcheck::ArrayHelper
+  def array: (untyped) -> Array[untyped]
+end
+
+interface Goodcheck::Reporter::_Reporter
+  def analysis: () { () -> void } -> void
+  def file: (Pathname) { () -> void } -> void
+  def rule: (Rule) { () -> void } -> void
+  def issue: (Issue) -> void
+end
+
+class Goodcheck::Reporter::JSON
+  attr_reader stdout: _IO
+  attr_reader stderr: _IO
+  attr_reader issues: Array[Issue]
+
+  def initialize: (stdout: _IO, stderr: _IO) -> void
+  include _Reporter
+end
+
+class Goodcheck::Reporter::Text
+  attr_reader stdout: _IO
+
+  def initialize: (stdout: _IO) -> void
+end
+
+module Goodcheck::Commands::ConfigLoading
+  attr_reader config: Config
+
+  def load_config!: (force_download: bool, cache_path: Pathname) -> void
+  def handle_config_errors: (_IO) { () -> void } -> void
+end
+
+class Goodcheck::Commands::Test
+  attr_reader stdout: _IO
+  attr_reader stderr: _IO
+  attr_reader config_path: Pathname
+  attr_reader home_path: Pathname
+  attr_reader force_download: bool
+
+  def initialize: (stdout: _IO, stderr: _IO, config_path: Pathname, force_download: bool, home_path: Pathname) -> void
+  def run: () -> Integer
+  def validate_rule_uniqueness: -> void
+  def validate_rules: -> void
+  def rule_matches_example?: (Rule, Trigger, String) -> bool
+end
+
+class Goodcheck::Commands::Pattern
+  attr_reader stdout: _IO
+  attr_reader stderr: _IO
+  attr_reader config_path: Pathname
+  attr_reader ids: Array[String]
+  attr_reader home_path: Pathname
+
+  def initialize: (stdout: _IO, stderr: _IO, path: Pathname, ids: Array[String], home_path: Pathname) -> void
+  def run: () -> Integer
+end
+
+Goodcheck::Commands::Init::CONFIG: String
+
+class Goodcheck::Commands::Init
+  attr_reader stdout: _IO
+  attr_reader stderr: _IO
+  attr_reader path: Pathname
+  attr_reader force: bool
+
+  def initialize: (stdout: _IO, stderr: _IO, path: Pathname, force: bool) -> void
+  def run: -> Integer
+end
+
+class Goodcheck::Commands::Check
+  attr_reader config_path: Pathname
+  attr_reader rules: Array[String]
+  attr_reader targets: Array[Pathname]
+  attr_reader reporter: Reporter::_Reporter
+  attr_reader stderr: _IO
+  attr_reader force_download: bool
+  attr_reader home_path: Pathname
+
+  def initialize: (config_path: Pathname, rules: Array[String], targets: Array[Pathname], reporter: Reporter::_Reporter, stderr: _IO, home_path: Pathname, force_download: bool) -> void
+  def run: -> Integer
+  def each_check: () { (Buffer, Rule, Trigger) -> void } -> void
+  def is_dot_file?: (Pathname) -> bool
+  def each_file: (Pathname, ?immediate: bool) { (Pathname) -> void } -> void
+  def exclude?: (Pathname) -> bool
+end
+
+class Goodcheck::Analyzer
+  attr_reader rule: Rule
+  attr_reader trigger: Trigger
+  attr_reader buffer: Buffer
+
+  def initialize: (rule: Rule, trigger: Trigger, buffer: Buffer) -> void
+
+  def scan: () { (Issue) -> void } -> void
+          | () -> Enumerator[Issue, void]
+
+  def scan_simple: (::Regexp) { (Issue) -> void } -> void
+  def scan_var: (Pattern::Token) { (Issue) -> void } -> void
+end
+
+class Goodcheck::CLI
+  attr_reader stdout: _IO
+  attr_reader stderr: _IO
+
+  def run: (Array[String]) -> Integer
+
+  def home_path: -> Pathname
+  def check: (Array[String]) -> Integer
+  def test: (Array[String]) -> Integer
+  def init: (Array[String]) -> Integer
+  def version: (Array[String]) -> Integer
+  def help: (Array[String]) -> Integer
+  def pattern: (Array[String]) -> Integer
+end
