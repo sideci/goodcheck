@@ -2,6 +2,10 @@
 
 ## master
 
+## 2.4.3 (2019-11-07)
+
+* Change LICENSE to MIT [#76](https://github.com/sider/goodcheck/pull/76)
+
 ## 2.4.2 (2019-10-24)
 
 * Fix `check` error on empty files [#73](https://github.com/sider/goodcheck/pull/73)
