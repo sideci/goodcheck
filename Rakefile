@@ -37,6 +37,13 @@ namespace :docs do
     end
   end
 
+  desc "Publish the documentation website"
+  task :publish => [:build] do
+    on_docs_dir do
+      sh "yarn", "run", "publish-gh-pages"
+    end
+  end
+
   def on_docs_dir(&block)
     Dir.chdir "docusaurus/website", &block
   end
