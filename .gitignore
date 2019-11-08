@@ -9,4 +9,5 @@
 /tmp/
 /.idea
 /Gemfile.lock
+/.ruby-version
 .DS_Store
