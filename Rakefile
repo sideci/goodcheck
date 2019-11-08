@@ -19,14 +19,14 @@ namespace :docs do
   desc "Install dependencies for the documentation website"
   task :install_deps do
     on_docs_dir do
-      sh "yarn install"
+      sh "yarn", "install"
     end
   end
 
   desc "Build the documentation website"
   task :build => [:install_deps] do
     on_docs_dir do
-      sh "yarn run build"
+      sh "yarn", "run", "build"
     end
   end
 
