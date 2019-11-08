@@ -241,7 +241,7 @@ module Goodcheck
 
       Goodcheck.logger.tagged import do
         import_loader.load(import) do |content|
-          json = JSON.parse(JSON.dump(YAML.load(content, import)), symbolize_names: true)
+          json = JSON.parse(JSON.dump(YAML.load(content, filename: import)), symbolize_names: true)
 
           Schema.rules.coerce json
           load_rules(rules, json)

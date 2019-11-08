@@ -6,6 +6,7 @@ module Goodcheck
     def initialize(path:, content:)
       @path = path
       @content = content
+      @line_ranges = nil
     end
 
     def line_ranges

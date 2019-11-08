@@ -176,7 +176,7 @@ EOF
 
         assert_equal 1, check.run
 
-        assert_match /Unexpected error happens while loading YAML file: #<Psych::SyntaxError:/, stderr.string
+        assert_match %r(Unexpected error happens while loading YAML file: #<Psych::SyntaxError:), stderr.string
       end
     end
   end
@@ -366,7 +366,7 @@ EOF
 
         assert_equal 1, check.run
 
-        assert_match /No such file or directory @ rb_sysopen/, stderr.string
+        assert_match %r(No such file or directory @ rb_sysopen), stderr.string
       end
     end
   end
@@ -386,15 +386,15 @@ EOF
         Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
 
-          assert_match /README.md/, stdout.string
-          refute_match /goodcheck.yml/, stdout.string
+          assert_match %r(README\.md), stdout.string
+          refute_match %r(goodcheck\.yml), stdout.string
         end
 
         Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname("."), Pathname("goodcheck.yml")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
 
-          assert_match /README.md/, stdout.string
-          assert_match /goodcheck.yml/, stdout.string
+          assert_match %r(README\.md), stdout.string
+          assert_match %r(goodcheck\.yml), stdout.string
         end
       end
     end
@@ -414,12 +414,12 @@ EOF
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          refute_match /\.file/, stdout.string
+          refute_match %r(\.file), stdout.string
         end
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("."), Pathname(".file")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          assert_match /\.file/, stdout.string
+          assert_match %r(\.file), stdout.string
         end
       end
     end

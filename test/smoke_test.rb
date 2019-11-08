@@ -14,7 +14,7 @@ class SmokeTest < Minitest::Test
       stdout, _, status = shell(goodcheck, chdir: builder.path)
 
       assert_operator status, :success?
-      assert_match /#{Regexp.escape "Usage: goodcheck <command> [options] [args...]"}/, stdout
+      assert_match %r(#{Regexp.escape "Usage: goodcheck <command> [options] [args...]"}), stdout
     end
   end
 
@@ -23,7 +23,7 @@ class SmokeTest < Minitest::Test
       stdout, _, status = shell(goodcheck, "help", chdir: builder.path)
 
       assert_operator status, :success?
-      assert_match /#{Regexp.escape "Usage: goodcheck <command> [options] [args...]"}/, stdout
+      assert_match %r(#{Regexp.escape "Usage: goodcheck <command> [options] [args...]"}), stdout
     end
   end
 
@@ -32,7 +32,7 @@ class SmokeTest < Minitest::Test
       stdout, _, status = shell(goodcheck, "version", chdir: builder.path)
 
       assert_operator status, :success?
-      assert_match /#{Regexp.escape "goodcheck #{Goodcheck::VERSION}"}/, stdout
+      assert_match %r(#{Regexp.escape "goodcheck #{Goodcheck::VERSION}"}), stdout
     end
   end
 
