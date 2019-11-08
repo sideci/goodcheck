@@ -27,6 +27,8 @@ module Goodcheck
 
       if COMMANDS.key?(command)
         __send__(command, args)
+      elsif command == :"--version"
+        version(args)
       else
         help(args)
       end
