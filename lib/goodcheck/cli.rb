@@ -18,7 +18,7 @@ module Goodcheck
       test: "Test your configuration",
       pattern: "Print regexp for rules",
       version: "Print version",
-      help: "Show goodcheck version and quit"
+      help: "Show help and quit"
     }
 
 
@@ -30,7 +30,9 @@ module Goodcheck
       elsif command == :"--version"
         version(args)
       else
+        stderr.puts "Invalid command: #{command}" if command
         help(args)
+        1
       end
     rescue => exn
       stderr.puts exn.inspect
@@ -82,7 +84,7 @@ module Goodcheck
       if args.empty?
         targets << Pathname(".")
       else
-        targets.push *args.map {|arg| Pathname(arg) }
+        args.each {|arg| targets << Pathname(arg) }
       end
 
       reporter = case format
