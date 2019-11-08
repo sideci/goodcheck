@@ -11,10 +11,21 @@ class SmokeTest < Minitest::Test
 
   def test_nocommand
     TestCaseBuilder.tmpdir do |builder|
-      stdout, _, status = shell(goodcheck, chdir: builder.path)
+      stdout, stderr, status = shell(goodcheck, chdir: builder.path)
 
-      assert_operator status, :success?
+      refute_operator status, :success?
       assert_match %r(#{Regexp.escape "Usage: goodcheck <command> [options] [args...]"}), stdout
+      assert_equal "", stderr
+    end
+  end
+
+  def test_invalid_command
+    TestCaseBuilder.tmpdir do |builder|
+      stdout, stderr, status = shell(goodcheck, "foo", chdir: builder.path)
+
+      refute_operator status, :success?
+      assert_match %r(#{Regexp.escape "Usage: goodcheck <command> [options] [args...]"}), stdout
+      assert_match %r(Invalid command: foo), stderr
     end
   end
 
