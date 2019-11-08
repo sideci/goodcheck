@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest-reporters", "~> 1.3.6"
 
   spec.add_runtime_dependency "activesupport", ">= 4.0", "< 7.0"
-  spec.add_runtime_dependency "strong_json", "~> 1.1.0"
+  spec.add_runtime_dependency "strong_json", ">= 1.1", "< 2.2"
   spec.add_runtime_dependency "rainbow", "~> 3.0.0"
   spec.add_runtime_dependency "httpclient", "~> 2.8.3"
 end
