@@ -124,11 +124,11 @@ class PatternTest < Minitest::Test
 
   def test_tokenize_variable_word2
     Token.compile_tokens("foo ${color:word}", { color: Token::VarPattern.empty }, case_sensitive: true).tap do |regexp|
-      assert_equal /\bfoo\s+(?-mix:(?<color>\S+))/m, regexp
+      assert_equal %r{\bfoo\s+(?-mix:(?<color>\S+))}m, regexp
     end
 
     Token.compile_tokens("${color:word} foo", { color: Token::VarPattern.empty }, case_sensitive: true).tap do |regexp|
-      assert_equal /(?-mix:(?<color>\S+))\s+foo\b/m, regexp
+      assert_equal %r{(?-mix:(?<color>\S+))\s+foo\b}m, regexp
     end
   end
 
@@ -178,19 +178,19 @@ class PatternTest < Minitest::Test
   def test_literal
     pattern = Literal.new(source: "hello.world", case_sensitive: false)
     assert_equal "hello.world", pattern.source
-    assert_equal /hello\.world/i, pattern.regexp
+    assert_equal %r(hello\.world)i, pattern.regexp
   end
 
   def test_regexp
     pattern = Regexp.new(source: "hello.world", case_sensitive: false, multiline: true)
     assert_equal "hello.world", pattern.source
-    assert_equal /hello.world/im, pattern.regexp
+    assert_equal %r(hello.world)im, pattern.regexp
   end
 
   def test_tokens
     pattern = Token.new(source: "hello.world", variables: {}, case_sensitive: true)
     assert_equal "hello.world", pattern.source
-    assert_equal /\bhello\s*\.\s*world\b/m, pattern.regexp
+    assert_equal %r(\bhello\s*\.\s*world\b)m, pattern.regexp
   end
 
   def test_tokens_var

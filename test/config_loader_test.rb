@@ -266,7 +266,7 @@ class ConfigLoaderTest < Minitest::Test
                        ]
                      })
 
-    assert_match /`case_insensitive` option is deprecated/, stderr.string
+    assert_match %r(`case_insensitive` option is deprecated), stderr.string
     assert_equal 1, stderr.string.scan(/`case_insensitive` option is deprecated/).count
   end
 
@@ -605,7 +605,7 @@ EOF
       )
 
       assert_instance_of Pattern::Token, pattern
-      assert_equal /\bbgcolor\s*=\s*\{(?-mix:(?-mix:"(?<color>(?:[^"]|\")*)")|(?-mix:'(?<color>(?:[^']|\')*)'))\}/m, pattern.regexp
+      assert_equal %r(\bbgcolor\s*=\s*\{(?-mix:(?-mix:"(?<color>(?:[^"]|\")*)")|(?-mix:'(?<color>(?:[^']|\')*)'))\})m, pattern.regexp
       assert_equal [:color], pattern.variables.keys
       pattern.variables[:color].tap do |color|
         assert_equal ["pink"], color.patterns

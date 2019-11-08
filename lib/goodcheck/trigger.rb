@@ -12,6 +12,8 @@ module Goodcheck
       @passes = passes
       @fails = fails
       @negated = negated
+      @by_pattern = false
+      @skips_fail_examples = false
     end
 
     def by_pattern!

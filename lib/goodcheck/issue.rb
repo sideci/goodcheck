@@ -10,6 +10,7 @@ module Goodcheck
       @range = range
       @rule = rule
       @text = text
+      @location = nil
     end
 
     def path
