@@ -30,6 +30,13 @@ namespace :docs do
     end
   end
 
+  desc "Update the version of the documentation website"
+  task :update_version => [:install_deps] do
+    on_docs_dir do
+      sh "yarn", "run", "version", Goodcheck::VERSION
+    end
+  end
+
   def on_docs_dir(&block)
     Dir.chdir "docusaurus/website", &block
   end
