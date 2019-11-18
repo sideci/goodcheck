@@ -44,7 +44,8 @@ module Goodcheck
           stdout.puts "  OK!👍"
           true
         else
-          stdout.puts(Rainbow("  Found #{duplicated_ids.size} duplications.😞").red)
+          count = duplicated_ids.size
+          stdout.puts(Rainbow("  Found #{count} #{'duplication'.pluralize(count)}.😞").red)
           duplicated_ids.each do |id|
             stdout.puts "    #{id}"
           end
