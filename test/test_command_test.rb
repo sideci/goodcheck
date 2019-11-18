@@ -19,7 +19,7 @@ rules:
     pattern: foo
     message: Hello
   - id: sample.2
-    pattern: 
+    pattern:
       - token: "[NSArray new]"
     message: Bar
     pass:
@@ -50,16 +50,16 @@ rules:
     pattern: foo
     message: Hello
   - id: sample.2
-    trigger: 
-      - pattern: 
+    trigger:
+      - pattern:
           - token: "[NSArray new]"
         glob: []
         pass:
           - "[[NSArray alloc] init]"
         fail:
           - "[NSArray new]"
-          - "[NSArray  new ]"        
-      - pattern: 
+          - "[NSArray  new ]"
+      - pattern:
           - token: "dangerouslySetInnerHTML={"
         glob: []
         fail:
@@ -101,7 +101,7 @@ EOF
 
       assert_equal <<MSG, stdout.string
 Validating rule id uniqueness...
-  Found 1 duplications.😞
+  Found 1 duplication.😞
     sample.1
 MSG
     end
@@ -113,7 +113,7 @@ rules:
   - id: sample.1
     message: Hello
     trigger:
-      - pattern: 
+      - pattern:
           - foo
         glob: []
         pass: foobar
@@ -141,7 +141,7 @@ MSG
 rules:
   - id: sample.1
     message: Hello
-    pattern: 
+    pattern:
       literal: foo
       glob: ["foo.rb"]
     pass: foobar
