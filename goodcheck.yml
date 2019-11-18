@@ -1,2 +1,10 @@
 import:
   - https://raw.githubusercontent.com/sider/goodcheck-rules/master/rules/typo.yml
+  - https://raw.githubusercontent.com/sider/goodcheck-rules/master/rules/ruby.yml
+
+exclude:
+  - "**/build"
+  - "**/node_modules"
+  - "**/vendor"
+  - "**/*.{ico,pdf,png}"
+  - "**/yarn.lock"

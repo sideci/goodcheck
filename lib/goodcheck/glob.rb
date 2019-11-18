@@ -9,7 +9,7 @@ module Goodcheck
     end
 
     def test(path)
-      path.fnmatch?(pattern, File::FNM_PATHNAME | File::FNM_EXTGLOB)
+      path.fnmatch?(pattern, File::FNM_PATHNAME | File::FNM_EXTGLOB | File::FNM_DOTMATCH)
     end
 
     def ==(other)
