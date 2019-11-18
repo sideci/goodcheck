@@ -12,6 +12,19 @@ class TestCommandTest < Minitest::Test
     end
   end
 
+  def test_no_rules
+    with_config("rules: []") do |builder|
+      test = Test.new(stdout: stdout, stderr: stderr, config_path: builder.config_path, force_download: nil, home_path: builder.path + "home")
+      result = test.run
+
+      assert_equal 0, result
+
+      assert_equal <<MSG, stdout.string
+No rules.
+MSG
+    end
+  end
+
   def test_ok_pattern
     with_config(<<EOF) do |builder|
 rules:
@@ -39,6 +52,8 @@ Validating rule id uniqueness...
 Testing rule sample.2...
   Testing pattern...
   OK!🎉
+
+Tested 1 rule, 1 success, 0 failures
 MSG
     end
   end
@@ -77,6 +92,8 @@ Testing rule sample.2...
   Testing 1st trigger...
   Testing 2nd trigger...
   OK!🎉
+
+Tested 1 rule, 1 success, 0 failures
 MSG
     end
   end
@@ -132,6 +149,11 @@ Testing rule sample.1...
   Testing 1st trigger...
     1st pass example matched.😱
     2nd fail example didn't match.😱
+
+Failed rules:
+  - sample.1
+
+Tested 1 rule, 0 successes, 1 failure
 MSG
     end
   end
@@ -162,6 +184,11 @@ Testing rule sample.1...
     1st pass example matched.😱
   🚨 The rule contains a `pattern` with `glob`, which is not supported by the test command.
     Skips testing `fail` examples.
+
+Failed rules:
+  - sample.1
+
+Tested 1 rule, 0 successes, 1 failure
 MSG
     end
   end

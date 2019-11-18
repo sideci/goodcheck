@@ -22,6 +22,11 @@ module Goodcheck
         handle_config_errors stderr do
           load_config!(cache_path: cache_dir_path, force_download: force_download)
 
+          if config.rules.empty?
+            stdout.puts "No rules."
+            return 0
+          end
+
           validate_rule_uniqueness or return 1
           validate_rules or return 1
 
@@ -55,6 +60,9 @@ module Goodcheck
 
       def validate_rules
         test_pass = true
+        success_count = 0
+        failure_count = 0
+        failed_rule_ids = Set[]
 
         config.rules.each do |rule|
           if rule.triggers.any? {|trigger| !trigger.passes.empty? || !trigger.fails.empty?}
@@ -84,6 +92,7 @@ module Goodcheck
 
                   pass_errors.each do |_, index|
                     stdout.puts "    #{(index+1).ordinalize} pass example matched.😱"
+                    failed_rule_ids << rule.id
                   end
                 end
 
@@ -93,6 +102,7 @@ module Goodcheck
 
                   fail_errors.each do |_, index|
                     stdout.puts "    #{(index+1).ordinalize} fail example didn't match.😱"
+                    failed_rule_ids << rule.id
                   end
                 end
               end
@@ -105,9 +115,26 @@ module Goodcheck
 
             if rule_ok
               stdout.puts "  OK!🎉"
+              success_count += 1
+            else
+              failure_count += 1
             end
           end
         end
+
+        unless failed_rule_ids.empty?
+          stdout.puts ""
+          stdout.puts "Failed rules:"
+          failed_rule_ids.each do |rule_id|
+            stdout.puts "  - #{Rainbow(rule_id).background(:red)}"
+          end
+        end
+
+        rule_count = success_count + failure_count
+        stdout.puts ""
+        stdout.puts ["Tested #{rule_count} #{'rule'.pluralize(rule_count)}",
+                     Rainbow("#{success_count} #{'success'.pluralize(success_count)}").green,
+                     Rainbow("#{failure_count} #{'failure'.pluralize(failure_count)}").red].join(", ")
 
         test_pass
       end

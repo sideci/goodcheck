@@ -3,6 +3,7 @@
 ## master
 
 * Check dot files (except for `.git`, `.svn`, `.hg`) [#91](https://github.com/sider/goodcheck/pull/91)
+* Improve `test` command output [#93](https://github.com/sider/goodcheck/pull/93)
 
 ## 2.4.3 (2019-11-07)
 
