@@ -400,7 +400,7 @@ EOF
     end
   end
 
-  def test_check_ignores_dot_files
+  def test_check_dot_files
     TestCaseBuilder.tmpdir do |builder|
       builder.cd do
         reporter = Reporters::Text.new(stdout: stdout)
@@ -414,12 +414,72 @@ EOF
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          refute_match %r(\.file), stdout.string
+          assert_match %r(\.file), stdout.string
         end
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("."), Pathname(".file")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_match %r(\.file), stdout.string
+        end
+      end
+    end
+  end
+
+  def test_default_exclusions_dot_git
+    TestCaseBuilder.tmpdir do |builder|
+      builder.cd do
+        reporter = Reporters::Text.new(stdout: stdout)
+        builder.file name: Pathname(".git/abc.txt"), content: "foo"
+        builder.config content: <<EOF
+rules:
+  - id: some_rule
+    message: Some message
+    pattern: foo
+EOF
+
+        Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
+          assert_equal 2, check.run
+          assert_equal "goodcheck.yml:4:    pattern: foo:\tSome message\n", stdout.string
+        end
+      end
+    end
+  end
+
+  def test_default_exclusions_dot_svn
+    TestCaseBuilder.tmpdir do |builder|
+      builder.cd do
+        reporter = Reporters::Text.new(stdout: stdout)
+        builder.file name: Pathname(".svn/abc.txt"), content: "foo"
+        builder.config content: <<EOF
+rules:
+  - id: some_rule
+    message: Some message
+    pattern: foo
+EOF
+
+        Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
+          assert_equal 2, check.run
+          assert_equal "goodcheck.yml:4:    pattern: foo:\tSome message\n", stdout.string
+        end
+      end
+    end
+  end
+
+  def test_default_exclusions_dot_hg
+    TestCaseBuilder.tmpdir do |builder|
+      builder.cd do
+        reporter = Reporters::Text.new(stdout: stdout)
+        builder.file name: Pathname(".hg/abc.txt"), content: "foo"
+        builder.config content: <<EOF
+rules:
+  - id: some_rule
+    message: Some message
+    pattern: foo
+EOF
+
+        Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
+          assert_equal 2, check.run
+          assert_equal "goodcheck.yml:4:    pattern: foo:\tSome message\n", stdout.string
         end
       end
     end

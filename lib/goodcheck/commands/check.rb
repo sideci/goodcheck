@@ -1,6 +1,8 @@
 module Goodcheck
   module Commands
     class Check
+      DEFAULT_EXCLUSIONS = [".git", ".svn", ".hg"].freeze
+
       attr_reader :config_path
       attr_reader :rules
       attr_reader :targets
@@ -82,24 +84,23 @@ module Goodcheck
         end
       end
 
-      def is_dotfile?(path)
-        /\A\.[^.]+/.match?(path.basename.to_s)
-      end
-
       def each_file(path, immediate: false, &block)
         case
         when path.symlink?
           # noop
         when path.directory?
-          if immediate || (!is_dotfile?(path) && !excluded?(path))
+          case
+          when DEFAULT_EXCLUSIONS.include?(path.basename.to_s)
+            # noop
+          when immediate || !excluded?(path)
             path.children.each do |child|
               each_file(child, &block)
             end
           end
         when path.file?
           case
-          when path == config_path || is_dotfile?(path)
-            # Skip dotfiles/config file unless explicitly given by command line
+          when path == config_path
+            # Skip the config file unless explicitly given by command line
             yield path if immediate
           when excluded?(path)
             # Skip excluded files unless explicitly given by command line
