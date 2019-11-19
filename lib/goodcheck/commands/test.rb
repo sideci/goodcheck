@@ -66,7 +66,7 @@ module Goodcheck
 
         config.rules.each do |rule|
           if rule.triggers.any? {|trigger| !trigger.passes.empty? || !trigger.fails.empty?}
-            stdout.puts "Testing rule #{rule.id}..."
+            stdout.puts "Testing rule #{Rainbow(rule.id).cyan}..."
 
             rule_ok = true
 
@@ -91,7 +91,7 @@ module Goodcheck
                   rule_ok = false
 
                   pass_errors.each do |_, index|
-                    stdout.puts "    #{(index+1).ordinalize} pass example matched.😱"
+                    stdout.puts "    #{(index+1).ordinalize} #{Rainbow('pass').green} example matched.😱"
                     failed_rule_ids << rule.id
                   end
                 end
@@ -101,7 +101,7 @@ module Goodcheck
                   rule_ok = false
 
                   fail_errors.each do |_, index|
-                    stdout.puts "    #{(index+1).ordinalize} fail example didn't match.😱"
+                    stdout.puts "    #{(index+1).ordinalize} #{Rainbow('fail').red} example didn't match.😱"
                     failed_rule_ids << rule.id
                   end
                 end
