@@ -360,7 +360,7 @@ module Goodcheck
         when ::Regexp
           Pattern::Regexp.new(source: pattern,
                               regexp: pat,
-                              multiline: pat.multiline?,
+                              multiline: pat.options & ::Regexp::MULTILINE == ::Regexp::MULTILINE,
                               case_sensitive: !pat.casefold?)
         end
       when Hash
