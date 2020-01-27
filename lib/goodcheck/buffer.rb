@@ -3,6 +3,31 @@ module Goodcheck
     attr_reader :path
     attr_reader :content
 
+    DISABLE_LINE_PATTERNS = [
+      /\/\/ goodcheck-disable-line$/, #JS, Java, C, ...
+      /# goodcheck-disable-line$/, # Ruby, Python, PHP, ...
+      /-- goodcheck-disable-line$/, # Haskel, SQL, ...
+      /<!-- goodcheck-disable-line -->$/, # HTML, Markdown, ...
+      /\/* goodcheck-disable-line *\/$/, # CSS, SCSS, 
+      /<%# goodcheck-disable-line %>$/, # ERB, ...
+      /' goodcheck-disable-line$/, # VB
+    ].freeze
+
+    DISABLE_NEXT_LINE_PATTERNS = [
+      /\/\/ goodcheck-disable-next-line$/, #JS, Java, C, ...
+      /# goodcheck-disable-next-line$/, # Ruby, Python, PHP, ...
+      /-- goodcheck-disable-next-line$/, # Haskel, SQL, ...
+      /<!-- goodcheck-disable-next-line -->$/, # HTML, Markdown, ...
+      /\/* goodcheck-disable-next-line *\/$/, # CSS, SCSS, 
+      /<%# goodcheck-disable-next-line %>$/, # ERB, ...
+      /' goodcheck-disable-next-line$/, # VB
+    ].freeze
+
+    class << self
+        attr_accessor :DISABLE_LINE_PATTERNS
+        attr_accessor :DISABLE_NEXT_LINE_PATTERNS
+    end
+
     def initialize(path:, content:)
       @path = path
       @content = content
@@ -24,6 +49,18 @@ module Goodcheck
 
       @line_ranges
     end
+    
+    def line_disabled?(line_number)
+      if line_number > 1
+        return true if DISABLE_NEXT_LINE_PATTERNS.any? { |pattern| line(line_number - 1).match?(pattern) } 
+      end
+
+      if line_number <= lines.length
+        return DISABLE_LINE_PATTERNS.any? { |pattern| line(line_number).match?(pattern) }
+      end
+
+      return false
+    end
 
     def location_for_position(position)
       line_index = line_ranges.bsearch_index do |range|
@@ -35,8 +72,12 @@ module Goodcheck
       end
     end
 
+    def lines
+      @lines ||= content.lines
+    end
+
     def line(line_number)
-      content.lines[line_number-1]
+      lines[line_number-1]
     end
 
     def position_for_location(line, column)

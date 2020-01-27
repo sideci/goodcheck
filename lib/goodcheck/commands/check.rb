@@ -36,6 +36,7 @@ module Goodcheck
               reporter.rule(rule) do
                 analyzer = Analyzer.new(rule: rule, buffer: buffer, trigger: trigger)
                 analyzer.scan do |issue|
+                  next if issue.location && buffer.line_disabled?(issue.location.start_line)
                   if reported_issues.add?(issue)
                     issue_reported = true
                     reporter.issue(issue)

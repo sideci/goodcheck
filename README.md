@@ -395,6 +395,22 @@ The *goodcheck home directory* is `~/.goodcheck`, but you can customize the loca
 
 The cache expires in 3 minutes.
 
+## Disabling Rules with Inline Comments
+
+You can disable rule warnings on a specific line using line comments supported by common languages.
+
+```rb
+# goodcheck-disable-next-line
+puts "Github"
+puts "Github" # goodcheck-disable-line
+```
+
+```js
+// goodcheck-disable-next-line
+console.log("Github")
+console.log("Github") // goodcheck-disable-line
+```
+
 ## Docker Images
 
 We provide Docker images of Goodcheck so that you can try Goodcheck without installing them.

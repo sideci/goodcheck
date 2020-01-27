@@ -602,4 +602,43 @@ EOF
       end
     end
   end
+
+  def test_disabled_lines_report_no_issue
+    puts "STARTING BROKEN TEST"
+    TestCaseBuilder.tmpdir do |builder|
+      builder.config content: <<EOF
+rules:
+  - id: foo
+    message: Foo
+    pattern:
+      - foo
+      - bar
+    glob:
+      - "app/models/**/*.rb"
+EOF
+
+      builder.file name: Pathname("app/models/user.rb"), content: <<-EOF
+class User < ApplicationRecord
+  # goodcheck-disable-next-line
+  belongs_to :foo
+  belongs_to :bar
+end
+EOF
+
+
+      builder.cd do
+        reporter = Reporters::JSON.new(stdout: stdout, stderr: stderr)
+        check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
+
+        assert_equal 2, check.run
+        assert_equal [{
+          rule_id: "foo",
+          path: "app/models/user.rb",
+          location: { start_line: 4, start_column: 14, end_line: 4, end_column: 17 },
+          message: "Foo",
+          justifications: []
+        }], JSON.parse(stdout.string, symbolize_names: true)
+      end
+    end
+  end
 end
