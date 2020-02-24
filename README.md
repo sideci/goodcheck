@@ -51,7 +51,7 @@ rules:
     message: |
       GitHub is GitHub, not Github
 
-      You may misspelling the name of the service!
+      You may be misspelling the name of the service!
     justification:
       - When you mean a service different from GitHub
       - When GitHub is renamed
