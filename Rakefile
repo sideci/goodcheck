@@ -48,3 +48,21 @@ namespace :docs do
     Dir.chdir "docusaurus/website", &block
   end
 end
+
+namespace :benchmark do
+  desc "Run benchmark"
+  task :run do
+    require "benchmark"
+    require_relative "lib/goodcheck"
+    require_relative "lib/goodcheck/cli"
+
+    target_file = File.join(__dir__, "benchmark", "gc.c")
+
+    n = 100
+    Benchmark.bm do |x|
+      x.report do
+        n.times { Goodcheck::CLI.new(stdout: STDOUT, stderr: STDERR).run(["check", target_file]) }
+      end
+    end
+  end
+end
