@@ -34,4 +34,4 @@ jobs:
         with:
           ruby-version: 2.7
       - run: bundle install --jobs=4 --retry=3 --path=vendor/bundle
-      - run: bundle exec rake benchmark:run
+      - run: bundle exec rake benchmark:run[10000]

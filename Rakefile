@@ -51,14 +51,16 @@ end
 
 namespace :benchmark do
   desc "Run benchmark"
-  task :run do
+  task :run, [:n] do |_task, args|
     require "benchmark"
     require_relative "lib/goodcheck"
     require_relative "lib/goodcheck/cli"
 
     target_file = File.join(__dir__, "benchmark", "gc.c")
 
-    n = 100
+    n = Integer(args[:n] || 1000)
+    puts "n = #{n}"
+
     Benchmark.bm do |x|
       x.report do
         n.times { Goodcheck::CLI.new(stdout: STDOUT, stderr: STDERR).run(["check", target_file]) }
