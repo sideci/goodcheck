@@ -2,6 +2,10 @@
 
 ## master
 
+## 2.5.0 (2020-02-27)
+
+* Add disable lines via inline comments [#101](https://github.com/sider/goodcheck/pull/101) (thanks to [@dcwither](https://github.com/dcwither)). See [README](https://github.com/sider/goodcheck#disabling-rules-with-inline-comments) for details.
+
 ## 2.4.5 (2019-12-13)
 
 * Replace ActiveSupport's `Regexp#multiline?` extension [#97](https://github.com/sider/goodcheck/pull/97) (thanks to [@issei126](https://github.com/issei126))
