@@ -264,8 +264,7 @@ You can define the _negated_ rules for the opposite, _something is missing in a 
 rules:
   - id: negated
     not:
-      pattern:
-        <!DOCTYPE html>
+      pattern: <!DOCTYPE html>
     message: Write a doctype on HTML files.
     glob: "**/*.html"
 ```
