@@ -8,25 +8,43 @@ What if a misspelling like `Github` for `GitHub` can be found automatically?
 
 Give Goodcheck a try to do them instead of you! 🎉
 
-Goodcheck is a customizable linter.
-You can define pairs of patterns and messages.
+Goodcheck is a customizable linter. You can define pairs of patterns and messages.
 It checks your program and when it detects a piece of text matching with the defined patterns, it prints your message which tells your teammates why it should be revised and how.
 Some part of the code reviewing process can be automated.
 With Goodcheck the only thing you have to do is define the rules, pairing patterns with messages, and then those same patterns won’t bother you anymore. 😆
 
+## Table of contents
+
+- [Installation](#installation)
+- [Quickstart](#quickstart)
+- [Defining rules](#defining-rules)
+  - [Pattern](#pattern)
+  - [Glob](#glob)
+  - [A rule with _negated_ pattern](#a-rule-with-negated-pattern)
+  - [A rule without pattern](#a-rule-without-pattern)
+  - [Triggers](#triggers)
+- [Importing rules](#importing-rules)
+- [Excluding files](#excluding-files)
+- [Commands](#commands)
+- [Downloaded rules](#downloaded-rules)
+- [Disabling rules with inline comments](#disabling-rules-with-inline-comments)
+- [Docker images](#docker-images)
+- [Development](#development)
+- [Contributing](#contributing)
+
 ## Installation
 
-```bash
+```shell-session
 $ gem install goodcheck
 ```
 
-Or you can use `bundler`!
+Or you can use [`bundler`](https://bundler.io)!
 
-If you would not like to install Goodcheck to system (e.g. you would not like to install Ruby 2.4 or higher), you can use a docker image. [See below](#docker-images).
+If you would not like to install Goodcheck to system (e.g. you would not like to install Ruby 2.4 or higher), you can use a [Docker image](#docker-images).
 
 ## Quickstart
 
-```bash
+```shell-session
 $ goodcheck init
 $ vim goodcheck.yml
 $ goodcheck check
@@ -40,9 +58,9 @@ Then run `check` command, and it will print matched texts.
 
 You can download a [printable cheatsheet](cheatsheet.pdf) from this repository.
 
-## `goodcheck.yml`
+## Defining rules
 
-An example of the configuration is like the following:
+A `goodcheck.yml` example of the configuration is like the following:
 
 ```yaml
 rules:
@@ -64,36 +82,38 @@ rules:
       - <a>Signup via Github</a>
 ```
 
-The *rule* hash contains the following keys.
+A *rule* hash under a `rules` list contains the following keys:
 
-* `id`: a string to identify rules (required)
-* `pattern`: a *pattern* or a sequence of *pattern*s
-* `message`: a string to tell writers why the code piece should be revised (required)
-* `justification`: a sequence of strings to tell writers when an exception can be allowed (optional)
-* `glob`: a *glob* or a sequence of *glob*s (optional)
-* `pass`: a string, or a sequence of strings, which does not match the given pattern (optional)
-* `fail`: a string, or a sequence of strings, which does match the given pattern (optional)
+* `id` - a string to identify rules (required)
+* [`pattern`](#pattern) - a *pattern* or a sequence of *pattern*s (optional)
+* `message` - a string to tell writers why the code piece should be revised (required)
+* `justification` - a sequence of strings to tell writers when an exception can be allowed (optional)
+* [`glob`](#glob) - a *glob* or a sequence of *glob*s (optional)
+* `pass` - a string or a sequence of strings, which does not match the given pattern (optional)
+* `fail` - a string or a sequence of strings, which does match the given pattern (optional)
 
-### *pattern*
+### Pattern
 
-A *pattern* can be a *literal pattern*, *regexp pattern*, *token pattern*, or a string.
+A pattern can be a *literal pattern*, *regexp pattern*, *token pattern*, or a string.
 
 #### String literal
 
-String literal represents a *literal pattern* or *regexp pattern*.
+A string literal represents a *literal pattern* or *regexp pattern*.
 
 ```yaml
 pattern:
   - This is a literal pattern
   - /This is a regexp pattern/
+  - /This is a regexp pattern with the casefold option/i
+  - /This is a regexp pattern with the multiline option/m
 ```
 
-If the string value begins with `/` and ends with `/`, it is a *regexp pattern*.
+If a string value begins with `/` and ends with `/`, it is a *regexp pattern*.
 You can optionally specify regexp options like `/casefold/i` or `/multiline/m`.
 
-#### *literal pattern*
+#### Literal pattern
 
-*literal pattern* allows you to construct a regexp which matches exactly to the `literal` string.
+A *literal pattern* allows you to construct a regexp which matches exactly to the `literal` string.
 
 ```yaml
 id: com.sample.GitHub
@@ -106,9 +126,9 @@ message: Write GitHub, not Github
 All regexp meta characters included in the `literal` value will be escaped.
 `case_sensitive` is an optional key and the default is `true`.
 
-#### *regexp pattern*
+#### Regexp pattern
 
-*regexp pattern* allows you to write a regexp with meta chars.
+A *regexp pattern* allows you to write a regexp with meta chars.
 
 ```yaml
 id: com.sample.digits
@@ -124,12 +144,12 @@ justification:
 It accepts two optional attributes, `case_sensitive` and `multiline`.
 The default values of `case_sensitive` and `multiline` are `true` and `false` respectively.
 
-The regexp will be passed to `Regexp.compile`.
+The regexp will be passed to [`Regexp.compile`](https://ruby-doc.org/core-2.7.0/Regexp.html#method-c-compile).
 The precise definition of regular expressions can be found in the documentation for Ruby.
 
-#### *token pattern*
+#### Token pattern
 
-*token pattern* compiles to a *tokenized* regexp.
+A *token pattern* compiles to a *tokenized* regexp.
 
 ```yaml
 id: com.sample.no-blink
@@ -162,9 +182,9 @@ pattern:
       color: true
 ```
 
-The variable binding consists of *variable name* and *variable type*, where `color` and `string` in the example above respectively. You have to add a key of the *variable name* in `where` attribute.
+The variable binding consists of a *name* and *type* (`${name:type}`), where `color` and `string` in the example above respectively. You have to add a key of the variable *name* in `where` attribute.
 
-We have 8 built-in patterns:
+We have 8 built-in types:
 
 * `string`
 * `int`
@@ -175,7 +195,7 @@ We have 8 built-in patterns:
 * `word`
 * `identifier`
 
-You can find the exact definitions of the types in the definition of `Goodcheck::Pattern::Token` (`@@TYPES`).
+You can find the exact definitions of the types in the definition of [`Goodcheck::Pattern::Token`](lib/goodcheck/pattern.rb) (`@@TYPES`).
 
 You can omit the type of variable binding.
 
@@ -197,14 +217,21 @@ If parens or brackets are surrounding the variable, Goodcheck tries to match wit
 - `backgroundColor={{ red: red(), green: green(), blue: green()-1 }}` Matches (`color=="{ red: red(), green: green(), blue: green()-1 }"`)
 - `backgroundColor={ {{{{{{}}}}}} }` Matches (`color==" {{{{{{}}}}}"`)
 
-### *glob*
+### Glob
 
-A *glob* can be a string, or a hash.
+A *glob* can be a string or a hash.
 
 ```yaml
+glob: "**/test/**/*.rb"
+# or
 glob:
   pattern: "legacy/**/*.rb"
   encoding: EUC-JP
+# or
+glob:
+  - "**/test/**/*.rb"
+  - pattern: "legacy/**/*.rb"
+    encoding: EUC-JP
 ```
 
 The hash can have an optional `encoding` attribute.
@@ -237,13 +264,12 @@ You can define the _negated_ rules for the opposite, _something is missing in a 
 rules:
   - id: negated
     not:
-      pattern:
-        <!DOCTYPE html>
+      pattern: <!DOCTYPE html>
     message: Write a doctype on HTML files.
     glob: "**/*.html"
 ```
 
-### A rule without `pattern`
+### A rule without pattern
 
 You can define a rule without `pattern`.
 The rule emits an issue on each file specified with `glob`.
@@ -259,15 +285,15 @@ rules:
 
 The output will be something like:
 
-```
+```shell-session
 $ goodcheck check
 db/schema.rb:-:# This file is auto-generated from the current state of the database. Instead: Read the operation manual for DB migration: https://example.com/guides/123
 ```
 
 ### Triggers
 
-Version 2.0.0 introduces a new abstraction to define patterns, trigger.
-You can continue using `pattern`s in `rule`, but using `trigger` allows more flexible pattern definition and more precise testing.
+Version 2.0.0 introduces a new abstraction to define patterns, called *trigger*.
+You can continue using `pattern`s in *rule*, but using `trigger` allows more flexible pattern definition and more precise testing.
 
 ```yaml
 rules:
@@ -303,13 +329,25 @@ import:
   - https://some.host/shared/rules.yml
 ```
 
-The value of `import` can be an array of:
+The value of `import` can be a sequence of:
 
 - A string which represents an absolute file path,
 - A string which represents a relative file path from the config file, or
-- A http/https URL which represents the location of rules
+- A http/https URL which represents the location of rules.
 
-The rules file is a YAML file with an array of rules.
+The rules file is a YAML file with an sequence of rules:
+
+```yaml
+- id: rule1
+  pattern: Some pattern 1
+  message: Some message 1
+
+- id: rule2
+  pattern: Some pattern 2
+  message: Some message 2
+
+# ...
+```
 
 ## Excluding files
 
@@ -319,9 +357,10 @@ The rules file is a YAML file with an array of rules.
 exclude:
   - node_modules
   - vendor
+  - **/test/**/*.txt
 ```
 
-The value of `exclude` can be a string or an array of strings representing the glob pattern for excluded files.
+The value of `exclude` can be a string or a sequence of strings representing the glob pattern for excluded files.
 
 ## Commands
 
@@ -342,7 +381,7 @@ You can pass:
 * Directory paths, or
 * Paths to files.
 
-When you omit `targets`, it checks all files in `.`.
+When you omit `targets`, it checks all files in `.` (the current directory).
 
 Available options are:
 
@@ -377,7 +416,7 @@ Available options are:
 * `-c [CONFIG]`, `--config=[CONFIG]` to specify the configuration file.
 * `-v`, `--verbose` to be verbose.
 * `--debug` to print all debug messages.
-* `--force` to ignore downloaded caches
+* `--force` to ignore downloaded caches.
 
 ### `goodcheck pattern [options] ids...`
 
@@ -395,9 +434,11 @@ The *goodcheck home directory* is `~/.goodcheck`, but you can customize the loca
 
 The cache expires in 3 minutes.
 
-## Disabling Rules with Inline Comments
+## Disabling rules with inline comments
 
 You can disable rule warnings on a specific line using line comments supported by common languages.
+
+For example, for Ruby:
 
 ```rb
 # goodcheck-disable-next-line
@@ -405,17 +446,17 @@ puts "Github"
 puts "Github" # goodcheck-disable-line
 ```
 
+For JavaScript:
+
 ```js
 // goodcheck-disable-next-line
 console.log("Github")
 console.log("Github") // goodcheck-disable-line
 ```
 
-## Docker Images
+## Docker images
 
-We provide Docker images of Goodcheck so that you can try Goodcheck without installing them.
-
-- https://hub.docker.com/r/sider/goodcheck/
+We provide Docker images of Goodcheck on [Docker Hub](https://hub.docker.com/r/sider/goodcheck) so that you can try Goodcheck without installing them.
 
 ```bash
 $ docker pull sider/goodcheck
@@ -423,11 +464,11 @@ $ docker run -t --rm -v "$(pwd):/work" sider/goodcheck check
 ```
 
 The default `latest` tag points to the latest release of Goodcheck.
-You can pick a version of Goodcheck from [tags page](https://hub.docker.com/r/sider/goodcheck/tags).
+You can pick a version of Goodcheck from the [Docker Hub tags page](https://hub.docker.com/r/sider/goodcheck/tags).
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repository, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`.
 
