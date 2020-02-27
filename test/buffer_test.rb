@@ -53,5 +53,65 @@ ipsum
     assert_equal 6, buffer.position_for_location(2, 0)
     assert_nil buffer.position_for_location(100, 0)
   end
+
+  def test_disabled_line
+    buffer = Buffer.new(path: Pathname("a.txt"), content: <<-EOF
+    Lorem 
+    ipsum # goodcheck-disable-line
+    吾輩は猫である。
+    # goodcheck-disable-next-line
+    🍔
+    🐈
+      EOF
+    )
+
+    assert_equal false, buffer.line_disabled?(1)
+    assert_equal true, buffer.line_disabled?(2)
+    assert_equal false, buffer.line_disabled?(3)
+    assert_equal false, buffer.line_disabled?(4)
+    assert_equal true, buffer.line_disabled?(5)
+    assert_equal false, buffer.line_disabled?(6)
+    assert_equal false, buffer.line_disabled?(7)
+  end
+
+  def test_disabled_line_js
+    buffer = Buffer.new(path: Pathname("a.js"), content: <<-EOF
+    Lorem
+    ipsum // goodcheck-disable-line
+    吾輩は猫である。
+    // goodcheck-disable-next-line
+    🍔
+    🐈
+      EOF
+    )
+
+    assert_equal false, buffer.line_disabled?(1)
+    assert_equal true, buffer.line_disabled?(2)
+    assert_equal false, buffer.line_disabled?(3)
+    assert_equal false, buffer.line_disabled?(4)
+    assert_equal true, buffer.line_disabled?(5)
+    assert_equal false, buffer.line_disabled?(6)
+    assert_equal false, buffer.line_disabled?(7)
+  end
+
+  def test_disabled_line_md
+    buffer = Buffer.new(path: Pathname("a.md"), content: <<-EOF
+    Lorem
+    ipsum <!-- goodcheck-disable-line -->
+    吾輩は猫である。
+    <!-- goodcheck-disable-next-line -->
+    🍔
+    🐈
+      EOF
+    )
+
+    assert_equal false, buffer.line_disabled?(1)
+    assert_equal true, buffer.line_disabled?(2)
+    assert_equal false, buffer.line_disabled?(3)
+    assert_equal false, buffer.line_disabled?(4)
+    assert_equal true, buffer.line_disabled?(5)
+    assert_equal false, buffer.line_disabled?(6)
+    assert_equal false, buffer.line_disabled?(7)
+  end
 end
 
