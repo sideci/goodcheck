@@ -10,28 +10,37 @@ jobs:
         ruby: [2.4, 2.5, 2.6, 2.7]
     steps:
       - uses: actions/checkout@v2
-      - uses: eregon/use-ruby-action@master
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - run: bundle install --jobs=4 --retry=3 --path=vendor/bundle
+      - run: |
+          gem install bundler --no-document
+          bundle config set path vendor/bundle
+          bundle install --jobs=4 --retry=3
       - run: bundle exec rake
 
   build-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: eregon/use-ruby-action@master
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
-      - run: bundle install --jobs=4 --retry=3 --path=vendor/bundle
+      - run: |
+          gem install bundler --no-document
+          bundle config set path vendor/bundle
+          bundle install --jobs=4 --retry=3
       - run: bundle exec rake docs:build
 
   benchmark:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: eregon/use-ruby-action@master
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7
-      - run: bundle install --jobs=4 --retry=3 --path=vendor/bundle
+      - run: |
+          gem install bundler --no-document
+          bundle config set path vendor/bundle
+          bundle install --jobs=4 --retry=3
       - run: bundle exec rake benchmark:run[10000]
