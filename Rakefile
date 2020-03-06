@@ -53,10 +53,15 @@ namespace :benchmark do
   desc "Run benchmark"
   task :run, [:n] do |_task, args|
     require "benchmark"
+    require "net/http"
+    require "tempfile"
     require_relative "lib/goodcheck"
     require_relative "lib/goodcheck/cli"
 
-    target_file = File.join(__dir__, "benchmark", "gc.c")
+    content = Net::HTTP.get(URI("https://raw.githubusercontent.com/ruby/ruby/0256e4f0f5e10f0a15cbba2cd64e252dfa864e4a/gc.c"))
+    target_file = Tempfile.new("goodcheck-benchmark-")
+    target_file.write content
+    target_file = target_file.path
 
     n = Integer(args[:n] || 1000)
     puts "n = #{n}"
