@@ -31,6 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "activesupport", ">= 4.0", "< 7.0"
   spec.add_runtime_dependency "strong_json", ">= 1.1", "< 2.2"
   spec.add_runtime_dependency "rainbow", "~> 3.0.0"
-  spec.add_runtime_dependency "httpclient", "~> 2.8.3"
   spec.add_runtime_dependency "psych", ">= 3.1", "< 4.0" # NOTE: Needed for old Ruby versions (<= 2.5)
 end

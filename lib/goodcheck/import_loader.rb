@@ -71,7 +71,7 @@ module Goodcheck
       if download
         path.rmtree if path.exist?
         Goodcheck.logger.info "Downloading content..."
-        content = HTTPClient.new.get_content(uri)
+        content = http_get uri
         Goodcheck.logger.debug "Downloaded content: #{content[0, 1024].inspect}#{content.size > 1024 ? "..." : ""}"
         yield content
         write_cache uri, content
@@ -84,6 +84,22 @@ module Goodcheck
     def write_cache(uri, content)
       path = cache_path + cache_name(uri)
       path.write(content)
+    end
+
+    # @see https://ruby-doc.org/stdlib-2.7.0/libdoc/net/http/rdoc/Net/HTTP.html#class-Net::HTTP-label-Following+Redirection
+    def http_get(uri, limit = 10)
+      raise ArgumentError, "Too many HTTP redirects" if limit == 0
+
+      res = Net::HTTP.get_response URI(uri)
+      case res
+      when Net::HTTPSuccess
+        res.body
+      when Net::HTTPRedirection
+        location = res['Location']
+        http_get location, limit - 1
+      else
+        raise "HTTP error: #{res.inspect}"
+      end
     end
   end
 end
