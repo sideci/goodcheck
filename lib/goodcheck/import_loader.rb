@@ -98,7 +98,7 @@ module Goodcheck
         location = res['Location']
         http_get location, limit - 1
       else
-        raise "HTTP error: #{res.inspect}"
+        raise "Error: HTTP GET #{uri.inspect} #{res.inspect}"
       end
     end
   end

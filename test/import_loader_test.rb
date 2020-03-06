@@ -178,4 +178,13 @@ EOF
       refute_equal "hello world", loaded_content
     end
   end
+
+  def test_http_get_failed
+    loader = Goodcheck::ImportLoader.new(cache_path: nil, force_download: false, config_path: nil)
+
+    error = assert_raises RuntimeError do
+      loader.http_get('https://github.com/sider/goodcheck/not_found.txt')
+    end
+    assert_includes error.message, 'Error: HTTP GET "https://github.com/sider/goodcheck/not_found.txt"'
+  end
 end
