@@ -11,6 +11,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body: |
-            For details, see the [changelog](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/CHANGELOG.md).
+            See the [changelog](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/CHANGELOG.md) for more details.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
