@@ -2,6 +2,8 @@
 
 ## master
 
+* Replace `httpclient` with `net/http` [#115](https://github.com/sider/goodcheck/pull/115)
+
 ## 2.5.0 (2020-02-27)
 
 * Add disable lines via inline comments [#101](https://github.com/sider/goodcheck/pull/101) (thanks to [@dcwither](https://github.com/dcwither)). See [README](https://github.com/sider/goodcheck#disabling-rules-with-inline-comments) for details.

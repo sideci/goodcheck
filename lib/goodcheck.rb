@@ -8,7 +8,7 @@ require "active_support/core_ext/integer/inflections"
 require "active_support/tagged_logging"
 require "rainbow"
 require "digest/sha2"
-require "httpclient"
+require "net/http"
 
 require "goodcheck/version"
 require "goodcheck/logger"
