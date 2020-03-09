@@ -2,6 +2,8 @@
 
 ## master
 
+## 2.5.1 (2020-03-09)
+
 * Replace `httpclient` with `net/http` [#115](https://github.com/sider/goodcheck/pull/115)
 
 ## 2.5.0 (2020-02-27)
