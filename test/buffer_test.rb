@@ -113,5 +113,28 @@ ipsum
     assert_equal false, buffer.line_disabled?(6)
     assert_equal false, buffer.line_disabled?(7)
   end
+
+  def test_disabled_line_css
+    buffer = Buffer.new(path: Pathname("a.css"), content: <<-EOF
+    .lorem {
+      font-size: 1.2rem; /* goodcheck-disable-line */
+    }
+    .ipsum {
+      /* goodcheck-disable-next-line */
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+      EOF
+    )
+
+    assert_equal false, buffer.line_disabled?(1)
+    assert_equal true, buffer.line_disabled?(2)
+    assert_equal false, buffer.line_disabled?(3)
+    assert_equal false, buffer.line_disabled?(4)
+    assert_equal false, buffer.line_disabled?(5)
+    assert_equal true, buffer.line_disabled?(6)
+    assert_equal false, buffer.line_disabled?(7)
+    assert_equal false, buffer.line_disabled?(8)
+  end
 end
 
