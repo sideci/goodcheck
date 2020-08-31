@@ -2,6 +2,8 @@
 
 ## master
 
+* Fix the pattern of disable lines for Slash-asterisk and add support for JSX [#131](https: //github.com/sider/goodcheck/pull/131)
+
 ## 2.5.1 (2020-03-09)
 
 * Replace `httpclient` with `net/http` [#115](https://github.com/sider/goodcheck/pull/115)
