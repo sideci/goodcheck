@@ -144,6 +144,10 @@ ipsum
       {/* goodcheck-disable-next-line */}
       <div>🍔</div>
       <div>🚒</div>
+      {  /* goodcheck-disable-next-line */  }
+      <div>🚓</div>
+      <div>🚂</div>
+      <div>🚃</div> {	/* goodcheck-disable-line */	}
     </div>
       EOF
     )
@@ -154,6 +158,9 @@ ipsum
     assert_equal true, buffer.line_disabled?(4)
     assert_equal false, buffer.line_disabled?(5)
     assert_equal false, buffer.line_disabled?(6)
+    assert_equal true, buffer.line_disabled?(7)
+    assert_equal false, buffer.line_disabled?(8)
+    assert_equal true, buffer.line_disabled?(9)
   end
 end
 
