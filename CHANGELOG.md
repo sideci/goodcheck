@@ -3,6 +3,7 @@
 ## master
 
 * Improve CLI help and error messages [#141](https://github.com/sider/goodcheck/pull/141)
+* Fail if missing rules on `goodcheck check` command [#142](https://github.com/sider/goodcheck/pull/142)
 
 ## 2.5.2 (2020-08-31)
 
