@@ -641,4 +641,24 @@ EOF
       end
     end
   end
+
+  def test_missing_rule
+    TestCaseBuilder.tmpdir do |builder|
+      builder.cd do
+        builder.config content: <<-EOF
+rules:
+  - id: foo
+    message: Foo
+    pattern: foo
+EOF
+
+        reporter = Reporters::Text.new(stdout: stdout)
+        check = Check.new(config_path: builder.config_path, rules: ["foo", "bar", "baz"], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
+
+        assert_equal 1, check.run
+        assert_equal "missing rule: bar\nmissing rule: baz\n", stderr.string
+        assert_empty stdout.string
+      end
+    end
+  end
 end
