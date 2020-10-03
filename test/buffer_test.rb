@@ -1,4 +1,4 @@
-require_relative "test_helper"
+require "test_helper"
 
 class BufferTest < Minitest::Test
   Buffer = Goodcheck::Buffer
@@ -56,7 +56,7 @@ ipsum
 
   def test_disabled_line
     buffer = Buffer.new(path: Pathname("a.txt"), content: <<-EOF
-    Lorem 
+    Lorem
     ipsum # goodcheck-disable-line
     吾輩は猫である。
     # goodcheck-disable-next-line
