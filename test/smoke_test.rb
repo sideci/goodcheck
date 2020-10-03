@@ -47,6 +47,15 @@ class SmokeTest < Minitest::Test
     end
   end
 
+  def test_version_flag
+    TestCaseBuilder.tmpdir do |builder|
+      stdout, _, status = shell(goodcheck, "--version", chdir: builder.path)
+
+      assert_operator status, :success?
+      assert_match %r(#{Regexp.escape "goodcheck #{Goodcheck::VERSION}"}), stdout
+    end
+  end
+
   def test_init
     TestCaseBuilder.tmpdir do |builder|
       _, _, status = shell(goodcheck, "init", chdir: builder.path)
