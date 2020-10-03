@@ -33,6 +33,14 @@ module Goodcheck
 
           reporter.analysis do
             load_config!(force_download: force_download, cache_path: cache_dir_path)
+
+            unless missing_rules.empty?
+              missing_rules.each do |rule|
+                stderr.puts "missing rule: #{rule}"
+              end
+              return EXIT_ERROR
+            end
+
             each_check do |buffer, rule, trigger|
               reported_issues = Set[]
 
@@ -50,6 +58,13 @@ module Goodcheck
           end
 
           issue_reported ? EXIT_MATCH : EXIT_SUCCESS
+        end
+      end
+
+      def missing_rules
+        @missing_rules ||= begin
+          config_rule_ids = config.rules.map(&:id)
+          rules.select { |rule| !config_rule_ids.include?(rule) }
         end
       end
 
