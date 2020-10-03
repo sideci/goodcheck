@@ -64,7 +64,7 @@ module Goodcheck
       def missing_rules
         @missing_rules ||= begin
           config_rule_ids = config.rules.map(&:id)
-          rules.select { |rule| !config_rule_ids.include?(rule) }
+          rules.reject { |rule| config_rule_ids.include?(rule) }
         end
       end
 
