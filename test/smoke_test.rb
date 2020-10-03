@@ -25,7 +25,7 @@ class SmokeTest < Minitest::Test
 
       refute_operator status, :success?
       assert_match %r(#{Regexp.escape "Usage: goodcheck <command> [options] [args...]"}), stdout
-      assert_match %r(Invalid command: foo), stderr
+      assert_match %r(invalid command: foo), stderr
     end
   end
 
@@ -243,6 +243,46 @@ EOF
       refute status.success?
       refute_match %r(app/models/user\.rb), stdout
       assert_match %r(app/views/welcome/index\.html\.erb), stdout
+    end
+  end
+
+  def test_check_invalid_format
+    TestCaseBuilder.tmpdir do |builder|
+      stdout, stderr, status = shell(goodcheck, "check", "--format", "foo", chdir: builder.path)
+
+      refute status.success?
+      assert_empty stdout
+      assert_equal "invalid argument: --format foo\n", stderr
+    end
+  end
+
+  def test_check_invalid_option
+    TestCaseBuilder.tmpdir do |builder|
+      stdout, stderr, status = shell(goodcheck, "check", "--foo", chdir: builder.path)
+
+      refute status.success?
+      assert_empty stdout
+      assert_equal "invalid option: --foo\n", stderr
+    end
+  end
+
+  def test_check_help
+    TestCaseBuilder.tmpdir do |builder|
+      stdout, stderr, status = shell(goodcheck, "check", "--help", chdir: builder.path)
+
+      assert status.success?
+      assert_equal <<-HELP, stdout
+Usage: goodcheck check [options] paths...
+    -c, --config=CONFIG              Configuration file path [default: 'goodcheck.yml']
+    -v, --verbose                    Set log level to verbose
+    -d, --debug                      Set log level to debug
+        --force                      Download importing files always
+    -R, --rule=RULE                  Only rule(s) to check
+        --format=<text|json>         Output format [default: 'text']
+        --version                    Print version
+    -h, --help                       Show help and quit
+      HELP
+      assert_empty stderr
     end
   end
 

@@ -13,6 +13,9 @@ module Goodcheck
 
       include ConfigLoading
       include HomePath
+      include ExitStatus
+
+      EXIT_MATCH = 2
 
       def initialize(config_path:, rules:, targets:, reporter:, stderr:, home_path:, force_download:)
         @config_path = config_path
@@ -46,7 +49,7 @@ module Goodcheck
             end
           end
 
-          issue_reported ? 2 : 0
+          issue_reported ? EXIT_MATCH : EXIT_SUCCESS
         end
       end
 

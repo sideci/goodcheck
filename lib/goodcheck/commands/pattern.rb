@@ -9,6 +9,7 @@ module Goodcheck
 
       include ConfigLoading
       include HomePath
+      include ExitStatus
 
       def initialize(stdout:, stderr:, path:, ids:, home_path:)
         @stdout = stdout
@@ -34,7 +35,7 @@ module Goodcheck
           end
         end
 
-        0
+        EXIT_SUCCESS
       end
     end
   end

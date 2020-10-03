@@ -3,6 +3,7 @@ module Goodcheck
     class Test
       include ConfigLoading
       include HomePath
+      include ExitStatus
 
       attr_reader :stdout
       attr_reader :stderr
@@ -24,13 +25,13 @@ module Goodcheck
 
           if config.rules.empty?
             stdout.puts "No rules."
-            return 0
+            return EXIT_SUCCESS
           end
 
-          validate_rule_uniqueness or return 1
-          validate_rules or return 1
+          validate_rule_uniqueness or return EXIT_ERROR
+          validate_rules or return EXIT_ERROR
 
-          0
+          EXIT_SUCCESS
         end
       end
 
