@@ -1,7 +1,5 @@
 require "optparse"
 
-Version = Goodcheck::VERSION
-
 module Goodcheck
   class CLI
     attr_reader :stdout
