@@ -2,6 +2,8 @@
 
 ## master
 
+* Improve CLI help and error messages [#141](https://github.com/sider/goodcheck/pull/141)
+
 ## 2.5.2 (2020-08-31)
 
 * Fix the pattern of disable lines for Slash-asterisk and add support for JSX [#131](https://github.com/sider/goodcheck/pull/131)

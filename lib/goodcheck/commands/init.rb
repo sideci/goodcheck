@@ -58,6 +58,8 @@ rules:
 #   - vendor
       EOC
 
+      include ExitStatus
+
       attr_reader :stdout
       attr_reader :stderr
       attr_reader :path
@@ -73,7 +75,7 @@ rules:
       def run
         if path.file? && !force
           stderr.puts "#{path} already exists. Try --force option to overwrite the file."
-          return 1
+          return EXIT_ERROR
         end
 
         path.open("w") do |io|
@@ -82,7 +84,7 @@ rules:
 
         stdout.puts "Wrote #{path}. ✍️"
 
-        0
+        EXIT_SUCCESS
       end
     end
   end

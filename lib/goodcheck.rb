@@ -13,7 +13,7 @@ require "net/http"
 require "goodcheck/version"
 require "goodcheck/logger"
 require "goodcheck/home_path"
-
+require "goodcheck/exit_status"
 require "goodcheck/glob"
 require "goodcheck/buffer"
 require "goodcheck/location"
