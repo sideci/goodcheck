@@ -7,6 +7,12 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList["test/**/*_test.rb"]
 end
 
+Rake::TestTask.new(:bench) do |t|
+  t.libs << "test"
+  t.libs << "lib"
+  t.test_files = FileList["test/**/*_benchmark.rb"]
+end
+
 task :default => :test
 
 namespace :docker do
@@ -46,30 +52,5 @@ namespace :docs do
 
   def on_docs_dir(&block)
     Dir.chdir "docusaurus/website", &block
-  end
-end
-
-namespace :benchmark do
-  desc "Run benchmark"
-  task :run, [:n] do |_task, args|
-    require "benchmark"
-    require "net/http"
-    require "tempfile"
-    require_relative "lib/goodcheck"
-    require_relative "lib/goodcheck/cli"
-
-    content = Net::HTTP.get(URI("https://raw.githubusercontent.com/ruby/ruby/0256e4f0f5e10f0a15cbba2cd64e252dfa864e4a/gc.c"))
-    target_file = Tempfile.new("goodcheck-benchmark-")
-    target_file.write content
-    target_file = target_file.path
-
-    n = Integer(args[:n] || 1000)
-    puts "n = #{n}"
-
-    Benchmark.bm do |x|
-      x.report do
-        n.times { Goodcheck::CLI.new(stdout: STDOUT, stderr: STDERR).run(["check", target_file]) }
-      end
-    end
   end
 end

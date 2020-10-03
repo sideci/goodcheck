@@ -32,7 +32,7 @@ jobs:
           bundle install --jobs=4 --retry=3
       - run: bundle exec rake docs:build
 
-  benchmark:
+  bench:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -43,4 +43,4 @@ jobs:
           gem install bundler --no-document
           bundle config set path vendor/bundle
           bundle install --jobs=4 --retry=3
-      - run: bundle exec rake benchmark:run[10000]
+      - run: bundle exec rake bench
