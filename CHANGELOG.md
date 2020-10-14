@@ -6,6 +6,7 @@
 * Fail if missing rules on `goodcheck check` command [#142](https://github.com/sider/goodcheck/pull/142)
 * Reduce needless files in this gem [#143](https://github.com/sider/goodcheck/pull/143)
 * Add `Goodcheck::Error` as a base error class [#144](https://github.com/sider/goodcheck/pull/144)
+* Improve error message when config file is not found [#145](https://github.com/sider/goodcheck/pull/145)
 
 ## 2.5.2 (2020-08-31)
 
