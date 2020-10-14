@@ -1,5 +1,5 @@
 
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "goodcheck/version"
 
@@ -14,9 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/sider/goodcheck"
   spec.licenses      = ["MIT"]
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
+  spec.files         = Dir["CHANGELOG.md", "LICENSE", "README.md", "exe/goodcheck", "lib/**/*.rb"]
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
