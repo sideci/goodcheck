@@ -1,6 +1,6 @@
 module Goodcheck
   class ImportLoader
-    class UnexpectedSchemaError < StandardError
+    class UnexpectedSchemaError < Error
       attr_reader :uri
 
       def initialize(uri)

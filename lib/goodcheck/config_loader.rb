@@ -2,7 +2,7 @@ module Goodcheck
   class ConfigLoader
     include ArrayHelper
 
-    class InvalidPattern < StandardError; end
+    class InvalidPattern < Error; end
 
     Schema = StrongJSON.new do
       def self.array_or(type)
