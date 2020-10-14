@@ -192,4 +192,15 @@ Tested 1 rule, 0 successes, 1 failure
 MSG
     end
   end
+
+  def test_no_config
+    TestCaseBuilder.tmpdir do |builder|
+      builder.cd do
+        test = Test.new(stdout: stdout, stderr: stderr, config_path: Pathname("foo.yml"), force_download: nil, home_path: builder.path + "home")
+
+        assert_equal 1, test.run
+        assert_equal "Configuration file not found: foo.yml\n", stderr.string
+      end
+    end
+  end
 end
