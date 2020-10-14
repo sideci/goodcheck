@@ -1,3 +1,10 @@
+rules:
+  - id: sider.goodcheck.error_class
+    pattern: StandardError
+    glob: "lib/**/*.rb"
+    message: |
+      Use `GoodCheck::Error` instead of `StandardError`.
+
 import:
   - https://raw.githubusercontent.com/sider/goodcheck-rules/master/rules/typo.yml
   - https://raw.githubusercontent.com/sider/goodcheck-rules/master/rules/ruby.yml

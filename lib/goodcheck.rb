@@ -11,6 +11,7 @@ require "digest/sha2"
 require "net/http"
 
 require "goodcheck/version"
+require "goodcheck/error"
 require "goodcheck/logger"
 require "goodcheck/home_path"
 require "goodcheck/exit_status"
