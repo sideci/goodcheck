@@ -362,11 +362,10 @@ EOF
     TestCaseBuilder.tmpdir do |builder|
       builder.cd do
         reporter = Reporters::Text.new(stdout: stdout)
-        check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
+        check = Check.new(config_path: Pathname("foo.yml"), rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 1, check.run
-
-        assert_match %r(No such file or directory @ rb_sysopen), stderr.string
+        assert_equal "Configuration file not found: foo.yml\n", stderr.string
       end
     end
   end
