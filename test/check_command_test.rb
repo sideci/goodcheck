@@ -660,4 +660,38 @@ EOF
       end
     end
   end
+
+  def test_glob_exclude
+    TestCaseBuilder.tmpdir do |builder|
+      builder.config content: <<EOF
+rules:
+  - id: com.example.1
+    pattern: foo
+    message: Disallow `foo`
+    glob:
+      - { pattern: "**/*.txt", exclude: ["**/*test*/**", "*bar*"] }
+EOF
+
+      builder.file name: Pathname("test.txt"), content: "foo"
+      builder.file name: Pathname("test/a.txt"), content: "foo"
+      builder.file name: Pathname("a/__tests__/b.txt"), content: "foo"
+      builder.file name: Pathname("_bar_.txt"), content: "foo"
+      builder.file name: Pathname("a/b/bar.txt"), content: "foo"
+      builder.file name: Pathname("pass.txt"), content: "foo"
+
+      builder.cd do
+        reporter = Reporters::Text.new(stdout: stdout)
+        check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
+
+        assert_equal 2, check.run
+
+        assert_match %r(test\.txt:1:foo:), stdout.string
+        refute_match %r(test/a\.txt:1:foo:), stdout.string
+        refute_match %r(a/__tests__/b\.txt:1:foo:), stdout.string
+        refute_match %r(_bar_\.txt:1:foo:), stdout.string
+        assert_match %r(a/b/bar\.txt:1:foo:), stdout.string
+        assert_match %r(pass.txt:1:foo:), stdout.string
+      end
+    end
+  end
 end

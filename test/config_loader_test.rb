@@ -97,16 +97,28 @@ class ConfigLoaderTest < Minitest::Test
   def test_load_globs
     loader = config_loader()
 
-    g1, g2, g3, _ = loader.load_globs(["foo", { pattern: "foo/bar" }, { pattern: "*.rb", encoding: "Shift_JIS" }])
+    g1, g2, g3, g4 = loader.load_globs([
+      "foo",
+      { pattern: "foo/bar" },
+      { pattern: "*.rb", encoding: "Shift_JIS" },
+      { pattern: "lib/**/*", exclude: "*baz*" },
+    ])
 
     assert_equal "foo", g1.pattern
     assert_nil g1.encoding
+    assert_nil g1.exclude
 
     assert_equal "foo/bar", g2.pattern
     assert_nil g2.encoding
+    assert_nil g2.exclude
 
     assert_equal "*.rb", g3.pattern
     assert_equal "Shift_JIS", g3.encoding
+    assert_nil g3.exclude
+
+    assert_equal "lib/**/*", g4.pattern
+    assert_nil g4.encoding
+    assert_equal "*baz*", g4.exclude
   end
 
   def test_load_pattern_rule
@@ -190,7 +202,7 @@ class ConfigLoaderTest < Minitest::Test
     rule.triggers[0].tap do |trigger|
       assert_operator trigger, :by_pattern?
       assert_equal ["foo.bar"], trigger.patterns.map(&:source)
-      assert_equal [Goodcheck::Glob.new(pattern: "*.rb", encoding: nil)], trigger.globs
+      assert_equal [Goodcheck::Glob.new(pattern: "*.rb", encoding: nil, exclude: nil)], trigger.globs
       assert_equal ["hogehoge"], trigger.passes
       assert_operator trigger, :skips_fail_examples?
       assert_equal [], trigger.fails
@@ -200,7 +212,7 @@ class ConfigLoaderTest < Minitest::Test
     rule.triggers[1].tap do |trigger|
       assert_operator trigger, :by_pattern?
       assert_equal ["File.open"], trigger.patterns.map(&:source)
-      assert_equal [Goodcheck::Glob.new(pattern: "*.rb", encoding: nil)], trigger.globs
+      assert_equal [Goodcheck::Glob.new(pattern: "*.rb", encoding: nil, exclude: nil)], trigger.globs
       assert_equal ["hogehoge"], trigger.passes
       assert_operator trigger, :skips_fail_examples?
       assert_equal [], trigger.fails
@@ -210,7 +222,7 @@ class ConfigLoaderTest < Minitest::Test
     rule.triggers[2].tap do |trigger|
       assert_operator trigger, :by_pattern?
       assert_equal ["background-color", "margin-left"], trigger.patterns.map(&:source)
-      assert_equal [Goodcheck::Glob.new(pattern: "app/**/*", encoding: nil)], trigger.globs
+      assert_equal [Goodcheck::Glob.new(pattern: "app/**/*", encoding: nil, exclude: nil)], trigger.globs
       assert_equal ["hogehoge"], trigger.passes
       assert_operator trigger, :skips_fail_examples?
       assert_equal [], trigger.fails
@@ -242,7 +254,7 @@ class ConfigLoaderTest < Minitest::Test
     rule.triggers[0].tap do |trigger|
       refute_operator trigger, :by_pattern?
       assert_equal ["foo.bar"], trigger.patterns.map(&:source)
-      assert_equal [Goodcheck::Glob.new(pattern: "*.rb", encoding: nil)], trigger.globs
+      assert_equal [Goodcheck::Glob.new(pattern: "*.rb", encoding: nil, exclude: nil)], trigger.globs
       assert_equal ["foo.baz"], trigger.passes
       assert_equal ["foo.bar.baz"], trigger.fails
       refute_operator trigger, :negated?
@@ -376,7 +388,8 @@ class ConfigLoaderTest < Minitest::Test
                                     glob: [
                                       "**/*.rb",
                                       { pattern: "**/Rakefile", encoding: "EUC-JP" },
-                                      { pattern: "*.gemspec" }
+                                      { pattern: "*.gemspec" },
+                                      { pattern: "*.md", exclude: "*CHANGELOG*" }
                                     ],
                                     pass: ["hoge"],
                                     fail: ["huga"]
