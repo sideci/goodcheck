@@ -1,16 +1,19 @@
 name: Release
 
-on: push
+on:
+  push:
+    tags: ["**"]
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\//}
+        id: get_tag
       - uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           body: |
-            See the [changelog](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/CHANGELOG.md) for more details.
+            See the [changelog](https://github.com/${{ github.repository }}/blob/${{ steps.get_tag.outputs.tag }}/CHANGELOG.md) for more details.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
