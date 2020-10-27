@@ -7,6 +7,7 @@
 * Reduce needless files in this gem [#143](https://github.com/sider/goodcheck/pull/143)
 * Add `Goodcheck::Error` as a base error class [#144](https://github.com/sider/goodcheck/pull/144)
 * Improve error message when config file is not found [#145](https://github.com/sider/goodcheck/pull/145)
+* Add `rules[].glob.exclude` option to `goodcheck.yml` [#146](https://github.com/sider/goodcheck/pull/146)
 
 ## 2.5.2 (2020-08-31)
 
