@@ -22,7 +22,8 @@ module Goodcheck
       let :deprecated_token_pattern, object(token: string, case_insensitive: boolean?)
 
       let :encoding, enum(*Encoding.name_list.map {|name| literal(name) })
-      let :glob_obj, object(pattern: string, encoding: optional(encoding))
+      let :glob_obj, object(pattern: string, encoding: optional(encoding),
+                            exclude: enum?(string, array(string)))
       let :one_glob, enum(glob_obj,
                           string,
                           detector: -> (value) {
@@ -344,9 +345,9 @@ module Goodcheck
       globs.map do |glob|
         case glob
         when String
-          Glob.new(pattern: glob, encoding: nil)
+          Glob.new(pattern: glob, encoding: nil, exclude: nil)
         when Hash
-          Glob.new(pattern: glob[:pattern], encoding: glob[:encoding])
+          Glob.new(pattern: glob[:pattern], encoding: glob[:encoding], exclude: glob[:exclude])
         end
       end
     end

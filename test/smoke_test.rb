@@ -120,6 +120,7 @@ rules:
       - bar
     glob:
       - "app/models/**/*.rb"
+      - { pattern: "**/*.erb", exclude: "**/*.html.*" }
 EOF
 
       builder.file name: Pathname("app/models/user.rb"), content: <<EOF
@@ -129,13 +130,14 @@ end
 EOF
 
       builder.file name: Pathname("app/views/welcome/index.html.erb"), content: <<EOF
-<h1>Foo Bar Baz</h1>
+<h1>Foo bar Baz</h1>
 EOF
 
       stdout, _, status = shell(goodcheck, "check", ".", chdir: builder.path)
 
       refute status.success?
       assert_match %r(app/models/user\.rb:2:  belongs_to :foo:\tFoo), stdout
+      refute_match %r(app/views/welcome/index\.html\.erb:1:), stdout
     end
   end
 

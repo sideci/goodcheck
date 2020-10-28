@@ -169,12 +169,16 @@ A *glob* can be a string, or a hash.
 glob:
   pattern: "legacy/**/*.rb"
   encoding: EUC-JP
+  exclude: ["**/test/**", "**/spec/**"]
 ```
 
 The hash can have an optional `encoding` attribute.
 You can specify the encoding of the file by the names defined for Ruby.
 The list of all available encoding names can be found by `$ ruby -e "puts Encoding.name_list"`.
 The default value is `UTF-8`.
+
+Also, the hash can have an optional `exclude` attribute.
+You can exclude any files from the `pattern` matched ones by this attribute.
 
 If you write a string as a `glob`, the string value can be the `pattern` of the glob, without `encoding` attribute.
 

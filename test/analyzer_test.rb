@@ -241,7 +241,7 @@ atest
         buffer: buffer,
         rule: new_rule(id: "rule1"),
         trigger: new_trigger {|trigger|
-          trigger.globs << Goodcheck::Glob.new(pattern: "*.txt", encoding: nil)
+          trigger.globs << Goodcheck::Glob.new(pattern: "*.txt", encoding: nil, exclude: nil)
         }
       )
 
