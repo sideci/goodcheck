@@ -46,13 +46,13 @@ module Goodcheck
     end
 
     def load_file(path)
-      files = config_path.parent.glob(path, File::FNM_DOTMATCH | File::FNM_EXTGLOB).sort
+      files = Dir.glob(File.join(config_path.parent.to_path, path), File::FNM_DOTMATCH | File::FNM_EXTGLOB).sort
       if files.empty?
         raise FileNotFound.new(path)
       else
         files.each do |file|
           Goodcheck.logger.info "Reading file: #{file}"
-          yield file.read
+          yield File.read(file)
         end
       end
     end
