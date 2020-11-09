@@ -4,7 +4,17 @@ module Goodcheck
       attr_reader :uri
 
       def initialize(uri)
+        super("Unexpected URI schema: #{uri.scheme}")
         @uri = uri
+      end
+    end
+
+    class FileNotFound < Error
+      attr_reader :path
+
+      def initialize(path)
+        super("No such a file: #{path}")
+        @path = path
       end
     end
 
@@ -24,20 +34,26 @@ module Goodcheck
       uri = URI.parse(name)
 
       case uri.scheme
-      when nil, "file"
-        load_file uri, &block
+      when nil
+        load_file name, &block
+      when "file"
+        load_file uri.path, &block
       when "http", "https"
         load_http uri, &block
       else
-        raise UnexpectedSchemaError.new("Unexpected URI schema: #{uri.class.name}")
+        raise UnexpectedSchemaError.new(uri)
       end
     end
 
-    def load_file(uri)
-      path = (config_path.parent + uri.path)
-
-      begin
-        yield path.read
+    def load_file(path)
+      files = config_path.parent.glob(path, File::FNM_DOTMATCH | File::FNM_EXTGLOB).sort
+      if files.empty?
+        raise FileNotFound.new(path)
+      else
+        files.each do |file|
+          Goodcheck.logger.info "Reading file: #{file}"
+          yield file.read
+        end
       end
     end
 

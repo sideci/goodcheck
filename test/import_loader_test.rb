@@ -3,6 +3,16 @@ require "test_helper"
 class ImportLoaderTest < Minitest::Test
   include TestHelper
 
+  def test_load_unexpected_schema
+    loader = Goodcheck::ImportLoader.new(cache_path: nil, force_download: false, config_path: nil)
+
+    error = assert_raises Goodcheck::ImportLoader::UnexpectedSchemaError do
+      loader.load("mailto:foo@example.com")
+    end
+    assert_equal "Unexpected URI schema: mailto", error.message
+    assert_equal URI("mailto:foo@example.com"), error.uri
+  end
+
   def test_load_file
     mktmpdir do |path|
       cache_path = path + "cache"
@@ -28,6 +38,37 @@ EOF
     end
   end
 
+  def test_load_file_via_glob
+    mktmpdir do |path|
+      cache_path = path + "cache"
+      cache_path.mkpath
+
+      rule_content_1 = <<EOF
+- id: foo
+  pattern: FOO
+  message: Message
+EOF
+      (path + "rules.yml").write rule_content_1
+
+      rule_content_2 = <<EOF
+- id: bar
+  pattern: BAR
+  message: Message
+EOF
+      (path + ".rules").mkpath
+      (path + ".rules" + "bar.yml").write rule_content_2
+
+      loader = Goodcheck::ImportLoader.new(cache_path: cache_path, force_download: false, config_path: path + "goodcheck.yml")
+
+      loaded_content = []
+      loader.load("**/*.yml") do |content|
+        loaded_content << content
+      end
+
+      assert_equal [rule_content_2, rule_content_1], loaded_content
+    end
+  end
+
   def test_load_file_error
     mktmpdir do |path|
       cache_path = path + "cache"
@@ -37,11 +78,13 @@ EOF
 
       loaded_content = nil
 
-      assert_raises Errno::ENOENT do
+      error = assert_raises Goodcheck::ImportLoader::FileNotFound do
         loader.load("rules.yml") do |content|
           loaded_content = content
         end
       end
+      assert_equal "No such a file: rules.yml", error.message
+      assert_equal "rules.yml", error.path
 
       # No yield if failed to read file
       assert_nil loaded_content
