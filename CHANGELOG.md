@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* Add missing doc for importing glob feature [#151](https://github.com/sider/goodcheck/pull/151)
+
 ## 2.6.0 (2020-11-17)
 
 * Improve CLI help and error messages [#141](https://github.com/sider/goodcheck/pull/141)
