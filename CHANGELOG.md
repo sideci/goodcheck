@@ -1,6 +1,8 @@
-# CHANGELOG
+# Changelog
 
-## master
+## HEAD
+
+## 2.6.0 (2020-11-17)
 
 * Improve CLI help and error messages [#141](https://github.com/sider/goodcheck/pull/141)
 * Fail if missing rules on `goodcheck check` command [#142](https://github.com/sider/goodcheck/pull/142)
