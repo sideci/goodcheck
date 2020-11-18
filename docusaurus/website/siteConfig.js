@@ -40,8 +40,8 @@ const siteConfig = {
   headerLinks: [
     { doc: 'getstarted', label: 'Get Started' },
     { doc: 'configuration', label: 'Configuration' },
-    { doc: 'rules', label: 'Rule' },
     { doc: 'commands', label: 'Commands' },
+    { doc: 'rules', label: 'Rule' },
   ],
 
   // If you have users set above, you add it here:
@@ -120,7 +120,7 @@ const siteConfig = {
     pattern: "Github",
     message: `|
       GitHub is GitHub, not Github
-  
+
       You may have misspelling the name of the service!`,
     resultFront: `index.html: 91:    - <a>Signup via `,
     match: "Github",
