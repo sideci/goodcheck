@@ -268,13 +268,14 @@ If your `pattern` definition includes `glob`, switching to `trigger` would make 
 import:
   - /usr/share/goodcheck/rules.yml
   - lib/goodcheck/rules.yml
+  - lib/goodcheck/rules/**/*.yml
   - https://some.host/shared/rules.yml
 ```
 
 The value of `import` can be an array of:
 
 - A string which represents an absolute file path,
-- A string which represents a relative file path from the config file, or
+- A string or glob pattern which represents a relative file path from the config file, or
 - A http/https URL which represents the location of rules
 
 The rules file is a YAML file with an array of rules.
