@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* Add missing doc for importing glob feature [#151](https://github.com/sider/goodcheck/pull/151)
+
 ## 2.6.0 (2020-11-17)
 
 * Improve CLI help and error messages [#141](https://github.com/sider/goodcheck/pull/141)
@@ -10,6 +12,7 @@
 * Add `Goodcheck::Error` as a base error class [#144](https://github.com/sider/goodcheck/pull/144)
 * Improve error message when config file is not found [#145](https://github.com/sider/goodcheck/pull/145)
 * Add `rules[].glob.exclude` option to `goodcheck.yml` [#146](https://github.com/sider/goodcheck/pull/146)
+* Glob support for importing rules [#149](https://github.com/sider/goodcheck/pull/149)
 
 ## 2.5.2 (2020-08-31)
 
