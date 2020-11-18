@@ -40,8 +40,8 @@ $ vim goodcheck.yml
 $ goodcheck check
 ```
 
-1. Generate a template of `goodcheck.yml` configuration file for you.
-2. Edit the configuration file to define patterns you want to check.
+1. Generate a template of [`goodcheck.yml`](configuration.md) configuration file for you.
+2. Edit the `goodcheck.yml` to define patterns you want to check.
 3. Run checking your files, and it will print matched texts.
 
 See the [commands](commands.md) for more details.

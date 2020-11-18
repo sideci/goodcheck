@@ -6,6 +6,7 @@ sidebar_label: Configuration
 
 ## `goodcheck.yml`
 
+The Goodcheck configuration files is named `goodcheck.yml`.
 An example of the configuration is like the following:
 
 ```yaml
@@ -21,11 +22,17 @@ rules:
       - When GitHub is renamed
     glob:
       - app/views/**/*.html.slim
-      - config/locales/**/*.yaml
+      - config/locales/**/*.yml
     pass:
       - <a>Signup via GitHub</a>
     fail:
       - <a>Signup via Github</a>
+
+import:
+  - goodcheck/*.yml
+
+exclude:
+  - vendor
 ```
 
 A *rule* hash under a `rules` list contains the following attributes:
@@ -173,7 +180,7 @@ It expands five levels of nesting. See the example of matches with the second `b
 - `backgroundColor={{ red: red(), green: green(), blue: green()-1 }}` matches (`color=="{ red: red(), green: green(), blue: green()-1 }"`)
 - `backgroundColor={ {{{{{{}}}}}} }` matches (`color==" {{{{{{}}}}}"`)
 
-## *glob*
+## `glob`
 
 A *glob* can be a string or a hash.
 
