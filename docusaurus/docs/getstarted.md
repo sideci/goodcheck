@@ -40,9 +40,11 @@ $ vim goodcheck.yml
 $ goodcheck check
 ```
 
-The `init` command generates a template of `goodcheck.yml` configuration file for you.
-Edit the config file to define patterns you want to check.
-Then run `check` command, and it will print matched texts.
+1. Generate a template of `goodcheck.yml` configuration file for you.
+2. Edit the configuration file to define patterns you want to check.
+3. Run checking your files, and it will print matched texts.
+
+See the [commands](commands.md) for more details.
 
 ## Cheatsheet
 
