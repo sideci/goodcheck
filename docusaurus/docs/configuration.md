@@ -145,7 +145,7 @@ You can omit the type of variable binding.
 
 ```yaml
 pattern:
-  - token: margin-left: ${size}px;
+  - token: "margin-left: ${size}px;"
     where:
       size: true
   - token: backgroundColor={${color}}
@@ -257,7 +257,7 @@ rules:
           </html>
 ```
 
-You can continue existing `pattern` definitions, but using `goodcheck test` against `pattern`s with `glob` does not work.
+You can keep `pattern` definitions, but using `goodcheck test` against `pattern`s with `glob` does not work.
 If your `pattern` definition includes `glob`, switching to `trigger` would make sense.
 
 ## Importing rules
