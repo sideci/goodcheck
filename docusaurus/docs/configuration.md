@@ -182,7 +182,7 @@ It expands five levels of nesting. See the example of matches with the second `b
 
 ## `glob`
 
-A *glob* can be a string or a hash.
+The `glob` can be a string or a hash.
 
 ```yaml
 glob: "**/test/**/*.rb"
