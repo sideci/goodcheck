@@ -35,7 +35,7 @@ exclude:
   - vendor
 ```
 
-A *rule* hash under a `rules` list contains the following attributes:
+A *rule* hash under the `rules` list contains the following attributes:
 
 | Name                  | Description                                                    | Required? |
 | --------------------- | -------------------------------------------------------------- | --------- |
