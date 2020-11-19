@@ -49,7 +49,7 @@ A *rule* hash under the `rules` list contains the following attributes:
 
 ## `pattern`
 
-A *pattern* can be one of either:
+The `pattern` can be one of either:
 
 - [string literal](#string-literal)
 - [*literal pattern*](#literal-pattern)
