@@ -327,7 +327,7 @@ The rules file to be imported should be a YAML file with an array of rules, for 
 
 ## Downloaded rules
 
-Downloaded rules are cached in a `cache` directory in the *Goodcheck home directory*.
+Downloaded rules are cached in the *cache* directory in the *Goodcheck home directory*.
 The *Goodcheck home directory* is `~/.goodcheck`, but you can customize the location with `GOODCHECK_HOME` environment variable.
 
 The cache expires in 3 minutes.
