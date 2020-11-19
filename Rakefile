@@ -29,6 +29,19 @@ namespace :docs do
     end
   end
 
+  desc "Start the documentation development server"
+  task :start => [:install_deps] do
+    puts ""
+    puts "!!!"
+    puts "!!! Open the URL in your browser: http://127.0.0.1:3000/goodcheck/docs/next/getstarted"
+    puts "!!!"
+    puts ""
+
+    on_docs_dir do
+      sh "yarn", "run", "start"
+    end
+  end
+
   desc "Build the documentation website"
   task :build => [:install_deps] do
     on_docs_dir do
@@ -51,6 +64,7 @@ namespace :docs do
   end
 
   def on_docs_dir(&block)
-    Dir.chdir "docusaurus/website", &block
+    dir = File.join(__dir__, "docusaurus", "website")
+    Dir.chdir(dir, &block)
   end
 end
