@@ -6,7 +6,7 @@ sidebar_label: Configuration
 
 ## `goodcheck.yml`
 
-The Goodcheck configuration files is named `goodcheck.yml`.
+The default Goodcheck configuration file is named `goodcheck.yml`.
 An example of the configuration is like the following:
 
 ```yaml
