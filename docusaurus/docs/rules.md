@@ -1,13 +1,12 @@
 ---
 id: rules
-title: Rules
+title: Rules Example
 sidebar_label: Rules
 ---
 
+## Rule: `target="_blank"` Security Issue
 
-## Rule: `"_blank"` Security Issue
-
-When `target = "_blank"` is used, the opened page can access the original window object and potentially redirect the original page to a malicious URL. In this example, the rule will look for patterns of `"_blank"` and suggest to use `rel="noopener"` to prevent the opened page from having access.
+When `target="_blank"` is used, the opened page can access the original window object and potentially redirect the original page to a malicious URL. In this example, the rule will look for patterns of `"_blank"` and suggest to use `rel="noopener"` to prevent the opened page from having access.
 
 ```yaml
 rules:
@@ -32,9 +31,10 @@ rules:
 ```
 
 ## Rule: Sign in
+
 > Warning: This rule needs customization.
 
-Keep wording consistent to provide a clear experience for users. In this example, the use of Log in or Log out would prompt the use of sign in / sign out instead.
+Keep wording consistent to provide a clear experience for users. In this example, the use of Log in or Log out would prompt the use of "sign in" / "sign out" instead.
 
 ```yaml
 rules:
@@ -62,10 +62,11 @@ rules:
       - "Sign out"
 ```
 
-## Rule: mixin
+## Rule: Sass mixin
+
 > Warning: This rule needs customization.
 
-A mixin lets you make groups of CSS declarations that you want to reuse throughout your site. In this example, it creates a warning when the color pattern is used and suggests using a mixin instead.
+A Sass mixin lets you make groups of CSS declarations that you want to reuse throughout your site. In this example, it creates a warning when the color pattern is used and suggests using a mixin instead.
 
 ```yaml
 rules:

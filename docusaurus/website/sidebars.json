@@ -3,9 +3,8 @@
         "Docs": [
             "getstarted",
             "configuration",
-            "rules",
             "commands",
-            "development"
+            "rules"
         ]
     }
 }

@@ -202,7 +202,7 @@ blockquote {
 }
 
 @media only screen and (max-width: 1023px) {
-  
+
   .splash-container h1 {
     margin-top: 20px;
     font-size: 48px;
@@ -241,5 +241,10 @@ blockquote {
   .section-card {
     max-width: 100%;
   }
-  
+
+}
+
+.post article a[href]:focus,
+.post article a[href]:hover {
+  text-decoration: underline;
 }

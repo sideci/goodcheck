@@ -3,6 +3,7 @@
 ## HEAD
 
 * Add missing doc for importing glob feature [#151](https://github.com/sider/goodcheck/pull/151)
+* Renewal documentation [#152](https://github.com/sider/goodcheck/pull/152)
 
 ## 2.6.0 (2020-11-17)
 
