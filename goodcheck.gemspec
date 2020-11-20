@@ -26,7 +26,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "minitest-reporters", "~> 1.4.2"
 
-  spec.add_runtime_dependency "activesupport", ">= 4.0", "< 7.0"
   spec.add_runtime_dependency "strong_json", ">= 1.1", "< 2.2"
   spec.add_runtime_dependency "rainbow", "~> 3.0.0"
   spec.add_runtime_dependency "psych", ">= 3.1", "< 4.0" # NOTE: Needed for old Ruby versions (<= 2.5)
