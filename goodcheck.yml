@@ -11,6 +11,7 @@ import:
 
 exclude:
   - "**/build"
+  - "**/coverage"
   - "**/node_modules"
   - "**/vendor"
   - "**/*.{ico,pdf,png}"
