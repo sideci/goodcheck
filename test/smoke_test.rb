@@ -172,7 +172,7 @@ EOF
                       path: "app/models/user.rb",
                       location: {
                         start_line: 2,
-                        start_column: 14,
+                        start_column: 15,
                         end_line: 2,
                         end_column: 17
                       },
