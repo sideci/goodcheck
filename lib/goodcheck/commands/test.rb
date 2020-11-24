@@ -51,7 +51,8 @@ module Goodcheck
           true
         else
           count = duplicated_ids.size
-          stdout.puts(Rainbow("  Found #{count} #{'duplication'.pluralize(count)}.😞").red)
+          duplication = count == 1 ? 'duplication' : 'duplications'
+          stdout.puts(Rainbow("  Found #{count} #{duplication}.😞").red)
           duplicated_ids.each do |id|
             stdout.puts "    #{id}"
           end
@@ -76,7 +77,7 @@ module Goodcheck
                 if trigger.by_pattern?
                   stdout.puts "  Testing pattern..."
                 else
-                  stdout.puts "  Testing #{(index+1).ordinalize} trigger..."
+                  stdout.puts "  #{index + 1}. Testing trigger..."
                 end
 
                 pass_errors = trigger.passes.each.with_index.select do |pass, _|
@@ -92,7 +93,7 @@ module Goodcheck
                   rule_ok = false
 
                   pass_errors.each do |_, index|
-                    stdout.puts "    #{(index+1).ordinalize} #{Rainbow('pass').green} example matched.😱"
+                    stdout.puts "    #{index + 1}. #{Rainbow('pass').green} example matched.😱"
                     failed_rule_ids << rule.id
                   end
                 end
@@ -102,7 +103,7 @@ module Goodcheck
                   rule_ok = false
 
                   fail_errors.each do |_, index|
-                    stdout.puts "    #{(index+1).ordinalize} #{Rainbow('fail').red} example didn't match.😱"
+                    stdout.puts "    #{index + 1}. #{Rainbow('fail').red} example didn't match.😱"
                     failed_rule_ids << rule.id
                   end
                 end
@@ -132,10 +133,11 @@ module Goodcheck
         end
 
         rule_count = success_count + failure_count
+        rule = rule_count == 1 ? "1 rule" : "#{rule_count} rules"
+        success = Rainbow(success_count == 1 ? "1 success" : "#{success_count} successes").green
+        failure = Rainbow(failure_count == 1 ? "1 failure" : "#{failure_count} failures").red
         stdout.puts ""
-        stdout.puts ["Tested #{rule_count} #{'rule'.pluralize(rule_count)}",
-                     Rainbow("#{success_count} #{'success'.pluralize(success_count)}").green,
-                     Rainbow("#{failure_count} #{'failure'.pluralize(failure_count)}").red].join(", ")
+        stdout.puts "Tested #{rule}, #{success}, #{failure}"
 
         test_pass
       end

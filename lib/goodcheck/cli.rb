@@ -63,7 +63,7 @@ module Goodcheck
       rules = []
       formats = [:text, :json]
       format = :text
-      loglevel = Logger::ERROR
+      loglevel = nil
       force_download = false
 
       OptionParser.new("Usage: goodcheck check [options] paths...") do |opts|
@@ -82,7 +82,7 @@ module Goodcheck
         end
       end.parse!(args)
 
-      Goodcheck.logger.level = loglevel
+      Goodcheck.logger.level = loglevel if loglevel
 
       if args.empty?
         targets << Pathname(".")

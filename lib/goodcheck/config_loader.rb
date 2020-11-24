@@ -214,21 +214,19 @@ module Goodcheck
 
     def load
       Goodcheck.logger.info "Loading configuration: #{path}"
-      Goodcheck.logger.tagged "#{path}" do
-        Schema.config.coerce(content)
+      Schema.config.coerce(content)
 
-        rules = []
+      rules = []
 
-        load_rules(rules, array(content[:rules]))
+      load_rules(rules, array(content[:rules]))
 
-        Array(content[:import]).each do |import|
-          load_import rules, import
-        end
-
-        exclude_paths = Array(content[:exclude])
-
-        Config.new(rules: rules, exclude_paths: exclude_paths)
+      Array(content[:import]).each do |import|
+        load_import rules, import
       end
+
+      exclude_paths = Array(content[:exclude])
+
+      Config.new(rules: rules, exclude_paths: exclude_paths)
     end
 
     def load_rules(rules, array)
@@ -240,13 +238,11 @@ module Goodcheck
     def load_import(rules, import)
       Goodcheck.logger.info "Importing rules from #{import}"
 
-      Goodcheck.logger.tagged import do
-        import_loader.load(import) do |content|
-          json = JSON.parse(JSON.dump(YAML.load(content, filename: import)), symbolize_names: true)
+      import_loader.load(import) do |content|
+        json = JSON.parse(JSON.dump(YAML.load(content, filename: import)), symbolize_names: true)
 
-          Schema.rules.coerce json
-          load_rules(rules, json)
-        end
+        Schema.rules.coerce json
+        load_rules(rules, json)
       end
     end
 

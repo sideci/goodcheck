@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* Goodbye ActiveSupport [#155](https://github.com/sider/goodcheck/pull/155)
+
 ## 2.6.1 (2020-11-19)
 
 * Add missing doc for importing glob feature [#151](https://github.com/sider/goodcheck/pull/151)
