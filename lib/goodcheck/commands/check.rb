@@ -71,31 +71,27 @@ module Goodcheck
       def each_check
         targets.each do |target|
           Goodcheck.logger.info "Checking target: #{target}"
-          Goodcheck.logger.tagged target.to_s do
-            each_file target, immediate: true do |path|
-              Goodcheck.logger.debug "Checking file: #{path}"
-              Goodcheck.logger.tagged path.to_s do
-                reporter.file(path) do
-                  buffers = {}
+          each_file target, immediate: true do |path|
+            Goodcheck.logger.debug "Checking file: #{path}"
+            reporter.file(path) do
+              buffers = {}
 
-                  config.rules_for_path(path, rules_filter: rules) do |rule, glob, trigger|
-                    Goodcheck.logger.debug "Checking rule: #{rule.id}"
-                    begin
-                      encoding = glob&.encoding || Encoding.default_external.name
+              config.rules_for_path(path, rules_filter: rules) do |rule, glob, trigger|
+                Goodcheck.logger.debug "Checking rule: #{rule.id}"
+                begin
+                  encoding = glob&.encoding || Encoding.default_external.name
 
-                      if buffers[encoding]
-                        buffer = buffers[encoding]
-                      else
-                        content = path.read(encoding: encoding).encode(Encoding.default_internal || Encoding::UTF_8)
-                        buffer = Buffer.new(path: path, content: content)
-                        buffers[encoding] = buffer
-                      end
-
-                      yield buffer, rule, trigger
-                    rescue ArgumentError => exn
-                      stderr.puts "#{path}: #{exn.inspect}"
-                    end
+                  if buffers[encoding]
+                    buffer = buffers[encoding]
+                  else
+                    content = path.read(encoding: encoding).encode(Encoding.default_internal || Encoding::UTF_8)
+                    buffer = Buffer.new(path: path, content: content)
+                    buffers[encoding] = buffer
                   end
+
+                  yield buffer, rule, trigger
+                rescue ArgumentError => exn
+                  stderr.puts "#{path}: #{exn.inspect}"
                 end
               end
             end
