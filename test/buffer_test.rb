@@ -16,16 +16,16 @@ ipsum
     assert_equal string.byteslice(expected), string.byteslice(actual)
   end
 
-  def test_line_starts
+  def test_line_ranges
     buffer = Buffer.new(path: Pathname("a.txt"), content: CONTENT)
 
+    assert_equal 6, buffer.line_ranges.size
     assert_string_range CONTENT, 0..5, buffer.line_ranges[0]
     assert_string_range CONTENT, 6..11, buffer.line_ranges[1]
     assert_string_range CONTENT, 12..36, buffer.line_ranges[2]
     assert_string_range CONTENT, 37..41, buffer.line_ranges[3]
     assert_string_range CONTENT, 42..46, buffer.line_ranges[4]
     assert_string_range CONTENT, 47..47, buffer.line_ranges[5]
-    assert_nil buffer.line_ranges[6]
   end
 
   def test_location_for_position
