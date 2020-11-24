@@ -3,6 +3,7 @@
 ## HEAD
 
 * Goodbye ActiveSupport [#155](https://github.com/sider/goodcheck/pull/155)
+* Fix zero column [#160](https://github.com/sider/goodcheck/pull/160)
 
 ## 2.6.1 (2020-11-19)
 
