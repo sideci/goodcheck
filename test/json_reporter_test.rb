@@ -16,7 +16,7 @@ class JSONReporterTest < Minitest::Test
         rule = Rule.new(id: "id", triggers: [], message: "Message", justifications: ["reason1", "reason2"])
         reporter.rule rule do
           buffer = Buffer.new(path: Pathname("foo.txt"), content: "a\nb\nc\nd\ne")
-          issue = Issue.new(buffer: buffer, range: 0...2, rule: rule, text: "a ")
+          issue = Issue.new(buffer: buffer, rule: rule, text: "a ", text_begin_pos: 0)
           reporter.issue(issue)
         end
       end
@@ -28,9 +28,9 @@ class JSONReporterTest < Minitest::Test
                     path: "foo.txt",
                     location: {
                       start_line: 1,
-                      start_column: 0,
-                      end_line: 2,
-                      end_column: 0,
+                      start_column: 1,
+                      end_line: 1,
+                      end_column: 2,
                     },
                     message: "Message",
                     justifications: ["reason1", "reason2"]

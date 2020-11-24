@@ -21,14 +21,18 @@ module Goodcheck
 
       def issue(issue)
         if issue.location
-          line = issue.buffer.line(issue.location.start_line)
-          end_column = if issue.location.start_line == issue.location.end_line
-                         issue.location.end_column
+          start_line = issue.location.start_line
+          start_column_index = issue.location.start_column - 1
+          line = issue.buffer.line(start_line)
+          column_size = if issue.location.one_line?
+                         issue.location.column_size
                        else
                          line.bytesize
                        end
-          colored_line = line.byteslice(0, issue.location.start_column) + Rainbow(line.byteslice(issue.location.start_column, end_column - issue.location.start_column)).red + line.byteslice(end_column, line.bytesize)
-          stdout.puts "#{issue.path}:#{issue.location.start_line}:#{colored_line.chomp}:\t#{issue.rule.message.lines.first.chomp}"
+          colored_line = line.byteslice(0, start_column_index) +
+                         Rainbow(line.byteslice(start_column_index, column_size)).red +
+                         line.byteslice(start_column_index + column_size, line.bytesize)
+          stdout.puts "#{issue.path}:#{start_line}:#{colored_line.chomp}:\t#{issue.rule.message.lines.first.chomp}"
         else
           line = issue.buffer.line(1)&.chomp
           line = line ? Rainbow(line).red : '-'

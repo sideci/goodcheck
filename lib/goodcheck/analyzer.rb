@@ -13,7 +13,7 @@ module Goodcheck
     def scan(&block)
       if block_given?
         if trigger.patterns.empty?
-          yield Issue.new(buffer: buffer, range: nil, rule: rule, text: nil)
+          yield Issue.new(buffer: buffer, rule: rule)
         else
           var_pats, novar_pats = trigger.patterns.partition {|pat|
             pat.is_a?(Pattern::Token) && !pat.variables.empty?
@@ -44,9 +44,7 @@ module Goodcheck
         while true
           case
           when scanner.scan_until(regexp)
-            text = scanner.matched
-            range = (scanner.pos - text.bytesize) .. scanner.pos
-            issues << Issue.new(buffer: buffer, range: range, rule: rule, text: text)
+            issues << new_issue_with_matched(scanner)
           else
             break
           end
@@ -55,7 +53,7 @@ module Goodcheck
         issues.each(&block)
       else
         unless regexp =~ buffer.content
-          yield Issue.new(buffer: buffer, range: nil, rule: rule, text: nil)
+          yield Issue.new(buffer: buffer, rule: rule)
         end
       end
     end
@@ -68,9 +66,7 @@ module Goodcheck
           case
           when scanner.scan_until(pat.regexp)
             if pat.test_variables(scanner)
-              text = scanner.matched
-              range = (scanner.pos - text.bytesize) .. scanner.pos
-              yield Issue.new(buffer: buffer, range: range, rule: rule, text: text)
+              yield new_issue_with_matched(scanner)
             end
           else
             break
@@ -84,11 +80,19 @@ module Goodcheck
               break
             end
           else
-            yield Issue.new(buffer: buffer, range: nil, rule: rule, text: nil)
+            yield Issue.new(buffer: buffer, rule: rule)
             break
           end
         end
       end
+    end
+
+    private
+
+    def new_issue_with_matched(scanner)
+      Issue.new(buffer: buffer, rule: rule,
+                text: scanner.matched,
+                text_begin_pos: scanner.pos - scanner.matched_size)
     end
   end
 end

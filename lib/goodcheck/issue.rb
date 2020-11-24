@@ -1,15 +1,15 @@
 module Goodcheck
   class Issue
     attr_reader :buffer
-    attr_reader :range
     attr_reader :rule
     attr_reader :text
+    attr_reader :range
 
-    def initialize(buffer:, range:, rule:, text:)
+    def initialize(buffer:, rule:, text: nil, text_begin_pos: nil)
       @buffer = buffer
-      @range = range
       @rule = rule
       @text = text
+      @range = text ? text_begin_pos..(text_begin_pos + text.bytesize - 1) : nil
       @location = nil
     end
 

@@ -43,7 +43,7 @@ module Goodcheck
         start_position = 0
 
         content.split(/\n/, -1).each do |line|
-          range = start_position...(start_position + line.bytesize)
+          range = start_position..(start_position + line.bytesize)
           @line_ranges << range
           start_position = range.end + 1
         end
@@ -51,10 +51,10 @@ module Goodcheck
 
       @line_ranges
     end
-    
+
     def line_disabled?(line_number)
       if line_number > 1
-        return true if DISABLE_NEXT_LINE_PATTERNS.any? { |pattern| line(line_number - 1).match?(pattern) } 
+        return true if DISABLE_NEXT_LINE_PATTERNS.any? { |pattern| line(line_number - 1).match?(pattern) }
       end
 
       if line_number <= lines.length
@@ -70,7 +70,9 @@ module Goodcheck
       end
 
       if line_index
-        [line_index + 1, position - line_ranges[line_index].begin]
+        line_number = line_index + 1
+        column_number = position - line_ranges[line_index].begin + 1
+        [line_number, column_number]
       end
     end
 
@@ -79,16 +81,7 @@ module Goodcheck
     end
 
     def line(line_number)
-      lines[line_number-1]
-    end
-
-    def position_for_location(line, column)
-      if (range = line_ranges[line-1])
-        pos = range.begin + column
-        if pos <= range.end
-          pos
-        end
-      end
+      lines[line_number - 1]
     end
   end
 end
