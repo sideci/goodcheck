@@ -5,11 +5,11 @@ module Goodcheck
     attr_reader :text
     attr_reader :range
 
-    def initialize(buffer:, rule:, text: nil, end_pos: nil)
+    def initialize(buffer:, rule:, text: nil, text_begin_pos: nil)
       @buffer = buffer
       @rule = rule
       @text = text
-      @range = text ? (end_pos - text.bytesize)..(end_pos - 1) : nil
+      @range = text ? text_begin_pos..(text_begin_pos + text.bytesize - 1) : nil
       @location = nil
     end
 

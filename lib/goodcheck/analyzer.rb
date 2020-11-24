@@ -44,7 +44,7 @@ module Goodcheck
         while true
           case
           when scanner.scan_until(regexp)
-            issues << Issue.new(buffer: buffer, rule: rule, text: scanner.matched, end_pos: scanner.pos)
+            issues << new_issue_with_matched(scanner)
           else
             break
           end
@@ -66,7 +66,7 @@ module Goodcheck
           case
           when scanner.scan_until(pat.regexp)
             if pat.test_variables(scanner)
-              yield Issue.new(buffer: buffer, rule: rule, text: scanner.matched, end_pos: scanner.pos)
+              yield new_issue_with_matched(scanner)
             end
           else
             break
@@ -85,6 +85,14 @@ module Goodcheck
           end
         end
       end
+    end
+
+    private
+
+    def new_issue_with_matched(scanner)
+      Issue.new(buffer: buffer, rule: rule,
+                text: scanner.matched,
+                text_begin_pos: scanner.pos - scanner.matched_size)
     end
   end
 end

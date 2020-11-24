@@ -16,7 +16,7 @@ class JSONReporterTest < Minitest::Test
         rule = Rule.new(id: "id", triggers: [], message: "Message", justifications: ["reason1", "reason2"])
         reporter.rule rule do
           buffer = Buffer.new(path: Pathname("foo.txt"), content: "a\nb\nc\nd\ne")
-          issue = Issue.new(buffer: buffer, rule: rule, text: "a ", end_pos: 2)
+          issue = Issue.new(buffer: buffer, rule: rule, text: "a ", text_begin_pos: 0)
           reporter.issue(issue)
         end
       end
