@@ -110,7 +110,7 @@ module Goodcheck
           when DEFAULT_EXCLUSIONS.include?(path.basename.to_s)
             # noop
           when immediate || !excluded?(path)
-            path.children.each do |child|
+            path.children.sort.each do |child|
               each_file(child, &block)
             end
           end

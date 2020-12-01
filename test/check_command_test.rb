@@ -354,10 +354,10 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-utf_8.txt:1:10: Foo
+euc_jp.txt:1:10: Foo
 吾輩は猫である。
          ^~~
-euc_jp.txt:1:10: Foo
+utf_8.txt:1:10: Foo
 吾輩は猫である。
          ^~~
 
@@ -474,15 +474,15 @@ EOF
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
+.file:1:1: Foo
+foo
+^~~
 goodcheck.yml:2:9: Foo
   - id: foo
         ^~~
 goodcheck.yml:4:14: Foo
     pattern: foo
              ^~~
-.file:1:1: Foo
-foo
-^~~
 
 2 files inspected, 3 issues detected
 OUT
@@ -494,15 +494,15 @@ OUT
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("."), Pathname(".file")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
+.file:1:1: Foo
+foo
+^~~
 goodcheck.yml:2:9: Foo
   - id: foo
         ^~~
 goodcheck.yml:4:14: Foo
     pattern: foo
              ^~~
-.file:1:1: Foo
-foo
-^~~
 .file:1:1: Foo
 foo
 ^~~
