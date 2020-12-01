@@ -5,6 +5,7 @@ module Goodcheck
         attr_reader :path
 
         def initialize(path:)
+          super(path.to_s)
           @path = path
         end
       end
