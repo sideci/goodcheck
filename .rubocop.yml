@@ -1,5 +1,0 @@
-# We don't use RuboCop.
-# If you really believe a Cop should be enabled, open pull requests for each Cop and explain why it matters.
-
-AllCops:
-  DisabledByDefault: true
