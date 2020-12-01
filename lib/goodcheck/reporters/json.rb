@@ -44,6 +44,10 @@ module Goodcheck
       def issue(issue)
         issues << issue
       end
+
+      def summary
+        # noop
+      end
     end
   end
 end

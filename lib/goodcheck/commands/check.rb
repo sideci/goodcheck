@@ -57,6 +57,8 @@ module Goodcheck
             end
           end
 
+          reporter.summary
+
           issue_reported ? EXIT_MATCH : EXIT_SUCCESS
         end
       end
