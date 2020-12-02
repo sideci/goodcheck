@@ -2,6 +2,8 @@
 
 ## HEAD
 
+## 2.7.0 (2020-12-02)
+
 * Goodbye ActiveSupport [#155](https://github.com/sider/goodcheck/pull/155)
 * Fix zero column [#160](https://github.com/sider/goodcheck/pull/160)
 * Improve text reporter [#161](https://github.com/sider/goodcheck/pull/161)
