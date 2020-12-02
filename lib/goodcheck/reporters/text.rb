@@ -35,7 +35,7 @@ module Goodcheck
           column_size = if issue.location.one_line?
                           issue.location.column_size
                         else
-                          line.bytesize - 1
+                          line.bytesize - start_column
                         end
           stdout.puts "#{Rainbow(issue.path).cyan}:#{start_line}:#{start_column}: #{message}"
           stdout.puts line.chomp

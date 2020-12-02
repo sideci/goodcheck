@@ -45,7 +45,43 @@ OUT
     end
   end
 
-  def test_check2
+  def test_check_multiline
+    TestCaseBuilder.tmpdir do |builder|
+      builder.config content: <<EOF
+rules:
+  - id: foo
+    message: Foo
+    pattern:
+      regexp: "<p>.+</p>"
+      multiline: true
+    glob: "*.html"
+EOF
+
+      builder.file name: Pathname("test.html"), content: <<EOF
+<section>
+  <p>
+    Geckos are a group of usually small, usually nocturnal lizards.
+  </p>
+</section>
+EOF
+
+      builder.cd do
+        reporter = Reporters::Text.new(stdout: stdout)
+        check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
+
+        assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+test.html:2:3: Foo
+  <p>
+  ^~~
+
+2 files inspected, 1 issue detected
+OUT
+      end
+    end
+  end
+
+  def test_check_multiline_json
     TestCaseBuilder.tmpdir do |builder|
       builder.config content: <<EOF
 rules:
