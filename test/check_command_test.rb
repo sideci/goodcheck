@@ -34,15 +34,54 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+app/models/user.rb:2:15: Foo
+  belongs_to :foo
+              ^~~
 
-        refute_match %r(app/models/user\.rb:1:class User < ApplicationRecord), stdout.string
-        assert_match %r(app/models/user\.rb:2:  belongs_to :foo:\tFoo), stdout.string
-        refute_match %r(app/views/welcome/index\.html\.erb), stdout.string
+3 files inspected, 1 issue detected
+OUT
       end
     end
   end
 
-  def test_check2
+  def test_check_multiline
+    TestCaseBuilder.tmpdir do |builder|
+      builder.config content: <<EOF
+rules:
+  - id: foo
+    message: Foo
+    pattern:
+      regexp: "<p>.+</p>"
+      multiline: true
+    glob: "*.html"
+EOF
+
+      builder.file name: Pathname("test.html"), content: <<EOF
+<section>
+  <p>
+    Geckos are a group of usually small, usually nocturnal lizards.
+  </p>
+</section>
+EOF
+
+      builder.cd do
+        reporter = Reporters::Text.new(stdout: stdout)
+        check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
+
+        assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+test.html:2:3: Foo
+  <p>
+  ^~~
+
+2 files inspected, 1 issue detected
+OUT
+      end
+    end
+  end
+
+  def test_check_multiline_json
     TestCaseBuilder.tmpdir do |builder|
       builder.config content: <<EOF
 rules:
@@ -66,7 +105,6 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 2, check.run
-
         assert_equal [
                        {
                          rule_id: "foo",
@@ -76,6 +114,7 @@ EOF
                          justifications: []
                        }
                      ], JSON.parse(stdout.string, symbolize_names: true)
+        assert_empty stderr.string
       end
     end
   end
@@ -89,20 +128,23 @@ rules:
     glob: "package.json"
 EOF
 
-      builder.file name: Pathname("Gemfile"), content: <<-EOF
+      builder.file name: Pathname("Gemfile"), content: <<EOF
 source "https://rubygems.org"
-      EOF
-      builder.file name: Pathname("package.json"), content: <<-EOF
+EOF
+      builder.file name: Pathname("package.json"), content: <<EOF
 {}
-      EOF
+EOF
 
       builder.cd do
-
         reporter = Reporters::Text.new(stdout: stdout)
         check = Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 2, check.run
-        assert_equal "package.json:-:{}:\tFoo\n", stdout.string
+        assert_equal <<OUT, stdout.string
+package.json:-:-: Foo
+
+2 files inspected, 1 issue detected
+OUT
       end
     end
   end
@@ -127,9 +169,16 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+goodcheck.yml:3:14: Do you want to write GitHub?
+    pattern: Github
+             ^~~~~~
+test.yml:1:7: Do you want to write GitHub?
+text: Github
+      ^~~~~~
 
-        assert_match %r(test\.yml:1:text: Github), stdout.string
-        refute_match %r(link\.yml:1:text: Github), stdout.string
+2 files inspected, 2 issues detected
+OUT
       end
     end
   end
@@ -157,6 +206,13 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+goodcheck.yml:3:14: Do you want to write GitHub?
+    pattern: Github
+             ^~~~~~
+
+1 file inspected, 1 issue detected
+OUT
       end
     end
   end
@@ -175,7 +231,7 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 1, check.run
-
+        assert_empty stdout.string
         assert_match %r(Unexpected error happens while loading YAML file: #<Psych::SyntaxError:), stderr.string
       end
     end
@@ -194,8 +250,8 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 1, check.run
-
-        assert_equal <<MSG, stderr.string
+        assert_empty stdout.string
+        assert_equal <<ERR, stderr.string
 Invalid config: TypeError at $.rules[0]: expected=rule, value={:id=>"foo", :message=>"Foo"}
  0 expected to be rule
   Expected to be rules
@@ -240,7 +296,7 @@ Where:
     "justification": optional(enum(array(string), string)),
     "trigger": enum(array(trigger), trigger)
   }
-MSG
+ERR
       end
     end
   end
@@ -273,12 +329,14 @@ EOF
         reporter = Reporters::Text.new(stdout: stdout)
         check = Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
-        result = check.run
+        assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+hello.css:6:3: Foo
+  background-color: pink;
+  ^~~~~~~~~~~~~~~~~~~~~~~
 
-        assert_equal 2, result
-        assert_equal <<MSG, stdout.string
-hello.css:6:  background-color: pink;:\tFoo
-MSG
+1 file inspected, 1 issue detected
+OUT
       end
     end
   end
@@ -297,6 +355,10 @@ EOF
         check = Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 0, check.run
+        assert_equal <<OUT, stdout.string
+
+no files inspected, no issues detected
+OUT
       end
     end
   end
@@ -309,16 +371,16 @@ rules:
     message: Foo
     pattern: 猫
     glob:
-      - pattern: euc-jp
+      - pattern: euc_jp.*
         encoding: EUC-JP
-      - pattern: utf-8
+      - pattern: utf_8.*
 EOF
 
-      builder.file name: Pathname("euc-jp"), content: <<EOF.encode("EUC-JP")
+      builder.file name: Pathname("euc_jp.txt"), content: <<EOF.encode("EUC-JP")
 吾輩は猫である。
 EOF
 
-      builder.file name: Pathname("utf-8"), content: <<EOF
+      builder.file name: Pathname("utf_8.txt"), content: <<EOF.encode("UTF-8")
 吾輩は猫である。
 EOF
 
@@ -327,9 +389,16 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+euc_jp.txt:1:10: Foo
+吾輩は猫である。
+         ^~~
+utf_8.txt:1:10: Foo
+吾輩は猫である。
+         ^~~
 
-        assert_match %r(euc-jp:1:吾輩は猫である。), stdout.string
-        assert_match %r(utf-8:1:吾輩は猫である。), stdout.string
+3 files inspected, 2 issues detected
+OUT
       end
     end
   end
@@ -351,9 +420,19 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+goodcheck.yml:4:14: Foo
+    pattern: 猫
+             ^~~
+text_file:1:1: Foo
+猫ねこ🐈
+^~~
 
-        assert_match %r(binary_file: #<ArgumentError: invalid byte sequence in UTF-8>), stderr.string
-        assert_match %r(text_file:1:猫ねこ🐈:\tFoo), stdout.string
+3 files inspected, 2 issues detected
+OUT
+        assert_equal <<ERR, stderr.string
+binary_file: #<ArgumentError: invalid byte sequence in UTF-8>
+ERR
       end
     end
   end
@@ -384,16 +463,33 @@ EOF
 
         Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
+          assert_equal <<OUT, stdout.string
+README.md:1:1: Foo
+foo
+^~~
 
-          assert_match %r(README\.md), stdout.string
-          refute_match %r(goodcheck\.yml), stdout.string
+1 file inspected, 1 issue detected
+OUT
         end
 
+        stdout.reopen("")
+        stderr.reopen("")
+        reporter = Reporters::Text.new(stdout: stdout)
         Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname("."), Pathname("goodcheck.yml")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
+          assert_equal <<OUT, stdout.string
+README.md:1:1: Foo
+foo
+^~~
+goodcheck.yml:2:9: Foo
+  - id: foo
+        ^~~
+goodcheck.yml:4:14: Foo
+    pattern: foo
+             ^~~
 
-          assert_match %r(README\.md), stdout.string
-          assert_match %r(goodcheck\.yml), stdout.string
+2 files inspected, 3 issues detected
+OUT
         end
       end
     end
@@ -413,12 +509,42 @@ EOF
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          assert_match %r(\.file), stdout.string
+          assert_equal <<OUT, stdout.string
+.file:1:1: Foo
+foo
+^~~
+goodcheck.yml:2:9: Foo
+  - id: foo
+        ^~~
+goodcheck.yml:4:14: Foo
+    pattern: foo
+             ^~~
+
+2 files inspected, 3 issues detected
+OUT
         end
 
+        stdout.reopen("")
+        stderr.reopen("")
+        reporter = Reporters::Text.new(stdout: stdout)
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("."), Pathname(".file")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          assert_match %r(\.file), stdout.string
+          assert_equal <<OUT, stdout.string
+.file:1:1: Foo
+foo
+^~~
+goodcheck.yml:2:9: Foo
+  - id: foo
+        ^~~
+goodcheck.yml:4:14: Foo
+    pattern: foo
+             ^~~
+.file:1:1: Foo
+foo
+^~~
+
+3 files inspected, 4 issues detected
+OUT
         end
       end
     end
@@ -438,7 +564,13 @@ EOF
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          assert_equal "goodcheck.yml:4:    pattern: foo:\tSome message\n", stdout.string
+          assert_equal <<OUT, stdout.string
+goodcheck.yml:4:14: Some message
+    pattern: foo
+             ^~~
+
+1 file inspected, 1 issue detected
+OUT
         end
       end
     end
@@ -458,7 +590,13 @@ EOF
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          assert_equal "goodcheck.yml:4:    pattern: foo:\tSome message\n", stdout.string
+          assert_equal <<OUT, stdout.string
+goodcheck.yml:4:14: Some message
+    pattern: foo
+             ^~~
+
+1 file inspected, 1 issue detected
+OUT
         end
       end
     end
@@ -478,7 +616,13 @@ EOF
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          assert_equal "goodcheck.yml:4:    pattern: foo:\tSome message\n", stdout.string
+          assert_equal <<OUT, stdout.string
+goodcheck.yml:4:14: Some message
+    pattern: foo
+             ^~~
+
+1 file inspected, 1 issue detected
+OUT
         end
       end
     end
@@ -499,7 +643,13 @@ EOF
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("abc.txt")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          assert_equal "abc.txt:1:foo:\tFoo\n", stdout.string
+          assert_equal <<OUT, stdout.string
+abc.txt:1:1: Foo
+foo
+^~~~
+
+1 file inspected, 1 issue detected
+OUT
         end
       end
     end
@@ -540,7 +690,6 @@ EOF
         )
 
         assert_equal 2, check.run
-
         assert_equal [
                        {
                          rule_id: "require",
@@ -550,11 +699,12 @@ EOF
                          justifications: []
                        }
                      ], JSON.parse(stdout.string, symbolize_names: true)
+        assert_empty stderr.string
       end
 
-      @stdout = nil
-
       builder.cd do
+        stdout.reopen("")
+        stderr.reopen("")
         reporter = Reporters::JSON.new(stdout: stdout, stderr: stderr)
         check = Check.new(
           config_path: builder.config_path,
@@ -567,7 +717,6 @@ EOF
         )
 
         assert_equal 2, check.run
-
         assert_equal [
                        {
                          rule_id: "require",
@@ -577,6 +726,7 @@ EOF
                          justifications: []
                        }
                      ], JSON.parse(stdout.string, symbolize_names: true)
+        assert_empty stderr.string
       end
     end
   end
@@ -596,7 +746,11 @@ EOF
 
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("x.js")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
-          assert_equal "x.js:-:-:\tUse *strict mode* if possible.\n", stdout.string
+          assert_equal <<OUT, stdout.string
+x.js:-:-: Use *strict mode* if possible.
+
+1 file inspected, 1 issue detected
+OUT
         end
       end
     end
@@ -616,14 +770,13 @@ rules:
       - "app/models/**/*.rb"
 EOF
 
-      builder.file name: Pathname("app/models/user.rb"), content: <<-EOF
+      builder.file name: Pathname("app/models/user.rb"), content: <<EOF
 class User < ApplicationRecord
   # goodcheck-disable-next-line
   belongs_to :foo
   belongs_to :bar
 end
 EOF
-
 
       builder.cd do
         reporter = Reporters::JSON.new(stdout: stdout, stderr: stderr)
@@ -637,6 +790,7 @@ EOF
           message: "Foo",
           justifications: []
         }], JSON.parse(stdout.string, symbolize_names: true)
+        assert_empty stderr.string
       end
     end
   end
@@ -644,7 +798,7 @@ EOF
   def test_missing_rule
     TestCaseBuilder.tmpdir do |builder|
       builder.cd do
-        builder.config content: <<-EOF
+        builder.config content: <<EOF
 rules:
   - id: foo
     message: Foo
@@ -655,8 +809,11 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: ["foo", "bar", "baz"], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 1, check.run
-        assert_equal "missing rule: bar\nmissing rule: baz\n", stderr.string
         assert_empty stdout.string
+        assert_equal <<ERR, stderr.string
+missing rule: bar
+missing rule: baz
+ERR
       end
     end
   end
@@ -684,13 +841,19 @@ EOF
         check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
 
         assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+a/b/bar.txt:1:1: Disallow `foo`
+foo
+^~~
+pass.txt:1:1: Disallow `foo`
+foo
+^~~
+test.txt:1:1: Disallow `foo`
+foo
+^~~
 
-        assert_match %r(test\.txt:1:foo:), stdout.string
-        refute_match %r(test/a\.txt:1:foo:), stdout.string
-        refute_match %r(a/__tests__/b\.txt:1:foo:), stdout.string
-        refute_match %r(_bar_\.txt:1:foo:), stdout.string
-        assert_match %r(a/b/bar\.txt:1:foo:), stdout.string
-        assert_match %r(pass.txt:1:foo:), stdout.string
+7 files inspected, 3 issues detected
+OUT
       end
     end
   end

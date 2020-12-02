@@ -5,6 +5,8 @@ module Goodcheck
 
       def initialize(stdout:)
         @stdout = stdout
+        @file_count = 0
+        @issue_count = 0
       end
 
       def analysis
@@ -12,6 +14,7 @@ module Goodcheck
       end
 
       def file(path)
+        @file_count += 1
         yield
       end
 
@@ -20,24 +23,48 @@ module Goodcheck
       end
 
       def issue(issue)
+        @issue_count += 1
+
+        message = issue.rule.message.lines.first.chomp
+
         if issue.location
           start_line = issue.location.start_line
-          start_column_index = issue.location.start_column - 1
+          start_column = issue.location.start_column
+          start_column_index = start_column - 1
           line = issue.buffer.line(start_line)
           column_size = if issue.location.one_line?
-                         issue.location.column_size
-                       else
-                         line.bytesize
-                       end
-          colored_line = line.byteslice(0, start_column_index) +
-                         Rainbow(line.byteslice(start_column_index, column_size)).red +
-                         line.byteslice(start_column_index + column_size, line.bytesize)
-          stdout.puts "#{issue.path}:#{start_line}:#{colored_line.chomp}:\t#{issue.rule.message.lines.first.chomp}"
+                          issue.location.column_size
+                        else
+                          line.bytesize - start_column
+                        end
+          stdout.puts "#{Rainbow(issue.path).cyan}:#{start_line}:#{start_column}: #{message}"
+          stdout.puts line.chomp
+          stdout.puts (" " * start_column_index) + Rainbow("^" + "~" * (column_size - 1)).yellow
         else
-          line = issue.buffer.line(1)&.chomp
-          line = line ? Rainbow(line).red : '-'
-          stdout.puts "#{issue.path}:-:#{line}:\t#{issue.rule.message.lines.first.chomp}"
+          stdout.puts "#{Rainbow(issue.path).cyan}:-:-: #{message}"
         end
+      end
+
+      def summary
+        files = case @file_count
+                when 0
+                  "no files"
+                when 1
+                  "1 file"
+                else
+                  "#{@file_count} files"
+                end
+        issues = case @issue_count
+                 when 0
+                   Rainbow("no issues").green
+                 when 1
+                   Rainbow("1 issue").red
+                 else
+                   Rainbow("#{@issue_count} issues").red
+                 end
+
+        stdout.puts ""
+        stdout.puts "#{files} inspected, #{issues} detected"
       end
     end
   end
