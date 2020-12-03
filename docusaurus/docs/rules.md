@@ -78,3 +78,28 @@ rules:
     fail:
       - "color: #038cf4;"
 ```
+
+## Rule: Disallow offensive words
+
+> Warning: This rule needs customization.
+
+The use of offensive words can cause you to lose the trust of your customer. The following rules check the use of them.
+
+```yaml
+rules:
+  - id: disallow-whitelist
+    message: Use "allowlist", not "whitelist".
+    pattern:
+      literal: whitelist
+      case_sensitive: false
+    pass: [allowlist, Allowlist]
+    fail: [whitelist, Whitelist]
+
+  - id: disallow-blacklist
+    message: Use "blocklist", not "blacklist".
+    pattern:
+      literal: blacklist
+      case_sensitive: false
+    pass: [blocklist, Blocklist]
+    fail: [blacklist, Blacklist]
+```
