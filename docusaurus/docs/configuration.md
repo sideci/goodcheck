@@ -36,16 +36,16 @@ exclude:
   - vendor
 ```
 
-A _rule_ hash under the `rules` list contains the following attributes:
+A *rule* hash under the `rules` list contains the following attributes:
 
 | Name                    | Description                                                    | Required? |
 | ----------------------- | -------------------------------------------------------------- | --------- |
 | `id`                    | A string to identify a rule                                    | yes       |
 | `message`               | A message to tell writers why the code piece should be revised | yes       |
 | [`pattern`](#pattern)   | A pattern or patterns of text to be scanned                    | no        |
-| [`glob`](#glob)         | A glob or globs of files to be scanned                         | no        |
 | `justification`         | Messages to tell writers when an exception can be allowed      | no        |
-| [`severity`](#severity) | A severity of rule            | no        |
+| [`glob`](#glob)         | A glob or globs of files to be scanned                         | no        |
+| [`severity`](#severity) | A severity of a rule                                           | no        |
 | `pass`                  | A pattern or patterns that do not match this rule              | no        |
 | `fail`                  | A pattern or patterns that match this rule                     | no        |
 
@@ -54,13 +54,13 @@ A _rule_ hash under the `rules` list contains the following attributes:
 The `pattern` can be one of either:
 
 - [string literal](#string-literal)
-- [_literal pattern_](#literal-pattern)
-- [_regexp pattern_](#regexp-pattern)
-- [_token pattern_](#token-pattern)
+- [*literal pattern*](#literal-pattern)
+- [*regexp pattern*](#regexp-pattern)
+- [*token pattern*](#token-pattern)
 
 ### string literal
 
-A string literal represents a _literal pattern_ or _regexp pattern_.
+A string literal represents a *literal pattern* or *regexp pattern*.
 
 ```yaml
 pattern:
@@ -70,12 +70,12 @@ pattern:
   - /This is a regexp pattern with the multiline option/m
 ```
 
-If the string value begins with `/` and ends with `/`, it is a _regexp pattern_.
+If the string value begins with `/` and ends with `/`, it is a *regexp pattern*.
 You can optionally specify regexp options like `/case-insensitive/i` or `/multiline/m`.
 
-### _literal pattern_
+### *literal pattern*
 
-A _literal pattern_ allows you to construct a regexp which matches exactly to the `literal` string.
+A *literal pattern* allows you to construct a regexp which matches exactly to the `literal` string.
 
 ```yaml
 id: com.sample.GitHub
@@ -88,9 +88,9 @@ message: Write GitHub, not Github
 All regexp meta characters included in the `literal` value will be escaped.
 `case_sensitive` is an optional attribute and the default is `true`.
 
-### _regexp pattern_
+### *regexp pattern*
 
-A _regexp pattern_ allows you to write a regexp with meta characters.
+A *regexp pattern* allows you to write a regexp with meta characters.
 
 ```yaml
 id: com.sample.digits
@@ -109,9 +109,9 @@ The default values of `case_sensitive` and `multiline` are `true` and `false` re
 The regexp will be passed to [`Regexp.compile`](https://ruby-doc.org/core/Regexp.html#compile-method) of Ruby.
 The precise definition of regular expressions can be found in the documentation for Ruby.
 
-### _token pattern_
+### *token pattern*
 
-A _token pattern_ compiles to a _tokenized_ regexp.
+A *token pattern* compiles to a *tokenized* regexp.
 
 ```yaml
 id: com.sample.no-blink
@@ -126,7 +126,7 @@ justification:
 
 It tries to tokenize the input and generates a regexp which matches a sequence of tokens.
 The tokenization is heuristic and may not work well for your programming language.
-In that case, try using a _regexp pattern_.
+In that case, try using a *regexp pattern*.
 
 The generated regexp of `<blink` is `<\s*blink\b/m`.
 It matches with `<blink />` and `< BLINK>`, but does not match with `https://www.chromium.org/blink`.
@@ -135,7 +135,7 @@ It accepts one optional attribute `case_sensitive`.
 The default value of `case_sensitive` is `true`.
 Note that the generated regexp is in multiline mode.
 
-A _token pattern_ can have an optional `where` attribute and _variable bindings_.
+A *token pattern* can have an optional `where` attribute and *variable bindings*.
 
 ```yaml
 pattern:
@@ -144,19 +144,19 @@ pattern:
       color: true
 ```
 
-The variable binding consists of a _variable name_ and a _variable type_, where `color` and `string` in the example above respectively.
-You have to add a key of the _variable name_ in `where` attribute.
+The variable binding consists of a *variable name* and a *variable type*, where `color` and `string` in the example above respectively.
+You have to add a key of the *variable name* in `where` attribute.
 
 Goodcheck has 8 built-in patterns:
 
-- `string`
-- `int`
-- `float`
-- `number`
-- `url`
-- `email`
-- `word`
-- `identifier`
+* `string`
+* `int`
+* `float`
+* `number`
+* `url`
+* `email`
+* `word`
+* `identifier`
 
 You can find the exact definitions of the types in the definition of `Goodcheck::Pattern::Token` (`@@TYPES`).
 
@@ -226,9 +226,9 @@ If both your rule and its pattern has `glob`, Goodcheck will scan the pattern wi
 rules:
   - id: glob_test
     pattern:
-      - literal: 123 # This pattern applies to .css files
+      - literal: 123      # This pattern applies to .css files
         glob: "*.css"
-      - literal: abc # This pattern applies to .txt files
+      - literal: abc      # This pattern applies to .txt files
     glob: "*.txt"
 ```
 
@@ -269,7 +269,7 @@ db/schema.rb:-:# This file is auto-generated from the current state of the datab
 
 ## Triggers
 
-The version 2.0.0 introduces a new abstraction to define patterns, called _trigger_.
+The version 2.0.0 introduces a new abstraction to define patterns, called *trigger*.
 You can continue using a `pattern` in a `rule`, but using a `trigger` allows more flexible pattern definitions and more precise testing.
 
 ```yaml
@@ -323,13 +323,14 @@ The rules file to be imported should be a YAML file with an array of rules, for 
 - id: imported_rule_2
   message: Rule 2
   pattern: rule-2
+
 # more rules...
 ```
 
 ## Downloaded rules
 
-Downloaded rules are cached in the _cache_ directory in the _Goodcheck home directory_.
-The _Goodcheck home directory_ is `~/.goodcheck`, but you can customize the location with `GOODCHECK_HOME` environment variable.
+Downloaded rules are cached in the *cache* directory in the *Goodcheck home directory*.
+The *Goodcheck home directory* is `~/.goodcheck`, but you can customize the location with `GOODCHECK_HOME` environment variable.
 
 The cache expires in 3 minutes.
 
@@ -389,6 +390,6 @@ For JavaScript:
 
 ```js
 // goodcheck-disable-next-line
-console.log("Github");
-console.log("Github"); // goodcheck-disable-line
+console.log("Github")
+console.log("Github") // goodcheck-disable-line
 ```
