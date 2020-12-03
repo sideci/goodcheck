@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* Drop support of Ruby 2.4 (**breaking**) [#169](https://github.com/sider/goodcheck/pull/169)
+
 ## 2.7.0 (2020-12-02)
 
 * Goodbye ActiveSupport [#155](https://github.com/sider/goodcheck/pull/155)
