@@ -18,7 +18,6 @@ class TestCommandTest < Minitest::Test
       result = test.run
 
       assert_equal 0, result
-
       assert_equal <<MSG, stdout.string
 No rules.
 MSG
@@ -45,7 +44,6 @@ EOF
       result = test.run
 
       assert_equal 0, result
-
       assert_equal <<MSG, stdout.string
 Validating rule id uniqueness...
   OK!👍
@@ -114,8 +112,7 @@ EOF
       test = Test.new(stdout: stdout, stderr: stderr, config_path: builder.config_path, force_download: nil, home_path: builder.path + "home")
       result = test.run
 
-      assert_equal 1, result
-
+      assert_equal 3, result
       assert_equal <<MSG, stdout.string
 Validating rule id uniqueness...
   Found 1 duplication.😞
@@ -141,7 +138,7 @@ EOF
       test = Test.new(stdout: stdout, stderr: stderr, config_path: builder.config_path, force_download: nil, home_path: builder.path + "home")
       result = test.run
 
-      assert_equal 1, result
+      assert_equal 3, result
       assert_equal <<MSG, stdout.string
 Validating rule id uniqueness...
   OK!👍
@@ -173,7 +170,7 @@ EOF
       test = Test.new(stdout: stdout, stderr: stderr, config_path: builder.config_path, force_download: nil, home_path: builder.path + "home")
       result = test.run
 
-      assert_equal 1, result
+      assert_equal 3, result
       assert_equal <<MSG, stdout.string
 Validating rule id uniqueness...
   OK!👍
@@ -190,6 +187,19 @@ Failed rules:
 
 Tested 1 rule, 0 successes, 1 failure
 MSG
+    end
+  end
+
+  def test_invalid_config
+    with_config(<<EOF) do |builder|
+rule:
+EOF
+      test = Test.new(stdout: stdout, stderr: stderr, config_path: builder.config_path, force_download: nil, home_path: builder.path + "home")
+      result = test.run
+
+      assert_equal 1, result
+      assert_empty stdout.string
+      assert_match %r(Invalid config:), stderr.string
     end
   end
 

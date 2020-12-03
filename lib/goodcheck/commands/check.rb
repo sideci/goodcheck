@@ -15,8 +15,6 @@ module Goodcheck
       include HomePath
       include ExitStatus
 
-      EXIT_MATCH = 2
-
       def initialize(config_path:, rules:, targets:, reporter:, stderr:, home_path:, force_download:)
         @config_path = config_path
         @rules = rules

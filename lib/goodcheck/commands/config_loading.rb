@@ -1,6 +1,8 @@
 module Goodcheck
   module Commands
     module ConfigLoading
+      include ExitStatus
+
       class ConfigFileNotFound < Error
         attr_reader :path
 
@@ -31,20 +33,20 @@ module Goodcheck
           yield
         rescue ConfigFileNotFound => exn
           stderr.puts "Configuration file not found: #{exn.path}"
-          1
+          EXIT_ERROR
         rescue Psych::Exception => exn
           stderr.puts "Unexpected error happens while loading YAML file: #{exn.inspect}"
           exn.backtrace.each do |trace_loc|
             stderr.puts "  #{trace_loc}"
           end
-          1
+          EXIT_ERROR
         rescue StrongJSON::Type::TypeError, StrongJSON::Type::UnexpectedAttributeError => exn
           stderr.puts "Invalid config: #{exn.message}"
           stderr.puts StrongJSON::ErrorReporter.new(path: exn.path).to_s
-          1
+          EXIT_ERROR
         rescue Errno::ENOENT => exn
           stderr.puts "#{exn}"
-          1
+          EXIT_ERROR
         end
       end
     end
