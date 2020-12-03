@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* `goodcheck test` exit with `3` on tests failed [#168](https://github.com/sider/goodcheck/pull/168)
+
 ## 2.7.0 (2020-12-02)
 
 * Goodbye ActiveSupport [#155](https://github.com/sider/goodcheck/pull/155)
