@@ -1,3 +1,9 @@
+linter:
+  rubocop:
+    gems:
+      - rubocop
+      - meowcop
+
 branches:
   exclude:
     - /^release-.*/
