@@ -96,30 +96,31 @@ module Goodcheck
                            end
                          })
 
-      let :positive_rule, object(
+      base_rule = {
         id: string,
-        pattern: array_or(pattern),
         message: string,
         justification: optional(array_or(string)),
+        severity: optional(string)
+      }
+
+      let :positive_rule, object(
+        **base_rule,
+        pattern: array_or(pattern),
         glob: optional(glob),
         pass: optional(array_or(string)),
         fail: optional(array_or(string))
       )
 
       let :negative_rule, object(
-        id: string,
+        **base_rule,
         not: object(pattern: array_or(pattern)),
-        message: string,
-        justification: optional(array_or(string)),
         glob: optional(glob),
         pass: optional(array_or(string)),
         fail: optional(array_or(string))
       )
 
       let :nopattern_rule, object(
-        id: string,
-        message: string,
-        justification: optional(array_or(string)),
+        **base_rule,
         glob: glob
       )
 
@@ -160,9 +161,7 @@ module Goodcheck
       )
 
       let :triggered_rule, object(
-        id: string,
-        message: string,
-        justification: optional(array_or(string)),
+        **base_rule,
         trigger: array_or(trigger)
       )
 
@@ -194,7 +193,8 @@ module Goodcheck
       let :config, object(
         rules: optional(rules),
         import: optional(imports),
-        exclude: optional(exclude)
+        exclude: optional(exclude),
+        severity: optional(array_or(string))
       )
     end
 

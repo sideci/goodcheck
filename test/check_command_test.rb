@@ -264,22 +264,25 @@ Where:
   config = {
     "rules": optional(rules),
     "import": optional(imports),
-    "exclude": optional(exclude)
+    "exclude": optional(exclude),
+    "severity": optional(enum(array(string), string))
   }
   positive_rule = {
     "id": string,
-    "pattern": enum(array(pattern), pattern),
     "message": string,
     "justification": optional(enum(array(string), string)),
+    "severity": optional(string),
+    "pattern": enum(array(pattern), pattern),
     "glob": optional(glob),
     "pass": optional(enum(array(string), string)),
     "fail": optional(enum(array(string), string))
   }
   negative_rule = {
     "id": string,
-    "not": { "pattern": enum(array(pattern), pattern) },
     "message": string,
     "justification": optional(enum(array(string), string)),
+    "severity": optional(string),
+    "not": { "pattern": enum(array(pattern), pattern) },
     "glob": optional(glob),
     "pass": optional(enum(array(string), string)),
     "fail": optional(enum(array(string), string))
@@ -288,12 +291,14 @@ Where:
     "id": string,
     "message": string,
     "justification": optional(enum(array(string), string)),
+    "severity": optional(string),
     "glob": glob
   }
   triggered_rule = {
     "id": string,
     "message": string,
     "justification": optional(enum(array(string), string)),
+    "severity": optional(string),
     "trigger": enum(array(trigger), trigger)
   }
 ERR
