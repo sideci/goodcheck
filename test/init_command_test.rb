@@ -14,7 +14,7 @@ class InitCommandTest < Minitest::Test
 
         assert_match %r(Wrote goodcheck\.yml), stdout.string
         assert_operator Pathname("goodcheck.yml"), :file?
-        YAML.load(Pathname("goodcheck.yml").read)
+        YAML.safe_load(Pathname("goodcheck.yml").read)
       end
     end
   end
@@ -29,7 +29,7 @@ class InitCommandTest < Minitest::Test
         assert_equal 1, init.run
         assert_match %r(goodcheck\.yml already exists\.), stderr.string
 
-        assert_equal({ "rules" => [] }, YAML.load(Pathname("goodcheck.yml").read))
+        assert_equal({ "rules" => [] }, YAML.safe_load(Pathname("goodcheck.yml").read))
       end
     end
   end
@@ -43,7 +43,7 @@ class InitCommandTest < Minitest::Test
 
         assert_equal 0, init.run
         assert_match %r(Wrote goodcheck\.yml), stdout.string
-        refute_equal({ "rules" => [] }, YAML.load(Pathname("goodcheck.yml").read))
+        refute_equal({ "rules" => [] }, YAML.safe_load(Pathname("goodcheck.yml").read))
       end
     end
   end
