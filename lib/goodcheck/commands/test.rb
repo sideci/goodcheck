@@ -28,8 +28,8 @@ module Goodcheck
             return EXIT_SUCCESS
           end
 
-          validate_rule_uniqueness or return EXIT_ERROR
-          validate_rules or return EXIT_ERROR
+          validate_rule_uniqueness or return EXIT_TEST_FAILED
+          validate_rules or return EXIT_TEST_FAILED
 
           EXIT_SUCCESS
         end

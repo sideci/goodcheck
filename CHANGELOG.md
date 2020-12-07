@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* `goodcheck test` exit with `3` on tests failed [#168](https://github.com/sider/goodcheck/pull/168)
+  (a potentially breaking change; the command previously exited with `1`)
 * Drop support of Ruby 2.4 (**breaking**) [#169](https://github.com/sider/goodcheck/pull/169)
 
 ## 2.7.0 (2020-12-02)

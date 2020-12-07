@@ -29,12 +29,6 @@ Available options are:
 * `--debug` to print all debug messages
 * `--force` to ignore downloaded caches
 
-The `check` command exits with:
-
-* `0` when it does not find any matching text fragment
-* `1` when it finds some error
-* `2` when it finds some matching text
-
 You can check its exit status to identify if the tool finds some pattern or not.
 
 ## `goodcheck test [options]`
@@ -67,3 +61,12 @@ An available option is:
 ## `goodcheck help`
 
 The `help` command prints the full help text.
+
+## Exit status
+
+The `goodcheck` command exits with the status:
+
+* `0` when it succeeds or does not find any matching text fragment
+* `1` when it encounters an fatal error
+* `2` when it finds some matching text
+* `3` when it finds some test failure
