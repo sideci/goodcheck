@@ -21,7 +21,13 @@ Goodcheck is provided as a Ruby gem. To install it, run:
 $ gem install goodcheck
 ```
 
-Check out the [documentation](docusaurus/docs/getstarted.md) for more details.
+If you do not want to install it, you can run it via Docker instead:
+
+```console
+$ docker run -t --rm -v "$(pwd):/work" sider/goodcheck
+```
+
+Check out the [documentation](docusaurus/docs/getstarted.md) or [website](https://sider.github.io/goodcheck/) for more details.
 
 ## Development
 
