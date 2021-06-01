@@ -232,6 +232,8 @@ module Goodcheck
     def load_rules(rules, array)
       array.each do |hash|
         rules << load_rule(hash)
+      rescue RegexpError => exn
+        raise InvalidPattern, "Invalid pattern of the `#{hash.fetch(:id)}` rule in `#{path}`: #{exn.message}"
       end
     end
 
