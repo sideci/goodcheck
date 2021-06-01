@@ -226,7 +226,7 @@ EOF
 
       assert_equal 1, result
       assert_empty stdout.string
-      assert_match %r(^Invalid pattern of the `foo` rule in `\S+`: premature end of char-class: \/\[a\/$), stderr.string
+      assert_match %r(^Invalid pattern of the `foo` rule in `\S+`: premature end of char-class: /\[a/$), stderr.string
     end
   end
 end
