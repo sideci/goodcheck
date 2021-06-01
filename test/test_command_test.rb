@@ -213,4 +213,20 @@ EOF
       end
     end
   end
+
+  def test_invalid_pattern
+    with_config(<<EOF) do |builder|
+rules:
+  - id: foo
+    pattern: /[a/
+    message: Foo
+EOF
+      test = Test.new(stdout: stdout, stderr: stderr, config_path: builder.config_path, force_download: nil, home_path: builder.path + "home")
+      result = test.run
+
+      assert_equal 1, result
+      assert_empty stdout.string
+      assert_match %r(^Invalid pattern of the `foo` rule in `\S+`: premature end of char-class: \/\[a\/$), stderr.string
+    end
+  end
 end

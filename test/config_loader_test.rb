@@ -648,4 +648,20 @@ EOF
     config = loader.load
     assert_empty config.rules
   end
+
+  def test_config_with_invalid_pattern
+    loader = ConfigLoader.new(
+      path: Pathname("hello.yml"),
+      content: {
+        rules: [{ id: "foo1", pattern: "/[a/", message: "Foo" }],
+      },
+      stderr: stderr,
+      import_loader: import_loader
+    )
+
+    error = assert_raises ConfigLoader::InvalidPattern do
+      loader.load
+    end
+    assert_equal "Invalid pattern of the `foo1` rule in `hello.yml`: premature end of char-class: /[a/", error.message
+  end
 end
