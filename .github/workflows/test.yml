@@ -16,8 +16,11 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       - run: bundle exec rake
+        env:
+          TESTOPT: '--verbose'
+          COVERAGE: ${{ matrix.ruby == '3.0' }}
       - uses: actions/upload-artifact@v2
-        if: ${{ always() && matrix.ruby == '3.0' }}
+        if: ${{ hashFiles('coverage/index.html') != '' }}
         with:
           name: coverage
           path: coverage/

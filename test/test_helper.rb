@@ -1,11 +1,11 @@
-require "simplecov"
-SimpleCov.start
+if ENV["COVERAGE"] == "true"
+  require "simplecov"
+  SimpleCov.start
+end
 
 require "goodcheck"
 
 require "minitest/autorun"
-require "minitest/reporters"
-Minitest::Reporters.use!
 
 require_relative "test_case_builder"
 require "open3"
