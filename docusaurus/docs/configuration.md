@@ -349,7 +349,7 @@ The value of `exclude` can be a string or an array of strings representing the g
 
 ## Severity
 
-A *severity* expresses a level of importance of a rule. Predefined severities are `error` and `warning`.
+A *severity* expresses an importance level of a rule. Predefined severities are `error` and `warning`.
 You can set any severity to a rule, e.g. `info` or `convention`.
 
 If you want to restrict severities available within your configuration, you can the top-level `severity` field. See the example below:
