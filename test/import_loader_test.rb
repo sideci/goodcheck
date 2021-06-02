@@ -56,12 +56,12 @@ EOF
   message: Message
 EOF
       (path + ".rules").mkpath
-      (path + ".rules" + "bar.yml").write rule_content_2
+      (path + ".rules" + "bar.yaml").write rule_content_2
 
       loader = Goodcheck::ImportLoader.new(cache_path: cache_path, force_download: false, config_path: path + "goodcheck.yml")
 
       loaded_content = []
-      loader.load("**/*.yml") do |content|
+      loader.load("**/*.{yml,yaml}") do |content|
         loaded_content << content
       end
 
