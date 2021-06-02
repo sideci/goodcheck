@@ -31,9 +31,13 @@ module Goodcheck
     end
 
     def load(name, &block)
-      uri = URI.parse(name)
+      uri = begin
+        URI.parse(name)
+      rescue URI::InvalidURIError
+        nil
+      end
 
-      case uri.scheme
+      case uri&.scheme
       when nil
         load_file name, &block
       when "file"

@@ -9,6 +9,7 @@
 * Update `psych` requirement allowing 4.0 [#183](https://github.com/sider/goodcheck/pull/183)
 * Improve output error message on RegexpError [#188](https://github.com/sider/goodcheck/pull/188)
 * Import .tar.gz files [#190](https://github.com/sider/goodcheck/pull/190)
+* Fix importing error with extended glob [#194](https://github.com/sider/goodcheck/pull/194)
 
 ## 2.7.0 (2020-12-02)
 
