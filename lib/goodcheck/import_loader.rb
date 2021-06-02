@@ -45,20 +45,19 @@ module Goodcheck
       end
     end
 
-    def load_file(path)
+    def load_file(path, &block)
       files = Pathname.glob(File.join(config_path.parent.to_path, path), File::FNM_DOTMATCH | File::FNM_EXTGLOB).sort
       if files.empty?
         raise FileNotFound.new(path)
       else
         files.each do |file|
           Goodcheck.logger.info "Reading file: #{file}"
-          content = file.read
           if unarchiver.tar_gz?(file)
-            unarchiver.tar_gz(content) do |content, filename|
-              yield content, filename
+            unarchiver.tar_gz(file.read) do |content, filename|
+              block.call(content, filename)
             end
           else
-            yield content, file.to_path
+            block.call(file.read, file.to_path)
           end
         end
       end
