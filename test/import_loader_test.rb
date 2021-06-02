@@ -91,7 +91,7 @@ EOF
     end
   end
 
-  SAMPLE_URL = "https://gist.githubusercontent.com/soutaro/6362c89acd7d6771ae6ebfc615be402d/raw/7f04b973c2c8df70783cd7deb955ab95d1375b2d/sample.yml"
+  SAMPLE_URL = "https://raw.githubusercontent.com/sider/goodcheck/5a61817bd6f16105bdcef1ccfbac62a2b4edeba8/goodcheck.yml"
 
   def test_load_url
     mktmpdir do |path|
