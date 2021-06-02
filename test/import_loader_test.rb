@@ -56,16 +56,36 @@ EOF
   message: Message
 EOF
       (path + ".rules").mkpath
-      (path + ".rules" + "bar.yml").write rule_content_2
+      (path + ".rules" + "bar.yaml").write rule_content_2
 
       loader = Goodcheck::ImportLoader.new(cache_path: cache_path, force_download: false, config_path: path + "goodcheck.yml")
 
       loaded_content = []
-      loader.load("**/*.yml") do |content|
+      loader.load("**/*.{yml,yaml}") do |content|
         loaded_content << content
       end
 
       assert_equal [rule_content_2, rule_content_1], loaded_content
+    end
+  end
+
+  def test_load_file_tar_gz
+    mktmpdir do |path|
+      cache_path = path + "cache"
+      cache_path.mkpath
+
+      FileUtils.copy_file File.join(__dir__, "fixtures", "goodcheck-test-rules.tar.gz"), path.join("rules.tar.gz")
+
+      loader = Goodcheck::ImportLoader.new(cache_path: cache_path, force_download: false, config_path: path + "goodcheck.yml")
+
+      loaded_content = []
+      loader.load("rules.tar.gz") do |content|
+        loaded_content << content
+      end
+
+      assert_equal 2, loaded_content.size
+      assert_match "- id: rule.a", loaded_content[0]
+      assert_match "- id: rule.b", loaded_content[1]
     end
   end
 
@@ -91,7 +111,8 @@ EOF
     end
   end
 
-  SAMPLE_URL = "https://gist.githubusercontent.com/soutaro/6362c89acd7d6771ae6ebfc615be402d/raw/7f04b973c2c8df70783cd7deb955ab95d1375b2d/sample.yml"
+  SAMPLE_URL = "https://raw.githubusercontent.com/sider/goodcheck/5a61817bd6f16105bdcef1ccfbac62a2b4edeba8/goodcheck.yml"
+  SAMPLE_URL_TAR_GZ = "https://raw.githubusercontent.com/sider/goodcheck/e0affdad8f70912f4ebddb37758adfd19dc11d71/test/fixtures/goodcheck-test-rules.tar.gz"
 
   def test_load_url
     mktmpdir do |path|
@@ -111,6 +132,33 @@ EOF
       cache_path = cache_dir_path + loader.cache_name(URI.parse(SAMPLE_URL))
       assert_operator cache_path, :file?
       assert_equal cache_path.read, loaded_content
+    end
+  end
+
+  def test_load_url_tar_gz
+    mktmpdir do |path|
+      cache_dir_path = path + "cache"
+      cache_dir_path.mkpath
+
+      loader = Goodcheck::ImportLoader.new(cache_path: cache_dir_path, force_download: false, config_path: path + "goodcheck.yml")
+
+      loaded_content = []
+      loader.load(SAMPLE_URL_TAR_GZ) do |content|
+        loaded_content << content
+      end
+
+      assert_equal 2, loaded_content.size
+      assert_match "- id: rule.a", loaded_content[0]
+      assert_match "- id: rule.b", loaded_content[1]
+
+      # Test cache is saved
+      cache_path_0 = cache_dir_path + loader.cache_name("#{SAMPLE_URL_TAR_GZ}/rules/a.yml")
+      assert cache_path_0.file?
+      assert_equal cache_path_0.read, loaded_content[0]
+
+      cache_path_1 = cache_dir_path + loader.cache_name("#{SAMPLE_URL_TAR_GZ}/rules/sub/b.yaml")
+      assert cache_path_1.file?
+      assert_equal cache_path_1.read, loaded_content[1]
     end
   end
 

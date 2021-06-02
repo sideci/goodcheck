@@ -6,6 +6,10 @@
   (a potentially breaking change; the command previously exited with `1`)
 * Drop support of Ruby 2.4 (**breaking**) [#169](https://github.com/sider/goodcheck/pull/169)
 * Update gemspec [#176](https://github.com/sider/goodcheck/pull/176)
+* Update `psych` requirement allowing 4.0 [#183](https://github.com/sider/goodcheck/pull/183)
+* Improve output error message on RegexpError [#188](https://github.com/sider/goodcheck/pull/188)
+* Import .tar.gz files [#190](https://github.com/sider/goodcheck/pull/190)
+* Fix importing error with extended glob [#194](https://github.com/sider/goodcheck/pull/194)
 
 ## 2.7.0 (2020-12-02)
 

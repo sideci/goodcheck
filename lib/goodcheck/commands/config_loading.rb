@@ -34,6 +34,9 @@ module Goodcheck
         rescue ConfigFileNotFound => exn
           stderr.puts "Configuration file not found: #{exn.path}"
           EXIT_ERROR
+        rescue ConfigLoader::InvalidPattern => exn
+          stderr.puts exn.message
+          EXIT_ERROR
         rescue Psych::Exception => exn
           stderr.puts "Unexpected error happens while loading YAML file: #{exn.inspect}"
           exn.backtrace.each do |trace_loc|

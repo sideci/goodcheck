@@ -21,8 +21,6 @@ module Goodcheck
       help: "Show help and quit"
     }.freeze
 
-    DEFAULT_CONFIG_FILE = Pathname("goodcheck.yml").freeze
-
     def run(args)
       command = args.shift&.to_sym
 
@@ -58,7 +56,7 @@ module Goodcheck
     end
 
     def check(args)
-      config_path = DEFAULT_CONFIG_FILE
+      config_path = Pathname(DEFAULT_CONFIG_FILE)
       targets = []
       rules = []
       formats = [:text, :json]
@@ -110,7 +108,7 @@ module Goodcheck
     end
 
     def test(args)
-      config_path = DEFAULT_CONFIG_FILE
+      config_path = Pathname(DEFAULT_CONFIG_FILE)
       loglevel = ::Logger::ERROR
       force_download = false
 
@@ -132,7 +130,7 @@ module Goodcheck
     end
 
     def init(args)
-      config_path = DEFAULT_CONFIG_FILE
+      config_path = Pathname(DEFAULT_CONFIG_FILE)
       force = false
 
       OptionParser.new("Usage: goodcheck init [options]") do |opts|
@@ -163,7 +161,7 @@ module Goodcheck
     end
 
     def pattern(args)
-      config_path = DEFAULT_CONFIG_FILE
+      config_path = Pathname(DEFAULT_CONFIG_FILE)
 
       OptionParser.new do |opts|
         opts.banner = "Usage: goodcheck pattern [options] ids..."

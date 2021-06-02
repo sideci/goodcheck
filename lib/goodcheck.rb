@@ -33,3 +33,8 @@ require "goodcheck/commands/init"
 require "goodcheck/commands/test"
 require "goodcheck/import_loader"
 require "goodcheck/commands/pattern"
+require "goodcheck/unarchiver"
+
+module Goodcheck
+  DEFAULT_CONFIG_FILE = "goodcheck.yml".freeze
+end

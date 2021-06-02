@@ -232,14 +232,16 @@ module Goodcheck
     def load_rules(rules, array)
       array.each do |hash|
         rules << load_rule(hash)
+      rescue RegexpError => exn
+        raise InvalidPattern, "Invalid pattern of the `#{hash.fetch(:id)}` rule in `#{path}`: #{exn.message}"
       end
     end
 
     def load_import(rules, import)
       Goodcheck.logger.info "Importing rules from #{import}"
 
-      import_loader.load(import) do |content|
-        json = JSON.parse(JSON.dump(YAML.safe_load(content, filename: import)), symbolize_names: true)
+      import_loader.load(import) do |content, filename|
+        json = JSON.parse(JSON.dump(YAML.safe_load(content, filename: filename)), symbolize_names: true)
 
         Schema.rules.coerce json
         load_rules(rules, json)

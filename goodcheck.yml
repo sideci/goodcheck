@@ -6,8 +6,7 @@ rules:
       Use `GoodCheck::Error` instead of `StandardError`.
 
 import:
-  - https://raw.githubusercontent.com/sider/goodcheck-rules/master/rules/typo.yml
-  - https://raw.githubusercontent.com/sider/goodcheck-rules/master/rules/ruby.yml
+  - https://github.com/sider/goodcheck-rules/archive/refs/tags/v0.0.1.tar.gz
 
 exclude:
   - "**/build"

@@ -31,9 +31,13 @@ module Goodcheck
     end
 
     def load(name, &block)
-      uri = URI.parse(name)
+      uri = begin
+        URI.parse(name)
+      rescue URI::InvalidURIError
+        nil
+      end
 
-      case uri.scheme
+      case uri&.scheme
       when nil
         load_file name, &block
       when "file"
@@ -45,14 +49,20 @@ module Goodcheck
       end
     end
 
-    def load_file(path)
-      files = Dir.glob(File.join(config_path.parent.to_path, path), File::FNM_DOTMATCH | File::FNM_EXTGLOB).sort
+    def load_file(path, &block)
+      files = Pathname.glob(File.join(config_path.parent.to_path, path), File::FNM_DOTMATCH | File::FNM_EXTGLOB).sort
       if files.empty?
         raise FileNotFound.new(path)
       else
         files.each do |file|
           Goodcheck.logger.info "Reading file: #{file}"
-          yield File.read(file)
+          if unarchiver.tar_gz?(file)
+            unarchiver.tar_gz(file.read) do |content, filename|
+              block.call(content, filename)
+            end
+          else
+            block.call(file.read, file.to_path)
+          end
         end
       end
     end
@@ -61,7 +71,7 @@ module Goodcheck
       Digest::SHA2.hexdigest(uri.to_s)
     end
 
-    def load_http(uri)
+    def load_http(uri, &block)
       hash = cache_name(uri)
       path = cache_path + hash
 
@@ -87,13 +97,19 @@ module Goodcheck
       if download
         path.rmtree if path.exist?
         Goodcheck.logger.info "Downloading content..."
-        content = http_get uri
-        Goodcheck.logger.debug "Downloaded content: #{content[0, 1024].inspect}#{content.size > 1024 ? "..." : ""}"
-        yield content
-        write_cache uri, content
+        if unarchiver.tar_gz?(uri.path)
+          unarchiver.tar_gz(http_get(uri)) do |content, filename|
+            block.call(content, filename)
+            write_cache "#{uri}/#{filename}", content
+          end
+        else
+          content = http_get(uri)
+          block.call(content, uri.path)
+          write_cache uri, content
+        end
       else
         Goodcheck.logger.info "Reading content from cache..."
-        yield path.read
+        block.call(path.read, path.to_path)
       end
     end
 
@@ -116,6 +132,18 @@ module Goodcheck
       else
         raise "Error: HTTP GET #{uri.inspect} #{res.inspect}"
       end
+    end
+
+    private
+
+    def unarchiver
+      @unarchiver ||=
+        begin
+          filter = ->(filename) {
+            %w[.yml .yaml].include?(File.extname(filename).downcase) && File.basename(filename) != DEFAULT_CONFIG_FILE
+          }
+          Unarchiver.new(file_filter: filter)
+        end
     end
   end
 end
