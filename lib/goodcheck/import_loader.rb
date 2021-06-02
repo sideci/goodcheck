@@ -93,13 +93,13 @@ module Goodcheck
       if download
         path.rmtree if path.exist?
         Goodcheck.logger.info "Downloading content..."
-        content = http_get uri
         if unarchiver.tar_gz?(uri.path)
-          unarchiver.tar_gz(content) do |content, filename|
+          unarchiver.tar_gz(http_get(uri)) do |content, filename|
             yield content, filename
             write_cache "#{uri}/#{filename}", content
           end
         else
+          content = http_get(uri)
           yield content, uri.path
           write_cache uri, content
         end
