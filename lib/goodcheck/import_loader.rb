@@ -32,10 +32,10 @@ module Goodcheck
 
     def load(name, &block)
       uri = begin
-              URI.parse(name)
-            rescue URI::InvalidURIError
-              nil
-            end
+        URI.parse(name)
+      rescue URI::InvalidURIError
+        nil
+      end
 
       case uri&.scheme
       when nil
