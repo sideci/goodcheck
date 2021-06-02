@@ -67,7 +67,7 @@ module Goodcheck
       Digest::SHA2.hexdigest(uri.to_s)
     end
 
-    def load_http(uri)
+    def load_http(uri, &block)
       hash = cache_name(uri)
       path = cache_path + hash
 
@@ -95,17 +95,17 @@ module Goodcheck
         Goodcheck.logger.info "Downloading content..."
         if unarchiver.tar_gz?(uri.path)
           unarchiver.tar_gz(http_get(uri)) do |content, filename|
-            yield content, filename
+            block.call(content, filename)
             write_cache "#{uri}/#{filename}", content
           end
         else
           content = http_get(uri)
-          yield content, uri.path
+          block.call(content, uri.path)
           write_cache uri, content
         end
       else
         Goodcheck.logger.info "Reading content from cache..."
-        yield path.read, path.to_path
+        block.call(path.read, path.to_path)
       end
     end
 
