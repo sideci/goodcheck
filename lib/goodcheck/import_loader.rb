@@ -46,13 +46,20 @@ module Goodcheck
     end
 
     def load_file(path)
-      files = Dir.glob(File.join(config_path.parent.to_path, path), File::FNM_DOTMATCH | File::FNM_EXTGLOB).sort
+      files = Pathname.glob(File.join(config_path.parent.to_path, path), File::FNM_DOTMATCH | File::FNM_EXTGLOB).sort
       if files.empty?
         raise FileNotFound.new(path)
       else
         files.each do |file|
           Goodcheck.logger.info "Reading file: #{file}"
-          yield File.read(file)
+          content = file.read
+          if unarchiver.tar_gz?(file)
+            unarchiver.tar_gz(content) do |content, filename|
+              yield content, filename
+            end
+          else
+            yield content, file.to_path
+          end
         end
       end
     end
@@ -88,12 +95,18 @@ module Goodcheck
         path.rmtree if path.exist?
         Goodcheck.logger.info "Downloading content..."
         content = http_get uri
-        Goodcheck.logger.debug "Downloaded content: #{content[0, 1024].inspect}#{content.size > 1024 ? "..." : ""}"
-        yield content
-        write_cache uri, content
+        if unarchiver.tar_gz?(uri.path)
+          unarchiver.tar_gz(content) do |content, filename|
+            yield content, filename
+            write_cache "#{uri}_#{filename}", content
+          end
+        else
+          yield content, uri.path
+          write_cache uri, content
+        end
       else
         Goodcheck.logger.info "Reading content from cache..."
-        yield path.read
+        yield path.read, path.to_path
       end
     end
 
@@ -116,6 +129,12 @@ module Goodcheck
       else
         raise "Error: HTTP GET #{uri.inspect} #{res.inspect}"
       end
+    end
+
+    private
+
+    def unarchiver
+      @unarchiver ||= Unarchiver.new
     end
   end
 end
