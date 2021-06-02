@@ -98,7 +98,7 @@ module Goodcheck
         if unarchiver.tar_gz?(uri.path)
           unarchiver.tar_gz(content) do |content, filename|
             yield content, filename
-            write_cache "#{uri}_#{filename}", content
+            write_cache "#{uri}/#{filename}", content
           end
         else
           yield content, uri.path

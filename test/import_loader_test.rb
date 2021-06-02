@@ -152,9 +152,13 @@ EOF
       assert_match "- id: rule.b", loaded_content[1]
 
       # Test cache is saved
-      cache_path = cache_dir_path + loader.cache_name(URI.parse(SAMPLE_URL_TAR_GZ))
-      assert_operator cache_path, :file?
-      assert_equal cache_path.read, loaded_content
+      cache_path_0 = cache_dir_path + loader.cache_name("#{SAMPLE_URL_TAR_GZ}/rules/a.yml")
+      assert cache_path_0.file?
+      assert_equal cache_path_0.read, loaded_content[0]
+
+      cache_path_1 = cache_dir_path + loader.cache_name("#{SAMPLE_URL_TAR_GZ}/rules/sub/b.yaml")
+      assert cache_path_1.file?
+      assert_equal cache_path_1.read, loaded_content[1]
     end
   end
 
