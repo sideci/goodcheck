@@ -112,7 +112,7 @@ EOF
   end
 
   SAMPLE_URL = "https://raw.githubusercontent.com/sider/goodcheck/5a61817bd6f16105bdcef1ccfbac62a2b4edeba8/goodcheck.yml"
-  SAMPLE_URL_TAR_GZ = "https://raw.githubusercontent.com/sider/goodcheck/import-tar-gz-files/test/fixtures/goodcheck-test-rules.tar.gz"
+  SAMPLE_URL_TAR_GZ = "https://raw.githubusercontent.com/sider/goodcheck/e0affdad8f70912f4ebddb37758adfd19dc11d71/test/fixtures/goodcheck-test-rules.tar.gz"
 
   def test_load_url
     mktmpdir do |path|
