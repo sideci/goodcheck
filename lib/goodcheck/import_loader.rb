@@ -133,7 +133,13 @@ module Goodcheck
     private
 
     def unarchiver
-      @unarchiver ||= Unarchiver.new
+      @unarchiver ||=
+        begin
+          filter = ->(filename) {
+            %w[.yml .yaml].include?(File.extname(filename).downcase) && File.basename(filename) != DEFAULT_CONFIG_FILE
+          }
+          Unarchiver.new(file_filter: filter)
+        end
     end
   end
 end

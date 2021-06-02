@@ -1,5 +1,11 @@
 module Goodcheck
   class Unarchiver
+    attr_reader :file_filter
+
+    def initialize(file_filter: ->(_filename) { true })
+      @file_filter = file_filter
+    end
+
     def tar_gz?(filename)
       name = filename.to_s.downcase
       ext = ".tar.gz"
@@ -11,7 +17,7 @@ module Goodcheck
 
       Gem::Package::TarReader.new(StringIO.new(gz(content))) do |tar_reader|
         tar_reader.each do |file|
-          if file.file?
+          if file.file? && file_filter.call(file.full_name)
             yield file.read, file.full_name
           end
         end
