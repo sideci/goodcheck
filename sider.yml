@@ -1,9 +1,8 @@
 linter:
-  rubocop:
-    gems:
-      - rubocop
-      - meowcop
-
-branches:
-  exclude:
-    - /^release-.*/
+  goodcheck:
+    dependencies:
+      # Test the edge version.
+      - name: goodcheck
+        git:
+          repo: https://github.com/sider/goodcheck.git
+          branch: master
