@@ -1,6 +1,8 @@
 require "test_helper"
 
 class ConfigTest < Minitest::Test
+  include TestHelper
+
   ConfigLoader = Goodcheck::ConfigLoader
   Config = Goodcheck::Config
 
@@ -53,5 +55,35 @@ class ConfigTest < Minitest::Test
     )
 
     assert_equal ["rule1", "rule1.x"], config.rules_for_path(Pathname("bar.rb"), rules_filter: ["rule1"]).map(&:first).map(&:id)
+  end
+
+  def test_exclude_path
+    config = Config.new(rules: [], exclude_paths: ["foo"])
+
+    assert config.exclude_path? Pathname("foo")
+    refute config.exclude_path? Pathname("bar")
+  end
+
+  def test_exclude_path_by_glob
+    config = Config.new(rules: [], exclude_paths: ["foo/**/*.{rb,yml}"])
+
+    assert config.exclude_path? Pathname("foo/a.rb")
+    assert config.exclude_path? Pathname("foo/a/b.yml")
+    refute config.exclude_path? Pathname("foo/a.py")
+    refute config.exclude_path? Pathname("bar/a.rb")
+  end
+
+  def test_exclude_path_by_mime_type
+    mktmpdir do |dir|
+      file = ->(name) do
+        (dir / name).tap { |f| f.write("") }
+      end
+
+      config = Config.new(rules: [], exclude_paths: [], exclude_binary: true)
+
+      assert config.exclude_path?(Pathname(__dir__) / "fixtures" / "goodcheck-test-rules.tar.gz")
+      refute config.exclude_path? file.("a.rb")
+      refute config.exclude_path? file.("a.svg")
+    end
   end
 end
