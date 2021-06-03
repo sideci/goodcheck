@@ -127,7 +127,7 @@ module Goodcheck
       end
 
       def excluded?(path)
-        config.exclude_paths.any? {|pattern| path.fnmatch?(pattern, File::FNM_PATHNAME | File::FNM_EXTGLOB) }
+        config.exclude_path?(path)
       end
     end
   end

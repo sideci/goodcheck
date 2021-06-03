@@ -14,7 +14,9 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
+          bundler-cache: ${{ matrix.ruby != '2.5' }} # https://github.com/sider/goodcheck/pull/195/checks?check_run_id=2735777166#step:3:70
+      - run: gem update --system && bundle install
+        if: ${{ matrix.ruby == '2.5' }}
       - run: bundle exec rake
         env:
           TESTOPT: '--verbose'

@@ -186,15 +186,14 @@ module Goodcheck
                       })
 
       let :rules, array(rule)
-
-      let :import_target, string
-      let :imports, array(import_target)
+      let :imports, array(string)
       let :exclude, array_or(string)
 
       let :config, object(
         rules: optional(rules),
         import: optional(imports),
-        exclude: optional(exclude)
+        exclude: optional(exclude),
+        exclude_binary: boolean?
       )
     end
 
@@ -224,9 +223,11 @@ module Goodcheck
         load_import rules, import
       end
 
-      exclude_paths = Array(content[:exclude])
-
-      Config.new(rules: rules, exclude_paths: exclude_paths)
+      Config.new(
+        rules: rules,
+        exclude_paths: Array(content[:exclude]),
+        exclude_binary: content[:exclude_binary]
+      )
     end
 
     def load_rules(rules, array)
