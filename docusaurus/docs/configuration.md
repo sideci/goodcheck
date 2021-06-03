@@ -346,8 +346,8 @@ exclude:
 exclude_binary: true
 ```
 
-- The value of `exclude` can be one or more strings, representing an excluded directory or a glob pattern for excluded files.
-- The value of `exclude_binary` can be a boolean. If enabled, Goodcheck will exclude files considered as *binary*. Defaults to `false`.
+- `exclude` - allows one or more strings, representing an excluded directory or a glob pattern for excluded files.
+- `exclude_binary` - allows a boolean. Defaults to `false`. If enabled, Goodcheck will exclude files considered as *binary*.
   For example, files like `foo.png` or `bar.zip` are considered as *binary*.
 
 ## Disabling rules with inline comments
