@@ -13,5 +13,6 @@ exclude:
   - "**/coverage"
   - "**/node_modules"
   - "**/vendor"
-  - "**/*.{ico,pdf,png}"
   - "**/yarn.lock"
+
+exclude_binary: true
