@@ -264,7 +264,8 @@ Where:
   config = {
     "rules": optional(rules),
     "import": optional(imports),
-    "exclude": optional(exclude)
+    "exclude": optional(exclude),
+    "exclude_binary": optional(boolean)
   }
   positive_rule = {
     "id": string,
