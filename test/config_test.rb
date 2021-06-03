@@ -82,8 +82,8 @@ class ConfigTest < Minitest::Test
       config = Config.new(rules: [], exclude_paths: [], exclude_binary: true)
 
       assert config.exclude_path?(Pathname(__dir__) / "fixtures" / "goodcheck-test-rules.tar.gz")
-      refute config.exclude_path? file.("a.rb")
-      refute config.exclude_path? file.("a.svg")
+      refute config.exclude_path? file.call("a.rb")
+      refute config.exclude_path? file.call("a.svg")
     end
   end
 end

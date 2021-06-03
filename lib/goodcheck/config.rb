@@ -3,20 +3,20 @@ module Goodcheck
     DEFAULT_EXCLUDE_BINARY = false
 
     # https://www.iana.org/assignments/media-types/media-types.xhtml
-    BINARY_MIME_TYPES = Set.new(%w[
+    BINARY_MIME_TYPES = %w[
       audio
       font
       image
       model
       multipart
       video
-    ]).freeze
-    BINARY_MIME_FULLTYPES = Set.new(%w[
+    ].to_set.freeze
+    BINARY_MIME_FULLTYPES = %w[
       application/gzip
       application/illustrator
       application/pdf
       application/zip
-    ]).freeze
+    ].to_set.freeze
 
     attr_reader :rules
     attr_reader :exclude_paths
