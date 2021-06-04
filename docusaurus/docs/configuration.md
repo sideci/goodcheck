@@ -366,13 +366,13 @@ rules:
     message: An error message.
     severity: error
 
-  # The rule with `severity: info` is denied by the `severity.allow` option below.
+  # Goodcheck will deny this rule with `severity: info` by the `severity.allow` option below.
   - id: an-info-rule
     pattern: foo
     message: An information message.
     severity: info
 
-  # The rule without `severity` is denied by the `severity.required` option below.
+  # Goodcheck will deny this rule without `severity` by the `severity.required` option below.
   - id: a-rule-without-severity
     pattern: foo
     message: A message without a severity.
