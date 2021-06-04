@@ -265,6 +265,7 @@ Where:
     "rules": optional(rules),
     "import": optional(imports),
     "exclude": optional(exclude),
+    "exclude_binary": optional(boolean),
     "severity": optional(enum(array(string), string))
   }
   positive_rule = {

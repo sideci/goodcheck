@@ -2,13 +2,22 @@
 
 ## HEAD
 
+Breaking changes:
+
+* Drop support of Ruby 2.4 [#169](https://github.com/sider/goodcheck/pull/169)
 * `goodcheck test` exit with `3` on tests failed [#168](https://github.com/sider/goodcheck/pull/168)
   (a potentially breaking change; the command previously exited with `1`)
-* Drop support of Ruby 2.4 (**breaking**) [#169](https://github.com/sider/goodcheck/pull/169)
+
+Features:
+
+* Import `.tar.gz` files [#190](https://github.com/sider/goodcheck/pull/190)
+* Introduce `exclude_binary` option [#195](https://github.com/sider/goodcheck/pull/195)
+
+Bugfixes and others:
+
 * Update gemspec [#176](https://github.com/sider/goodcheck/pull/176)
 * Update `psych` requirement allowing 4.0 [#183](https://github.com/sider/goodcheck/pull/183)
-* Improve output error message on RegexpError [#188](https://github.com/sider/goodcheck/pull/188)
-* Import .tar.gz files [#190](https://github.com/sider/goodcheck/pull/190)
+* Improve output error message on `RegexpError` [#188](https://github.com/sider/goodcheck/pull/188)
 * Fix importing error with extended glob [#194](https://github.com/sider/goodcheck/pull/194)
 
 ## 2.7.0 (2020-12-02)

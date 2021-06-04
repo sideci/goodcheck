@@ -337,16 +337,20 @@ The cache expires in 3 minutes.
 
 ## Excluding files
 
-`goodcheck.yml` can have an optional `exclude` attribute.
+`goodcheck.yml` can have an optional `exclude` or `exclude_binary` attribute, which allows you to exclude any files.
 
 ```yaml
 exclude:
   - node_modules
   - vendor
   - assets/**/*.png
+
+exclude_binary: true
 ```
 
-The value of `exclude` can be a string or an array of strings representing the glob pattern for excluded files.
+- `exclude` - allows one or more strings, representing an excluded directory or a glob pattern for excluded files.
+- `exclude_binary` - allows a boolean. Defaults to `false`. If enabled, Goodcheck will exclude files considered as *binary*.
+  For example, files like `foo.png` or `bar.zip` are considered as *binary*.
 
 ## Severity
 
