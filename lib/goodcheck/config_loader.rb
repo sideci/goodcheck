@@ -264,8 +264,9 @@ module Goodcheck
       triggers = retrieve_triggers(hash)
       justifications = array(hash[:justification])
       message = hash[:message].chomp
+      severity = hash[:severity]
 
-      Rule.new(id: id, message: message, justifications: justifications, triggers: triggers)
+      Rule.new(id: id, message: message, justifications: justifications, triggers: triggers, severity: severity)
     end
 
     def retrieve_triggers(hash)
