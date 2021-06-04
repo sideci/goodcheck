@@ -385,7 +385,7 @@ severity:
 In summary:
 
 - `rules[].severity` - a string that represents a rule’s severity
-- `severity.allow` - a list of allowed severities
+- `severity.allow` - a list of allowed severities (defaults to all allowed)
 - `severity.required` - a boolean value whether or not to require severities (defaults to `false`)
 
 ## Disabling rules with inline comments
