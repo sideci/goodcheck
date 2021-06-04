@@ -354,27 +354,39 @@ exclude_binary: true
 
 ## Severity
 
-A *severity* expresses an importance level of a rule. Predefined severities are `error` and `warning`.
-You can set any severity to a rule, e.g. `info` or `convention`.
+A *severity* represents an importance level of a rule. You can optionally specify any severity to a rule, such as `error`, `warning`, or `info`.
 
-If you want to restrict severities available within your configuration, you can the top-level `severity` field. See the example below:
+Also, you can allow only specific severities via the top-level `severity` option. See below:
 
 ```yaml
 rules:
-  - id: valid-severity
-    pattern: bar
-    message: Disallow `bar`
-    severity: error         # OK
-
-  - id: invalid-severity
+  # No problems.
+  - id: an-error-rule
     pattern: foo
-    message: Disallow `foo`
-    severity: convention    # NG
+    message: An error message.
+    severity: error
 
-severity: [error, warning, info]
+  # The rule with `severity: info` is denied by the `severity.allow` option below.
+  - id: an-info-rule
+    pattern: foo
+    message: An information message.
+    severity: info
+
+  # The rule without `severity` is denied by the `severity.required` option below.
+  - id: a-rule-without-severity
+    pattern: foo
+    message: A message without a severity.
+
+severity:
+  allow: [error, warning]
+  required: true
 ```
 
-The default list of severities is *empty*, that is, any severities are allowed.
+In summary:
+
+- `rules[].severity` - a string that represents a rule’s severity
+- `severity.allow` - a list of allowed severities
+- `severity.required` - a boolean value whether or not to require severities (defaults to `false`)
 
 ## Disabling rules with inline comments
 
