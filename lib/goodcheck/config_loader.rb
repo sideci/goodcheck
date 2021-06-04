@@ -96,32 +96,34 @@ module Goodcheck
                            end
                          })
 
-      base_rule = {
+      let :positive_rule, object(
         id: string,
+        pattern: array_or(pattern),
         message: string,
         justification: optional(array_or(string)),
-        severity: optional(string)
-      }
-
-      let :positive_rule, object(
-        **base_rule,
-        pattern: array_or(pattern),
         glob: optional(glob),
         pass: optional(array_or(string)),
-        fail: optional(array_or(string))
+        fail: optional(array_or(string)),
+        severity: optional(string)
       )
 
       let :negative_rule, object(
-        **base_rule,
+        id: string,
         not: object(pattern: array_or(pattern)),
+        message: string,
+        justification: optional(array_or(string)),
         glob: optional(glob),
         pass: optional(array_or(string)),
-        fail: optional(array_or(string))
+        fail: optional(array_or(string)),
+        severity: optional(string)
       )
 
       let :nopattern_rule, object(
-        **base_rule,
-        glob: glob
+        id: string,
+        message: string,
+        justification: optional(array_or(string)),
+        glob: glob,
+        severity: optional(string)
       )
 
       let :positive_trigger, object(
@@ -161,8 +163,11 @@ module Goodcheck
       )
 
       let :triggered_rule, object(
-        **base_rule,
-        trigger: array_or(trigger)
+        id: string,
+        message: string,
+        justification: optional(array_or(string)),
+        trigger: array_or(trigger),
+        severity: optional(string)
       )
 
       let :rule, enum(positive_rule,
