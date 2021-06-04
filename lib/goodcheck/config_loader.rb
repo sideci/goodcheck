@@ -190,15 +190,18 @@ module Goodcheck
                       })
 
       let :rules, array(rule)
-      let :imports, array(string)
-      let :exclude, array_or(string)
+
+      let :severity, object(
+        allow: optional(array(string)),
+        required: boolean?,
+      )
 
       let :config, object(
         rules: optional(rules),
-        import: optional(imports),
-        exclude: optional(exclude),
+        import: optional(array(string)),
+        exclude: optional(array_or(string)),
         exclude_binary: boolean?,
-        severity: optional(array_or(string))
+        severity: optional(severity)
       )
     end
 

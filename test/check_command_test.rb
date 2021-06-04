@@ -263,10 +263,10 @@ Where:
   rules = array(rule)
   config = {
     "rules": optional(rules),
-    "import": optional(imports),
-    "exclude": optional(exclude),
+    "import": optional(array(string)),
+    "exclude": optional(enum(array(string), string)),
     "exclude_binary": optional(boolean),
-    "severity": optional(enum(array(string), string))
+    "severity": optional(severity)
   }
   positive_rule = {
     "id": string,
