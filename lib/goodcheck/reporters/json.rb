@@ -26,7 +26,8 @@ module Goodcheck
               end_column: location.end_column
             },
             message: issue.rule.message,
-            justifications: issue.rule.justifications
+            justifications: issue.rule.justifications,
+            severity: issue.rule.severity
           }
         end
         stdout.puts ::JSON.dump(json)

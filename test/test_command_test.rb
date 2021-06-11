@@ -45,13 +45,15 @@ EOF
 
       assert_equal 0, result
       assert_equal <<MSG, stdout.string
-Validating rule id uniqueness...
-  OK!👍
+Validating rule ID uniqueness...
+  OK! 👍
+Testing rule sample.1...
+  OK! 👍
 Testing rule sample.2...
   Testing pattern...
-  OK!🎉
+  OK! 👍
 
-Tested 1 rule, 1 success, 0 failures
+2 rules tested: 2 successful, 0 failed
 MSG
     end
   end
@@ -84,14 +86,16 @@ EOF
 
       assert_equal 0, result
       assert_equal <<MSG, stdout.string
-Validating rule id uniqueness...
-  OK!👍
+Validating rule ID uniqueness...
+  OK! 👍
+Testing rule sample.1...
+  OK! 👍
 Testing rule sample.2...
   1. Testing trigger...
   2. Testing trigger...
-  OK!🎉
+  OK! 👍
 
-Tested 1 rule, 1 success, 0 failures
+2 rules tested: 2 successful, 0 failed
 MSG
     end
   end
@@ -114,9 +118,9 @@ EOF
 
       assert_equal 3, result
       assert_equal <<MSG, stdout.string
-Validating rule id uniqueness...
-  Found 1 duplication.😞
-    sample.1
+Validating rule ID uniqueness...
+  Found 1 duplication. 😱
+    - sample.1
 MSG
     end
   end
@@ -140,17 +144,17 @@ EOF
 
       assert_equal 3, result
       assert_equal <<MSG, stdout.string
-Validating rule id uniqueness...
-  OK!👍
+Validating rule ID uniqueness...
+  OK! 👍
 Testing rule sample.1...
   1. Testing trigger...
-    1. pass example matched.😱
-    2. fail example didn't match.😱
+    1. pass example matched. 😱
+    2. fail example didn’t match. 😱
 
 Failed rules:
   - sample.1
 
-Tested 1 rule, 0 successes, 1 failure
+1 rule tested: 0 successful, 1 failed
 MSG
     end
   end
@@ -172,20 +176,20 @@ EOF
 
       assert_equal 3, result
       assert_equal <<MSG, stdout.string
-Validating rule id uniqueness...
-  OK!👍
+Validating rule ID uniqueness...
+  OK! 👍
 Testing rule sample.1...
   Testing pattern...
-    1. pass example matched.😱
+    1. pass example matched. 😱
   Testing pattern...
-    1. pass example matched.😱
-  🚨 The rule contains a `pattern` with `glob`, which is not supported by the test command.
+    1. pass example matched. 😱
+    The rule contains a `pattern` with `glob`, which is not supported by the test command. 🚨
     Skips testing `fail` examples.
 
 Failed rules:
   - sample.1
 
-Tested 1 rule, 0 successes, 1 failure
+1 rule tested: 0 successful, 1 failed
 MSG
     end
   end
@@ -227,6 +231,41 @@ EOF
       assert_equal 1, result
       assert_empty stdout.string
       assert_match %r(^Invalid pattern of the `foo` rule in `\S+`: premature end of char-class: /\[a/$), stderr.string
+    end
+  end
+
+  def test_invalid_severity
+    with_config(<<EOF) do |builder|
+rules:
+  - id: foo
+    pattern: a
+    message: ...
+    severity: info
+  - id: bar
+    pattern: a
+    message: ...
+severity:
+  allow: [error, warn]
+  required: true
+EOF
+      test = Test.new(stdout: stdout, stderr: stderr, config_path: builder.config_path, force_download: nil, home_path: builder.path + "home")
+      result = test.run
+
+      assert_equal 3, result
+      assert_equal <<MSG, stdout.string
+Validating rule ID uniqueness...
+  OK! 👍
+Testing rule foo...
+  "info" severity isn’t allowed. Must be one of "error", "warn". 😱
+Testing rule bar...
+  Severity is required. 😱
+
+Failed rules:
+  - foo
+  - bar
+
+2 rules tested: 0 successful, 2 failed
+MSG
     end
   end
 end

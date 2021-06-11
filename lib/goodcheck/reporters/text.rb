@@ -37,7 +37,9 @@ module Goodcheck
                         else
                           line.bytesize - start_column
                         end
-          stdout.puts "#{Rainbow(issue.path).cyan}:#{start_line}:#{start_column}: #{message}"
+          rule = Rainbow("(#{issue.rule.id})").darkgray
+          severity = issue.rule.severity ? Rainbow("[#{issue.rule.severity}]").magenta : ""
+          stdout.puts "#{Rainbow(issue.path).cyan}:#{start_line}:#{start_column}: #{message}  #{rule}  #{severity}".strip
           stdout.puts line.chomp
           stdout.puts (" " * start_column_index) + Rainbow("^" + "~" * (column_size - 1)).yellow
         else

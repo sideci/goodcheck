@@ -12,6 +12,7 @@ Features:
 
 * Import `.tar.gz` files [#190](https://github.com/sider/goodcheck/pull/190)
 * Introduce `exclude_binary` option [#195](https://github.com/sider/goodcheck/pull/195)
+* Add rule severity [#172](https://github.com/sider/goodcheck/pull/172)
 
 Bugfixes and others:
 

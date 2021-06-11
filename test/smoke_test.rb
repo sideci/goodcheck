@@ -123,7 +123,7 @@ EOF
       stdout, stderr, status = shell(goodcheck, "test", chdir: builder.path)
 
       assert status.success?
-      assert_match %r(Validating rule id uniqueness...), stdout
+      assert_match %r(Validating rule ID uniqueness...), stdout
       assert_empty stderr
     end
   end
@@ -156,7 +156,7 @@ EOF
 
       refute status.success?
       assert_equal <<OUT, stdout
-app/models/user.rb:2:15: Foo
+app/models/user.rb:2:15: Foo  (foo)
   belongs_to :foo
               ^~~
 
@@ -202,7 +202,8 @@ EOF
                         end_column: 17
                       },
                       message: "Foo",
-                      justifications: []
+                      justifications: [],
+                      severity: nil
                     }], JSON.parse(stdout, symbolize_names: true)
       assert_empty stderr
     end
@@ -235,7 +236,7 @@ EOF
 
       refute status.success?
       assert_equal <<OUT, stdout
-app/models/user.rb:2:15: Foo
+app/models/user.rb:2:15: Foo  (foo)
   belongs_to :foo
               ^~~
 
@@ -277,7 +278,7 @@ EOF
 
       refute status.success?
       assert_equal <<OUT, stdout
-app/views/welcome/index.html.erb:1:9: Bar
+app/views/welcome/index.html.erb:1:9: Bar  (bar)
 <h1>Foo Bar Baz</h1>
         ^~~
 

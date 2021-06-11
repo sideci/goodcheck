@@ -103,7 +103,8 @@ module Goodcheck
         justification: optional(array_or(string)),
         glob: optional(glob),
         pass: optional(array_or(string)),
-        fail: optional(array_or(string))
+        fail: optional(array_or(string)),
+        severity: optional(string)
       )
 
       let :negative_rule, object(
@@ -113,14 +114,16 @@ module Goodcheck
         justification: optional(array_or(string)),
         glob: optional(glob),
         pass: optional(array_or(string)),
-        fail: optional(array_or(string))
+        fail: optional(array_or(string)),
+        severity: optional(string)
       )
 
       let :nopattern_rule, object(
         id: string,
         message: string,
         justification: optional(array_or(string)),
-        glob: glob
+        glob: glob,
+        severity: optional(string)
       )
 
       let :positive_trigger, object(
@@ -163,7 +166,8 @@ module Goodcheck
         id: string,
         message: string,
         justification: optional(array_or(string)),
-        trigger: array_or(trigger)
+        trigger: array_or(trigger),
+        severity: optional(string)
       )
 
       let :rule, enum(positive_rule,
@@ -186,14 +190,18 @@ module Goodcheck
                       })
 
       let :rules, array(rule)
-      let :imports, array(string)
-      let :exclude, array_or(string)
+
+      let :severity, object(
+        allow: optional(array(string)),
+        required: boolean?
+      )
 
       let :config, object(
         rules: optional(rules),
-        import: optional(imports),
-        exclude: optional(exclude),
-        exclude_binary: boolean?
+        import: optional(array(string)),
+        exclude: optional(array_or(string)),
+        exclude_binary: boolean?,
+        severity: optional(severity)
       )
     end
 
@@ -226,7 +234,8 @@ module Goodcheck
       Config.new(
         rules: rules,
         exclude_paths: Array(content[:exclude]),
-        exclude_binary: content[:exclude_binary]
+        exclude_binary: content[:exclude_binary],
+        severity: content[:severity]
       )
     end
 
@@ -256,8 +265,9 @@ module Goodcheck
       triggers = retrieve_triggers(hash)
       justifications = array(hash[:justification])
       message = hash[:message].chomp
+      severity = hash[:severity]
 
-      Rule.new(id: id, message: message, justifications: justifications, triggers: triggers)
+      Rule.new(id: id, message: message, justifications: justifications, triggers: triggers, severity: severity)
     end
 
     def retrieve_triggers(hash)

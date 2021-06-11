@@ -308,6 +308,20 @@ class ConfigLoaderTest < Minitest::Test
     end
   end
 
+  def test_load_rule_with_severity
+    loader = config_loader()
+    rule = loader.load_rule(
+      {
+        id: "com.id.1",
+        message: "Some message",
+        severity: "error"
+      }
+    )
+
+    assert_instance_of Rule, rule
+    assert_equal "error", rule.severity
+  end
+
   def test_load_config_failure
     loader = ConfigLoader.new(path: Pathname("hello.yml"), content: [{}], stderr: stderr, import_loader: import_loader)
     assert_raises StrongJSON::Type::TypeError do

@@ -13,7 +13,7 @@ class JSONReporterTest < Minitest::Test
 
     json_analysis = reporter.analysis do
       reporter.file Pathname("foo.txt") do
-        rule = Rule.new(id: "id", triggers: [], message: "Message", justifications: ["reason1", "reason2"])
+        rule = Rule.new(id: "id", triggers: [], message: "Message", justifications: ["reason1", "reason2"], severity: "warning")
         reporter.rule rule do
           buffer = Buffer.new(path: Pathname("foo.txt"), content: "a\nb\nc\nd\ne")
           issue = Issue.new(buffer: buffer, rule: rule, text: "a ", text_begin_pos: 0)
@@ -33,7 +33,8 @@ class JSONReporterTest < Minitest::Test
                       end_column: 2,
                     },
                     message: "Message",
-                    justifications: ["reason1", "reason2"]
+                    justifications: ["reason1", "reason2"],
+                    severity: "warning"
                   }], json
     assert_equal json, JSON.parse(JSON.dump(json_analysis), symbolize_names: true)
   end

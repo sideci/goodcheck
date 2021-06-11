@@ -13,6 +13,7 @@ An example of the configuration is like the following:
 rules:
   - id: com.example.github
     pattern: Github
+    severity: warning
     message: |
       GitHub is GitHub, not Github
 
@@ -37,15 +38,16 @@ exclude:
 
 A *rule* hash under the `rules` list contains the following attributes:
 
-| Name                  | Description                                                    | Required? |
-| --------------------- | -------------------------------------------------------------- | --------- |
-| `id`                  | A string to identify a rule                                    | yes       |
-| [`pattern`](#pattern) | A pattern or patterns of text to be scanned                    | no        |
-| `message`             | A message to tell writers why the code piece should be revised | yes       |
-| `justification`       | Messages to tell writers when an exception can be allowed      | no        |
-| [`glob`](#glob)       | A glob or globs of files to be scanned                         | no        |
-| `pass`                | A pattern or patterns that do not match this rule              | no        |
-| `fail`                | A pattern or patterns that match this rule                     | no        |
+| Name                    | Description                                                    | Required? |
+| ----------------------- | -------------------------------------------------------------- | --------- |
+| `id`                    | A string to identify a rule                                    | yes       |
+| `message`               | A message to tell writers why the code piece should be revised | yes       |
+| [`pattern`](#pattern)   | A pattern or patterns of text to be scanned                    | no        |
+| `justification`         | Messages to tell writers when an exception can be allowed      | no        |
+| [`glob`](#glob)         | A glob or globs of files to be scanned                         | no        |
+| [`severity`](#severity) | A severity of a rule                                           | no        |
+| `pass`                  | A pattern or patterns that do not match this rule              | no        |
+| `fail`                  | A pattern or patterns that match this rule                     | no        |
 
 ## `pattern`
 
@@ -349,6 +351,42 @@ exclude_binary: true
 - `exclude` - allows one or more strings, representing an excluded directory or a glob pattern for excluded files.
 - `exclude_binary` - allows a boolean. Defaults to `false`. If enabled, Goodcheck will exclude files considered as *binary*.
   For example, files like `foo.png` or `bar.zip` are considered as *binary*.
+
+## Severity
+
+A *severity* represents an importance level of a rule. You can optionally specify any severity to a rule, such as `error`, `warning`, or `info`.
+
+Also, you can allow only specific severities via the top-level `severity` option. See below:
+
+```yaml
+rules:
+  # No problems.
+  - id: an-error-rule
+    pattern: foo
+    message: An error message.
+    severity: error
+
+  # Goodcheck will deny this rule with `severity: info` by the `severity.allow` option below.
+  - id: an-info-rule
+    pattern: foo
+    message: An information message.
+    severity: info
+
+  # Goodcheck will deny this rule without `severity` by the `severity.required` option below.
+  - id: a-rule-without-severity
+    pattern: foo
+    message: A message without a severity.
+
+severity:
+  allow: [error, warning]
+  required: true
+```
+
+In summary:
+
+- `rules[].severity` - a string that represents a rule’s severity
+- `severity.allow` - a list of allowed severities (defaults to all allowed)
+- `severity.required` - a boolean value whether or not to require severities (defaults to `false`)
 
 ## Disabling rules with inline comments
 

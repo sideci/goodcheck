@@ -22,11 +22,22 @@ module Goodcheck
     attr_reader :exclude_paths
     attr_reader :exclude_binary
     alias exclude_binary? exclude_binary
+    attr_reader :allowed_severities
+    attr_reader :severity_required
+    alias severity_required? severity_required
 
-    def initialize(rules:, exclude_paths:, exclude_binary: DEFAULT_EXCLUDE_BINARY)
+    def initialize(rules:, exclude_paths:, exclude_binary: DEFAULT_EXCLUDE_BINARY, severity: nil)
       @rules = rules
       @exclude_paths = exclude_paths
-      @exclude_binary = exclude_binary.nil? ? DEFAULT_EXCLUDE_BINARY : exclude_binary
+      @exclude_binary = exclude_binary || DEFAULT_EXCLUDE_BINARY
+      severity ||= {}
+      @allowed_severities = Set.new(severity.fetch(:allow, []))
+      @severity_required = severity.fetch(:required, false)
+    end
+
+    def severity_allowed?(severity)
+      return true if allowed_severities.empty?
+      allowed_severities.include?(severity)
     end
 
     def each_rule(filter:, &block)
