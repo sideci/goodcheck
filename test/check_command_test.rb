@@ -17,6 +17,7 @@ rules:
       - bar
     glob:
       - "app/models/**/*.rb"
+    severity: warning
 EOF
 
       builder.file name: Pathname("app/models/user.rb"), content: <<EOF
@@ -35,7 +36,7 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-app/models/user.rb:2:15: Foo
+app/models/user.rb:2:15: Foo  [foo]  (warning)
   belongs_to :foo
               ^~~
 
@@ -71,7 +72,7 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-test.html:2:3: Foo
+test.html:2:3: Foo  [foo]
   <p>
   ^~~
 
@@ -170,10 +171,10 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-goodcheck.yml:3:14: Do you want to write GitHub?
+goodcheck.yml:3:14: Do you want to write GitHub?  [com.example.1]
     pattern: Github
              ^~~~~~
-test.yml:1:7: Do you want to write GitHub?
+test.yml:1:7: Do you want to write GitHub?  [com.example.1]
 text: Github
       ^~~~~~
 
@@ -207,7 +208,7 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-goodcheck.yml:3:14: Do you want to write GitHub?
+goodcheck.yml:3:14: Do you want to write GitHub?  [com.example.1]
     pattern: Github
              ^~~~~~
 
@@ -337,7 +338,7 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-hello.css:6:3: Foo
+hello.css:6:3: Foo  [foo]
   background-color: pink;
   ^~~~~~~~~~~~~~~~~~~~~~~
 
@@ -396,10 +397,10 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-euc_jp.txt:1:10: Foo
+euc_jp.txt:1:10: Foo  [foo]
 吾輩は猫である。
          ^~~
-utf_8.txt:1:10: Foo
+utf_8.txt:1:10: Foo  [foo]
 吾輩は猫である。
          ^~~
 
@@ -427,10 +428,10 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-goodcheck.yml:4:14: Foo
+goodcheck.yml:4:14: Foo  [foo]
     pattern: 猫
              ^~~
-text_file:1:1: Foo
+text_file:1:1: Foo  [foo]
 猫ねこ🐈
 ^~~
 
@@ -470,7 +471,7 @@ EOF
         Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-README.md:1:1: Foo
+README.md:1:1: Foo  [foo]
 foo
 ^~~
 
@@ -484,13 +485,13 @@ OUT
         Check.new(config_path: builder.config_path.basename, rules: [], targets: [Pathname("."), Pathname("goodcheck.yml")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-README.md:1:1: Foo
+README.md:1:1: Foo  [foo]
 foo
 ^~~
-goodcheck.yml:2:9: Foo
+goodcheck.yml:2:9: Foo  [foo]
   - id: foo
         ^~~
-goodcheck.yml:4:14: Foo
+goodcheck.yml:4:14: Foo  [foo]
     pattern: foo
              ^~~
 
@@ -516,13 +517,13 @@ EOF
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-.file:1:1: Foo
+.file:1:1: Foo  [foo]
 foo
 ^~~
-goodcheck.yml:2:9: Foo
+goodcheck.yml:2:9: Foo  [foo]
   - id: foo
         ^~~
-goodcheck.yml:4:14: Foo
+goodcheck.yml:4:14: Foo  [foo]
     pattern: foo
              ^~~
 
@@ -536,16 +537,16 @@ OUT
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("."), Pathname(".file")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-.file:1:1: Foo
+.file:1:1: Foo  [foo]
 foo
 ^~~
-goodcheck.yml:2:9: Foo
+goodcheck.yml:2:9: Foo  [foo]
   - id: foo
         ^~~
-goodcheck.yml:4:14: Foo
+goodcheck.yml:4:14: Foo  [foo]
     pattern: foo
              ^~~
-.file:1:1: Foo
+.file:1:1: Foo  [foo]
 foo
 ^~~
 
@@ -571,7 +572,7 @@ EOF
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-goodcheck.yml:4:14: Some message
+goodcheck.yml:4:14: Some message  [some_rule]
     pattern: foo
              ^~~
 
@@ -597,7 +598,7 @@ EOF
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-goodcheck.yml:4:14: Some message
+goodcheck.yml:4:14: Some message  [some_rule]
     pattern: foo
              ^~~
 
@@ -623,7 +624,7 @@ EOF
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname(".")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-goodcheck.yml:4:14: Some message
+goodcheck.yml:4:14: Some message  [some_rule]
     pattern: foo
              ^~~
 
@@ -650,7 +651,7 @@ EOF
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("abc.txt")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-abc.txt:1:1: Foo
+abc.txt:1:1: Foo  [foo]
 foo
 ^~~~
 
@@ -848,13 +849,13 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-a/b/bar.txt:1:1: Disallow `foo`
+a/b/bar.txt:1:1: Disallow `foo`  [com.example.1]
 foo
 ^~~
-pass.txt:1:1: Disallow `foo`
+pass.txt:1:1: Disallow `foo`  [com.example.1]
 foo
 ^~~
-test.txt:1:1: Disallow `foo`
+test.txt:1:1: Disallow `foo`  [com.example.1]
 foo
 ^~~
 

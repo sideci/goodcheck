@@ -1,6 +1,7 @@
 rules:
   - id: sider.goodcheck.error_class
     pattern: StandardError
+    severity: error
     glob: "lib/**/*.rb"
     message: |
       Use `GoodCheck::Error` instead of `StandardError`.
