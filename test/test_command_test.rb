@@ -47,11 +47,13 @@ EOF
       assert_equal <<MSG, stdout.string
 Validating rule id uniqueness...
   OK!👍
+Testing rule sample.1...
+  No tests.
 Testing rule sample.2...
   Testing pattern...
   OK!🎉
 
-Tested 1 rule, 1 success, 0 failures
+1 of 2 rules tested: 1 successful, 0 failed
 MSG
     end
   end
@@ -86,12 +88,14 @@ EOF
       assert_equal <<MSG, stdout.string
 Validating rule id uniqueness...
   OK!👍
+Testing rule sample.1...
+  No tests.
 Testing rule sample.2...
   1. Testing trigger...
   2. Testing trigger...
   OK!🎉
 
-Tested 1 rule, 1 success, 0 failures
+1 of 2 rules tested: 1 successful, 0 failed
 MSG
     end
   end
@@ -150,7 +154,7 @@ Testing rule sample.1...
 Failed rules:
   - sample.1
 
-Tested 1 rule, 0 successes, 1 failure
+1 of 1 rules tested: 0 successful, 1 failed
 MSG
     end
   end
@@ -185,7 +189,7 @@ Testing rule sample.1...
 Failed rules:
   - sample.1
 
-Tested 1 rule, 0 successes, 1 failure
+1 of 1 rules tested: 0 successful, 1 failed
 MSG
     end
   end

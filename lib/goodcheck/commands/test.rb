@@ -67,9 +67,9 @@ module Goodcheck
         failed_rule_ids = Set[]
 
         config.rules.each do |rule|
-          if rule.triggers.any? {|trigger| !trigger.passes.empty? || !trigger.fails.empty?}
-            stdout.puts "Testing rule #{Rainbow(rule.id).cyan}..."
+          stdout.puts "Testing rule #{Rainbow(rule.id).cyan}..."
 
+          if rule.triggers.any? {|trigger| !trigger.passes.empty? || !trigger.fails.empty?}
             rule_ok = true
 
             rule.triggers.each.with_index do |trigger, index|
@@ -121,6 +121,8 @@ module Goodcheck
             else
               failure_count += 1
             end
+          else
+            stdout.puts "  No tests."
           end
         end
 
@@ -132,12 +134,9 @@ module Goodcheck
           end
         end
 
-        rule_count = success_count + failure_count
-        rule = rule_count == 1 ? "1 rule" : "#{rule_count} rules"
-        success = Rainbow(success_count == 1 ? "1 success" : "#{success_count} successes").green
-        failure = Rainbow(failure_count == 1 ? "1 failure" : "#{failure_count} failures").red
         stdout.puts ""
-        stdout.puts "Tested #{rule}, #{success}, #{failure}"
+        stdout.puts "#{Rainbow(success_count + failure_count).bold} of #{Rainbow(config.rules.size).bold} rules tested: " \
+                    "#{Rainbow(success_count.to_s + ' successful').green.bold}, #{Rainbow(failure_count.to_s + ' failed').red.bold}"
 
         test_pass
       end
