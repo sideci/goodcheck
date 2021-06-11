@@ -202,7 +202,8 @@ EOF
                         end_column: 17
                       },
                       message: "Foo",
-                      justifications: []
+                      justifications: [],
+                      severity: nil
                     }], JSON.parse(stdout, symbolize_names: true)
       assert_empty stderr
     end

@@ -93,6 +93,7 @@ rules:
       multiline: true
     glob:
       - "app/models/**/*.rb"
+    severity: warning
 EOF
 
       builder.file name: Pathname("app/models/user.rb"), content: <<EOF
@@ -112,7 +113,8 @@ EOF
                          path: "app/models/user.rb",
                          location: { start_line: 1, start_column: 1, end_line: 3, end_column: 4 },
                          message: "Foo",
-                         justifications: []
+                         justifications: [],
+                         severity: "warning"
                        }
                      ], JSON.parse(stdout.string, symbolize_names: true)
         assert_empty stderr.string
@@ -703,7 +705,8 @@ EOF
                          path: "hello.js",
                          location: { start_line: 1, start_column: 11, end_line: 1, end_column: 17 },
                          message: "Require",
-                         justifications: []
+                         justifications: [],
+                         severity: nil
                        }
                      ], JSON.parse(stdout.string, symbolize_names: true)
         assert_empty stderr.string
@@ -730,7 +733,8 @@ EOF
                          path: "node_modules/bar.js",
                          location: { start_line: 1, start_column: 11, end_line: 1, end_column: 17 },
                          message: "Require",
-                         justifications: []
+                         justifications: [],
+                         severity: nil
                        }
                      ], JSON.parse(stdout.string, symbolize_names: true)
         assert_empty stderr.string
@@ -795,7 +799,8 @@ EOF
           path: "app/models/user.rb",
           location: { start_line: 4, start_column: 15, end_line: 4, end_column: 17 },
           message: "Foo",
-          justifications: []
+          justifications: [],
+          severity: nil
         }], JSON.parse(stdout.string, symbolize_names: true)
         assert_empty stderr.string
       end
