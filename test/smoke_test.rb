@@ -123,7 +123,7 @@ EOF
       stdout, stderr, status = shell(goodcheck, "test", chdir: builder.path)
 
       assert status.success?
-      assert_match %r(Validating rule id uniqueness...), stdout
+      assert_match %r(Validating rule ID uniqueness...), stdout
       assert_empty stderr
     end
   end

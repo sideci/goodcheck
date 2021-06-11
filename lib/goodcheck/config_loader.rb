@@ -234,7 +234,8 @@ module Goodcheck
       Config.new(
         rules: rules,
         exclude_paths: Array(content[:exclude]),
-        exclude_binary: content[:exclude_binary]
+        exclude_binary: content[:exclude_binary],
+        severity: content[:severity]
       )
     end
 

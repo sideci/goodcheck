@@ -36,7 +36,7 @@ module Goodcheck
       end
 
       def validate_rule_uniqueness
-        stdout.puts "Validating rule id uniqueness..."
+        stdout.puts "Validating rule ID uniqueness..."
 
         duplicated_ids = []
 
@@ -47,31 +47,29 @@ module Goodcheck
         end
 
         if duplicated_ids.empty?
-          stdout.puts "  OK!👍"
+          stdout.puts Rainbow("  OK! 👍").green
           true
         else
           count = duplicated_ids.size
           duplication = count == 1 ? 'duplication' : 'duplications'
-          stdout.puts(Rainbow("  Found #{count} #{duplication}.😞").red)
+          stdout.puts "  Found #{Rainbow(count).bold} #{duplication}. 😱"
           duplicated_ids.each do |id|
-            stdout.puts "    #{id}"
+            stdout.puts "    - #{Rainbow(id).background(:red)}"
           end
           false
         end
       end
 
       def validate_rules
-        test_pass = true
         success_count = 0
-        failure_count = 0
         failed_rule_ids = Set[]
 
         config.rules.each do |rule|
           stdout.puts "Testing rule #{Rainbow(rule.id).cyan}..."
 
-          if rule.triggers.any? {|trigger| !trigger.passes.empty? || !trigger.fails.empty?}
-            rule_ok = true
+          rule_ok = true
 
+          if rule.triggers.any? {|trigger| !trigger.passes.empty? || !trigger.fails.empty?}
             rule.triggers.each.with_index do |trigger, index|
               if !trigger.passes.empty? || !trigger.fails.empty?
                 if trigger.by_pattern?
@@ -89,21 +87,19 @@ module Goodcheck
                 end
 
                 unless pass_errors.empty?
-                  test_pass = false
                   rule_ok = false
 
                   pass_errors.each do |_, index|
-                    stdout.puts "    #{index + 1}. #{Rainbow('pass').green} example matched.😱"
+                    stdout.puts "    #{index + 1}. #{Rainbow('pass').green} example matched. 😱"
                     failed_rule_ids << rule.id
                   end
                 end
 
                 unless fail_errors.empty?
-                  test_pass = false
                   rule_ok = false
 
                   fail_errors.each do |_, index|
-                    stdout.puts "    #{index + 1}. #{Rainbow('fail').red} example didn't match.😱"
+                    stdout.puts "    #{index + 1}. #{Rainbow('fail').red} example didn’t match. 😱"
                     failed_rule_ids << rule.id
                   end
                 end
@@ -111,18 +107,27 @@ module Goodcheck
             end
 
             if rule.triggers.any?(&:skips_fail_examples?)
-              stdout.puts "  🚨 The rule contains a `pattern` with `glob`, which is not supported by the test command."
+              stdout.puts "    The rule contains a `pattern` with `glob`, which is not supported by the test command. 🚨"
               stdout.puts "    Skips testing `fail` examples."
             end
+          end
 
-            if rule_ok
-              stdout.puts "  OK!🎉"
-              success_count += 1
-            else
-              failure_count += 1
-            end
-          else
-            stdout.puts "  No tests."
+          if rule.severity && !config.severity_allowed?(rule.severity)
+            allowed_severities = config.allowed_severities.map { |s| %("#{s}") }.join(', ')
+            stdout.puts Rainbow("  \"#{rule.severity}\" severity isn’t allowed. Must be one of #{allowed_severities}. 😱").red
+            rule_ok = false
+            failed_rule_ids << rule.id
+          end
+
+          if !rule.severity && config.severity_required?
+            stdout.puts Rainbow("  Severity is required. 😱").red
+            rule_ok = false
+            failed_rule_ids << rule.id
+          end
+
+          if rule_ok
+            stdout.puts Rainbow("  OK! 👍").green
+            success_count += 1
           end
         end
 
@@ -134,11 +139,12 @@ module Goodcheck
           end
         end
 
+        total = success_count + failed_rule_ids.size
         stdout.puts ""
-        stdout.puts "#{Rainbow(success_count + failure_count).bold} of #{Rainbow(config.rules.size).bold} rules tested: " \
-                    "#{Rainbow(success_count.to_s + ' successful').green.bold}, #{Rainbow(failure_count.to_s + ' failed').red.bold}"
+        stdout.puts "#{Rainbow(total).bold} #{total == 1 ? 'rule' : 'rules'} tested: " \
+                    "#{Rainbow(success_count.to_s + ' successful').green.bold}, #{Rainbow(failed_rule_ids.size.to_s + ' failed').red.bold}"
 
-        test_pass
+        failed_rule_ids.empty?
       end
 
       def rule_matches_example?(rule, trigger, example)
