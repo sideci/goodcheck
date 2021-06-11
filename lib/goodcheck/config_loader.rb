@@ -193,7 +193,7 @@ module Goodcheck
 
       let :severity, object(
         allow: optional(array(string)),
-        required: boolean?,
+        required: boolean?
       )
 
       let :config, object(
