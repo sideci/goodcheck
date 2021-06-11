@@ -156,7 +156,7 @@ EOF
 
       refute status.success?
       assert_equal <<OUT, stdout
-app/models/user.rb:2:15: Foo  [foo]
+app/models/user.rb:2:15: Foo  (foo)
   belongs_to :foo
               ^~~
 
@@ -236,7 +236,7 @@ EOF
 
       refute status.success?
       assert_equal <<OUT, stdout
-app/models/user.rb:2:15: Foo  [foo]
+app/models/user.rb:2:15: Foo  (foo)
   belongs_to :foo
               ^~~
 
@@ -278,7 +278,7 @@ EOF
 
       refute status.success?
       assert_equal <<OUT, stdout
-app/views/welcome/index.html.erb:1:9: Bar  [bar]
+app/views/welcome/index.html.erb:1:9: Bar  (bar)
 <h1>Foo Bar Baz</h1>
         ^~~
 
