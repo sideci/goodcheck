@@ -2,6 +2,8 @@
 
 ## HEAD
 
+## 3.0.0 (2021-06-14)
+
 Breaking changes:
 
 * Drop support of Ruby 2.4 [#169](https://github.com/sider/goodcheck/pull/169)
