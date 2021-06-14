@@ -18,6 +18,19 @@ module Goodcheck
       end
     end
 
+    class HTTPGetError < Error
+      attr_reader :response
+
+      def initialize(res)
+        super("HTTP GET #{res.uri} => #{res.code} #{res.message}")
+        @response = res
+      end
+
+      def error_response?
+        response.is_a?(Net::HTTPClientError) || response.is_a?(Net::HTTPServerError)
+      end
+    end
+
     attr_reader :cache_path
     attr_reader :expires_in
     attr_reader :force_download
@@ -122,15 +135,28 @@ module Goodcheck
     def http_get(uri, limit = 10)
       raise ArgumentError, "Too many HTTP redirects" if limit == 0
 
-      res = Net::HTTP.get_response URI(uri)
-      case res
-      when Net::HTTPSuccess
-        res.body
-      when Net::HTTPRedirection
-        location = res['Location']
-        http_get location, limit - 1
-      else
-        raise "Error: HTTP GET #{uri.inspect} #{res.inspect}"
+      max_retry_count = 2
+      retry_count = 0
+      begin
+        res = Net::HTTP.get_response URI(uri)
+        case res
+        when Net::HTTPSuccess
+          res.body
+        when Net::HTTPRedirection
+          location = res['Location']
+          http_get location, limit - 1
+        else
+          raise HTTPGetError.new(res)
+        end
+      rescue HTTPGetError => exn
+        if retry_count < max_retry_count && exn.error_response?
+          retry_count += 1
+          Goodcheck.logger.info "#{retry_count} retry HTTP GET #{exn.response.uri} due to '#{exn.response.code} #{exn.response.message}'..."
+          sleep 1
+          retry
+        else
+          raise
+        end
       end
     end
 
