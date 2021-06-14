@@ -1,8 +1,5 @@
 module Goodcheck
   class Buffer
-    attr_reader :path
-    attr_reader :content
-
     DISABLE_LINE_PATTERNS = [
       /\/\/ goodcheck-disable-line$/, #JS, Java, C, ...
       /# goodcheck-disable-line$/, # Ruby, Python, PHP, ...
@@ -25,10 +22,8 @@ module Goodcheck
       /' goodcheck-disable-next-line$/, # VB
     ].freeze
 
-    class << self
-        attr_accessor :DISABLE_LINE_PATTERNS
-        attr_accessor :DISABLE_NEXT_LINE_PATTERNS
-    end
+    attr_reader :path
+    attr_reader :content
 
     def initialize(path:, content:)
       @path = path
