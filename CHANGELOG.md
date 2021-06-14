@@ -2,6 +2,8 @@
 
 ## HEAD
 
+## 3.0.1 (2021-06-14)
+
 * Retry HTTP GET request on importing rules [#197](https://github.com/sider/goodcheck/pull/197)
 
 ## 3.0.0 (2021-06-14)
