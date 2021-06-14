@@ -273,9 +273,9 @@ EOF
   def test_http_get_failed
     loader = Goodcheck::ImportLoader.new(cache_path: nil, force_download: false, config_path: nil)
 
-    error = assert_raises RuntimeError do
+    error = assert_raises Goodcheck::ImportLoader::HTTPGetError do
       loader.http_get('https://github.com/sider/goodcheck/not_found.txt')
     end
-    assert_includes error.message, 'Error: HTTP GET "https://github.com/sider/goodcheck/not_found.txt"'
+    assert_equal 'HTTP GET https://github.com/sider/goodcheck/not_found.txt => 404 Not Found', error.message
   end
 end
