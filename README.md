@@ -42,7 +42,7 @@ To release a new version, follows the steps below:
 3. Update the documentation via `bundle exec rake docs:update_version`.
 4. Commit the above changes like `git commit -m 'Version 1.2.3'`.
 5. Run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-6. Publish the updated documentation like `GIT_USER=some_user USE_SSH=true bundle exec rake docs:publish`.
+6. Publish the updated documentation like `GIT_USER=some_user [USE_SSH=true] bundle exec rake docs:publish`.
 
 ## Contributing
 
