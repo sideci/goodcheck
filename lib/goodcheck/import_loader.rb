@@ -148,7 +148,7 @@ module Goodcheck
         else
           raise HTTPGetError.new(res)
         end
-      rescue HTTPGetError => exn
+      rescue Net::OpenTimeout, HTTPGetError => exn
         if retry_count < max_retry_count && exn.error_response?
           retry_count += 1
           Goodcheck.logger.info "#{retry_count} retry HTTP GET #{exn.response.uri} due to '#{exn.response.code} #{exn.response.message}'..."
