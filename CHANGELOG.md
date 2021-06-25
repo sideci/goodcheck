@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* Fix HTTP GET retrying [#203](https://github.com/sider/goodcheck/pull/203)
+
 ## 3.0.2 (2021-06-23)
 
 * Retry importing on Net::OpenTimeout [#202](https://github.com/sider/goodcheck/pull/202)
