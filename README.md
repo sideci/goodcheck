@@ -41,7 +41,7 @@ To release a new version, follows the steps below:
 2. Update [CHANGELOG.md](CHANGELOG.md).
 3. Run `bundle exec rake docs:update_version`.
 4. Run `git add . && git commit -m 'Version <new_version>'`.
-5. Run `bundle exec rake release`, which will create a tag, push the commit and tag, and publish the gem to [rubygems.org](https://rubygems.org).
+5. Run `bundle exec rake release`, which will create a tag, push the commit and tag, and publish the gem to [RubyGems.org](https://rubygems.org).
 6. Run `GIT_USER=<your_nickname> [USE_SSH=true] bundle exec rake docs:publish`.
 
 ## Contributing
