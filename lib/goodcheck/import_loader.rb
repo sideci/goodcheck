@@ -25,10 +25,6 @@ module Goodcheck
         super("HTTP GET #{res.uri} => #{res.code} #{res.message}")
         @response = res
       end
-
-      def error_response?
-        response.is_a?(Net::HTTPClientError) || response.is_a?(Net::HTTPServerError)
-      end
     end
 
     attr_reader :cache_path
@@ -145,13 +141,15 @@ module Goodcheck
         when Net::HTTPRedirection
           location = res['Location']
           http_get location, limit - 1
-        else
+        when Net::HTTPClientError, Net::HTTPServerError
           raise HTTPGetError.new(res)
+        else
+          raise Error, "HTTP GET failed due to #{res.inspect}"
         end
       rescue Net::OpenTimeout, HTTPGetError => exn
-        if retry_count < max_retry_count && exn.error_response?
+        if retry_count < max_retry_count
           retry_count += 1
-          Goodcheck.logger.info "#{retry_count} retry HTTP GET #{exn.response.uri} due to '#{exn.response.code} #{exn.response.message}'..."
+          Goodcheck.logger.info "Retry ##{retry_count} - HTTP GET #{uri} due to #{exn.inspect}..."
           sleep 1
           retry
         else
