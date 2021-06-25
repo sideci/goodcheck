@@ -278,4 +278,14 @@ EOF
     end
     assert_equal 'HTTP GET https://github.com/sider/goodcheck/not_found.txt => 404 Not Found', error.message
   end
+
+  def test_http_get_open_timeout
+    loader = Goodcheck::ImportLoader.new(cache_path: nil, force_download: false, config_path: nil)
+
+    Net::HTTP.stub :get_response, ->(_) { raise Net::OpenTimeout } do
+      assert_raises Net::OpenTimeout do
+        loader.http_get('https://github.com/sider/goodcheck')
+      end
+    end
+  end
 end
