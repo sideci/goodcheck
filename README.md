@@ -37,12 +37,12 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 
 To release a new version, follows the steps below:
 
-1. Update the version number in [`version.rb`](lib/goodcheck/version.rb).
-2. Add the new version's entry to the [changelog](CHANGELOG.md).
-3. Update the documentation via `bundle exec rake docs:update_version`.
-4. Commit the above changes like `git commit -m 'Version 1.2.3'`.
-5. Run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-6. Publish the updated documentation like `GIT_USER=some_user [USE_SSH=true] bundle exec rake docs:publish`.
+1. Update [`lib/goodcheck/version.rb`](lib/goodcheck/version.rb).
+2. Update [CHANGELOG.md](CHANGELOG.md).
+3. Run `bundle exec rake docs:update_version`.
+4. Run `git add . && git commit -m 'Version <new_version>'`.
+5. Run `bundle exec rake release`, which will create a tag, push the commit and tag, and publish the gem to [RubyGems.org](https://rubygems.org).
+6. Run `GIT_USER=<your_nickname> [USE_SSH=true] bundle exec rake docs:publish`.
 
 ## Contributing
 
