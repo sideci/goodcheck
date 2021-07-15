@@ -2,6 +2,8 @@
 
 ## HEAD
 
+## 3.1.0 (2021-07-15)
+
 * Improve coloring for text format [#208](https://github.com/sider/goodcheck/pull/208)
 * Output justification with text format [#210](https://github.com/sider/goodcheck/pull/210)
 
