@@ -869,4 +869,39 @@ OUT
       end
     end
   end
+
+  def test_justification
+    TestCaseBuilder.tmpdir do |builder|
+      builder.cd do
+        builder.config content: <<EOF
+rules:
+  - id: foo_rule
+    message: Foo
+    pattern: foo
+    justification:
+      - AAA
+      - BBB
+EOF
+
+        builder.file name: Pathname("test.txt"), content: "    foo"
+
+        reporter = Reporters::Text.new(stdout: stdout)
+        check = Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("test.txt")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home")
+
+        assert_equal 2, check.run
+        assert_equal <<OUT, stdout.string
+test.txt:1:5: Foo  (foo_rule)
+    foo
+    ^~~
+
+  Justifications:
+    • AAA
+    • BBB
+
+
+1 file inspected, 1 issue detected
+OUT
+      end
+    end
+  end
 end
