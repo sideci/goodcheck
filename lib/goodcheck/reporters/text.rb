@@ -25,7 +25,11 @@ module Goodcheck
       def issue(issue)
         @issue_count += 1
 
+        path = Rainbow(issue.path).cyan
         message = issue.rule.message.lines.first.chomp
+        rule = Rainbow("(#{issue.rule.id})").dimgray
+        severity = issue.rule.severity ? Rainbow("[#{issue.rule.severity}]").magenta : ""
+        format = "%<path>s%<location>s %<message>s  %<rule>s  %<severity>s"
 
         if issue.location
           start_line = issue.location.start_line
@@ -37,13 +41,13 @@ module Goodcheck
                         else
                           line.bytesize - start_column
                         end
-          rule = Rainbow("(#{issue.rule.id})").darkgray
-          severity = issue.rule.severity ? Rainbow("[#{issue.rule.severity}]").magenta : ""
-          stdout.puts "#{Rainbow(issue.path).cyan}:#{start_line}:#{start_column}: #{message}  #{rule}  #{severity}".strip
+          location = Rainbow(":#{start_line}:#{start_column}:").dimgray
+          stdout.puts sprintf(format, { path: path, location: location, message: message, rule: rule, severity: severity }).strip
           stdout.puts line.chomp
           stdout.puts (" " * start_column_index) + Rainbow("^" + "~" * (column_size - 1)).yellow
         else
-          stdout.puts "#{Rainbow(issue.path).cyan}:-:-: #{message}"
+          location = Rainbow(":-:-:").dimgray
+          stdout.puts sprintf(format, { path: path, location: location, message: message, rule: rule, severity: severity }).strip
         end
       end
 
