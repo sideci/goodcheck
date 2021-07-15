@@ -25,7 +25,7 @@ module Goodcheck
       def issue(issue)
         @issue_count += 1
 
-        format_line = ->(line:, column:) {
+        format_line = lambda do |line:, column:|
           format_args = {
             path: Rainbow(issue.path).cyan,
             location: Rainbow(":#{line}:#{column}:").dimgray,
@@ -34,7 +34,7 @@ module Goodcheck
             severity: issue.rule.severity ? Rainbow("[#{issue.rule.severity}]").magenta : ""
           }
           format("%<path>s%<location>s %<message>s  %<rule>s  %<severity>s", format_args).strip
-        }
+        end
 
         if issue.location
           start_line = issue.location.start_line
