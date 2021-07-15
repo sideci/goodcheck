@@ -25,7 +25,16 @@ module Goodcheck
       def issue(issue)
         @issue_count += 1
 
-        message = issue.rule.message.lines.first.chomp
+        format_line = lambda do |line:, column:|
+          format_args = {
+            path: Rainbow(issue.path).cyan,
+            location: Rainbow(":#{line}:#{column}:").dimgray,
+            message: issue.rule.message.lines.first.chomp,
+            rule: Rainbow("(#{issue.rule.id})").dimgray,
+            severity: issue.rule.severity ? Rainbow("[#{issue.rule.severity}]").magenta : ""
+          }
+          format("%<path>s%<location>s %<message>s  %<rule>s  %<severity>s", format_args).strip
+        end
 
         if issue.location
           start_line = issue.location.start_line
@@ -37,13 +46,11 @@ module Goodcheck
                         else
                           line.bytesize - start_column
                         end
-          rule = Rainbow("(#{issue.rule.id})").darkgray
-          severity = issue.rule.severity ? Rainbow("[#{issue.rule.severity}]").magenta : ""
-          stdout.puts "#{Rainbow(issue.path).cyan}:#{start_line}:#{start_column}: #{message}  #{rule}  #{severity}".strip
+          stdout.puts format_line.call(line: start_line, column: start_column)
           stdout.puts line.chomp
           stdout.puts (" " * start_column_index) + Rainbow("^" + "~" * (column_size - 1)).yellow
         else
-          stdout.puts "#{Rainbow(issue.path).cyan}:-:-: #{message}"
+          stdout.puts format_line.call(line: "-", column: "-")
         end
       end
 

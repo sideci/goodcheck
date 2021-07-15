@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* Improve coloring for text format [#208](https://github.com/sider/goodcheck/pull/208)
+
 ## 3.0.3 (2021-06-25)
 
 * Fix HTTP GET retrying [#203](https://github.com/sider/goodcheck/pull/203)
