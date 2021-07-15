@@ -144,7 +144,7 @@ EOF
 
         assert_equal 2, check.run
         assert_equal <<OUT, stdout.string
-package.json:-:-: Foo
+package.json:-:-: Foo  (foo)
 
 2 files inspected, 1 issue detected
 OUT
@@ -758,7 +758,7 @@ EOF
         Check.new(config_path: builder.config_path, rules: [], targets: [Pathname("x.js")], reporter: reporter, stderr: stderr, force_download: false, home_path: builder.path + "home").tap do |check|
           assert_equal 2, check.run
           assert_equal <<OUT, stdout.string
-x.js:-:-: Use *strict mode* if possible.
+x.js:-:-: Use *strict mode* if possible.  (strict-mode)
 
 1 file inspected, 1 issue detected
 OUT
