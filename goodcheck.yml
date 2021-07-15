@@ -7,7 +7,7 @@ rules:
       Use `GoodCheck::Error` instead of `StandardError`.
 
 import:
-  - https://github.com/sider/goodcheck-rules/archive/refs/tags/v0.0.1.tar.gz
+  - https://github.com/sider/goodcheck-rules/archive/refs/tags/v0.0.3.tar.gz
 
 exclude:
   - "**/build"
