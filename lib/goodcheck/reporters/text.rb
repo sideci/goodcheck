@@ -52,6 +52,16 @@ module Goodcheck
         else
           stdout.puts format_line.call(line: "-", column: "-")
         end
+
+        justifications = issue.rule.justifications
+        unless justifications.empty?
+          stdout.puts ""
+          stdout.puts "  #{Rainbow('Justifications').dimgray.underline.italic}:"
+          justifications.each do |justification|
+            stdout.puts "    • #{Rainbow(justification).dimgray.italic}"
+          end
+          stdout.puts ""
+        end
       end
 
       def summary
